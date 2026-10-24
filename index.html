@@ -1,66 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Portfolio</title>
-    <link rel="icon" href="static/images/icon.png">
-    <script src="https://unpkg.com/scrollreveal@4"></script> <!-- Scroll reveal script -->
-</head>
-
-
-<body>
-    <main>
-        <header>
-            <div id="logo">
-                <h1>Åse Sagebakken</h1>
-            </div>
-            
-            <nav>
-                <ul>
-                    <li>About</li>
-                    <li>Education</li>
-                    <li>Skillset</li>
-                    <li>Projects</li>
-                </ul>
-            </nav>
-        </header>
-
-        <div class="banner">
-            <div class="logo">Åse Sagebakken</div>
-        </div>
-
-        <div class="container">
-            <h2>About me</h2>
-
-            <img id="pbimg" src="static/images/profile.png">
-
-            <p>Third year student of a bachelors degree in computer science at the University of Stavanger.</p>
-        </div>
-
-
-        <div class="skillcontainer">
-
-        </div>
-
-        <div class="timecontainer">
-        </div>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-
-        </footer>
-    </main>
-
-    <!-- scripts and stylesheets at the end for faster page loading -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> <!-- Loads the Montserrat font-->
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="static/timeline.css">
-
-    <link href="static/fontawesome/css/all.min.css" rel="stylesheet"> <!--loads fontawesome stylesheet -->
-
-    <script src="static/script.js"></script>
-
-</body>
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Åse Sagebakken – Frontend-utvikler</title>
+    <meta
+      name="description"
+      content="Frontend-utvikler hos Horizon56 i Stavanger. Lager digitale verktøy for energisektoren med Vue.js, TypeScript og GraphQL."
+    />
+    <meta property="og:title" content="Åse Sagebakken – Frontend-utvikler" />
+    <meta
+      property="og:description"
+      content="Frontend-utvikler hos Horizon56 i Stavanger. Lager digitale verktøy for energisektoren med Vue.js, TypeScript og GraphQL."
+    />
+    <meta property="og:image" content="https://asejs.github.io/profile.jpg" />
+    <meta property="og:url" content="https://asejs.github.io/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Åse Sagebakken",
+        "jobTitle": "Frontend-utvikler",
+        "url": "https://asejs.github.io/",
+        "telephone": "+47 95 87 80 60",
+        "image": "https://asejs.github.io/profile.jpg",
+        "worksFor": { "@type": "Organization", "name": "Horizon56" },
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universitetet i Stavanger" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Stavanger", "addressCountry": "NO" },
+        "knowsAbout": ["Vue.js", "TypeScript", "GraphQL", "Frontend-utvikling"],
+        "sameAs": ["https://www.linkedin.com/in/asesagebakken", "https://github.com/Asejs"]
+      }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      try {
+        const saved = localStorage.getItem('theme')
+        if (saved) document.documentElement.dataset.theme = saved
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

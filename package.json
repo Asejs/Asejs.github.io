@@ -1,0 +1,23 @@
+{
+  "name": "asejs.github.io",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "cv": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf=public/Ase-Sagebakken-CV.pdf \"file://$PWD/cv/cv.html\""
+  },
+  "dependencies": {
+    "vue": "^3.5.44"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vue/tsconfig": "^0.9.1",
+    "typescript": "~5.9",
+    "vite": "^8.3.5",
+    "vue-tsc": "^3.3.13"
+  }
+}
