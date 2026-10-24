@@ -60,7 +60,7 @@ const year = new Date().getFullYear()
       <div class="hero__text">
         <div class="hero__title">
           <h1 class="hero__name">{{ profile.name }}</h1>
-          <p class="eyebrow">// {{ profile.role.toLowerCase() }} · {{ profile.location.toLowerCase() }}</p>
+          <p class="eyebrow">// {{ profile.role.toLowerCase() }}</p>
         </div>
         <p class="hero__summary">{{ profile.summary }}</p>
         <ContactLinks label="Kontakt" class="hero__links" />

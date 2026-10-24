@@ -172,7 +172,8 @@ export const projects: Project[] = [
     tags: ['Python', 'PyQt', 'TCP', 'MJPEG'],
     links: [
       { label: 'uissubsea.no', href: 'https://www.uissubsea.no/' },
-      { label: 'Kildekode på GitHub', href: 'https://github.com/Asejs/UiS-Subsea-GUI' },
+      { label: 'Kildekode på GitHub', href: 'https://github.com/VebjornRiiser/uis-subsea' },
+      { label: 'Tidlig prototype', href: 'https://github.com/Asejs/UiS-Subsea-GUI' },
     ],
     video: '/projects/uis-subsea/video.mp4',
     coverOnPage: false,
