@@ -38,13 +38,12 @@ function createGuide() {
   const ring = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.035, 8, 48), new THREE.MeshBasicMaterial({ ...glow, opacity: 0.95 }))
   ring.rotation.x = Math.PI / 2
   const beam = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.06, 0.3, 3, 24, 1, true),
-    new THREE.MeshBasicMaterial({ ...glow, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
+    new THREE.CylinderGeometry(0.12, 0.45, 1, 24, 1, true).translate(0, 0.5, 0),
+    new THREE.MeshBasicMaterial({ ...glow, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
   )
-  beam.position.y = 1.5
   beacon.add(ring, beam)
 
-  return { beacon, ring }
+  return { beacon, ring, beam }
 }
 
 function seededRandom(seed: number) {
@@ -222,6 +221,7 @@ export async function createRovScene(
     guide.beacon.visible = Boolean(goal)
     if (goal) {
       guide.beacon.position.copy(goal)
+      guide.beam.scale.y = Math.max(0.01, SURFACE_Y - goal.y)
       guide.ring.scale.setScalar(1 + Math.sin(elapsed * 4) * 0.15)
     }
     jawOpen += ((mission.gripClosed ? 0 : 1) - jawOpen) * Math.min(1, dt * 6)
