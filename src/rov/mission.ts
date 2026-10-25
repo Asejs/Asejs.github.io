@@ -661,6 +661,9 @@ export function createMission(scene: THREE.Scene, gripPoint: THREE.Object3D, rov
   }
 
   return {
+    get running() {
+      return status === 'running'
+    },
     get gripClosed() {
       return gripClosed || Boolean(held) || Boolean(pulling)
     },

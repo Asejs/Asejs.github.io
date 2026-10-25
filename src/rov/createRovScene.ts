@@ -155,7 +155,7 @@ export async function createRovScene(
   function update(dt: number) {
     elapsed += dt
 
-    const steering = stunTimer > 0 ? { surge: 0, yaw: 0, heave: 0 } : input
+    const steering = stunTimer > 0 || !mission.running ? { surge: 0, yaw: 0, heave: 0 } : input
     yawRate += (steering.yaw * 1.5 - yawRate) * Math.min(1, dt * 3)
     heading += yawRate * dt
 

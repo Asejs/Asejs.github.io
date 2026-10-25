@@ -80,7 +80,9 @@ watch(
   (next) => {
     if (next !== 'finished') return
     sound.stopMusic()
-    sound.finish()
+    sound.thrust(0)
+    if (allDone.value) sound.finish()
+    else sound.timeUp()
   },
 )
 
@@ -128,6 +130,7 @@ function applyKeys() {
     rov!.input[axis] = Math.max(-1, Math.min(1, rov!.input[axis] + value))
   })
   const { surge, yaw, heave } = rov.input
+  if (telemetry.status !== 'running') return sound.thrust(0)
   sound.thrust(Math.min(1, Math.hypot(surge, heave) + Math.abs(yaw) * 0.6))
 }
 
@@ -156,7 +159,7 @@ function release() {
 }
 
 function grip() {
-  if (!rov) return
+  if (!rov || telemetry.status !== 'running') return
   rov.toggleGrip()
   sound.grip()
 }
