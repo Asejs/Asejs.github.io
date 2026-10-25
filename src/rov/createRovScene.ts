@@ -56,7 +56,7 @@ function seededRandom(seed: number) {
 async function loadRov(url: string) {
   const materials: Record<string, THREE.Material> = {
     frame: new THREE.MeshStandardMaterial({ color: '#16181b', roughness: 0.6, flatShading: true }),
-    thrusters: new THREE.MeshStandardMaterial({ color: '#4a525a', roughness: 0.45, metalness: 0.3 }),
+    thrusters: new THREE.MeshStandardMaterial({ color: '#d0202a', roughness: 0.4, metalness: 0.2 }),
     housing: new THREE.MeshStandardMaterial({ color: '#bfe6f0', roughness: 0.1, transparent: true, opacity: 0.35 }),
     parts: new THREE.MeshStandardMaterial({ color: '#8b959b', roughness: 0.5, metalness: 0.4, flatShading: true }),
   }

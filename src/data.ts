@@ -144,7 +144,7 @@ export const projects: Project[] = [
     tags: ['React', 'TypeScript', 'NX', 'Zustand', 'TanStack Query', 'AG Grid', 'Jest', 'Storybook'],
     links: [
       {
-        label: 'New on deck-artikkel fra Innseiling',
+        label: 'Intervju i Bouvet: New on deck',
         href: 'https://www.bouvet.no/bouvet-deler/innseiling/new-on-deck/ase',
       },
     ],
@@ -184,6 +184,11 @@ export const projects: Project[] = [
         src: '/projects/uis-subsea/gui.jpg',
         alt: 'Operatørgrensesnittet for ROV-en på en bærbar PC ved bassengkanten under testing',
         caption: 'Operatørgrensesnittet i bruk under test i bassenget',
+      },
+      {
+        src: '/projects/uis-subsea/team.jpg',
+        alt: 'UiS Subsea-teamet i marineblå t-skjorter samlet rundt ROV-en Fenris og flyteren Frøya på en gressplen',
+        caption: 'UiS Subsea-teamet med Fenris og flyteren Frøya under MATE ROV World Championship 2022',
       },
     ],
     hue: 180,
