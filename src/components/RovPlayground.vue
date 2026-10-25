@@ -35,6 +35,10 @@ const groups = computed(() => {
   return result
 })
 const showTasks = ref(false)
+const HEAVE_KEYS = ['KeyE', 'KeyQ', 'Space', 'ShiftLeft', 'ShiftRight']
+const usedHeave = ref(false)
+const heaveTip = ref(false)
+let heaveTimer: number | undefined
 const doneCount = computed(() => telemetry.tasks.filter((task) => task.done).length)
 const nextTask = computed(() => telemetry.tasks.find((task) => !task.done))
 const maxScore = computed(() => telemetry.tasks.reduce((sum, task) => sum + task.points, 0))
@@ -143,6 +147,7 @@ function onKeydown(event: KeyboardEvent) {
   if (!(event.code in KEYS)) return
   event.preventDefault()
   pressed.add(event.code)
+  if (HEAVE_KEYS.includes(event.code)) usedHeave.value = true
   applyKeys()
 }
 
@@ -170,6 +175,7 @@ function touchGrip() {
 }
 
 function hold(code: string) {
+  if (HEAVE_KEYS.includes(code)) usedHeave.value = true
   touched.value = true
   pressed.add(code)
   applyKeys()
@@ -232,9 +238,14 @@ onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', syncLoop)
   rov?.dispose()
   sound.dispose()
+  window.clearTimeout(heaveTimer)
 })
 
 function start() {
+  usedHeave.value = false
+  heaveTip.value = false
+  window.clearTimeout(heaveTimer)
+  heaveTimer = window.setTimeout(() => (heaveTip.value = true), 8000)
   rov?.startMission()
   sound.startMusic()
   stage.value?.focus()
@@ -364,6 +375,14 @@ const TOUCH_BUTTONS = [
             Poeng fra MATE 2022. Bonus: 1 poeng per hele minutt og 0,01 per sekund som er igjen når alt er gjort.
           </p>
         </div>
+
+        <p
+          v-if="!prompt && heaveTip && !usedHeave && telemetry.status === 'running'"
+          class="rov__prompt rov__prompt--tip"
+        >
+          <span class="rov__hint-desktop">Tips: Q dykker ned og E går opp</span>
+          <span class="rov__hint-touch">Tips: Bruk Ned og Opp for å endre dybde</span>
+        </p>
 
         <p v-if="prompt" class="rov__prompt" :class="{ 'rov__prompt--quiet': !prompt.startsWith('Trykk') && !prompt.startsWith('Boom'), 'rov__prompt--alert': prompt.startsWith('Boom') }">
           {{ prompt }}
@@ -537,6 +556,11 @@ const TOUCH_BUTTONS = [
   font-weight: 600;
   white-space: nowrap;
   pointer-events: none;
+}
+
+.rov__prompt--tip {
+  background: #86d2dc;
+  color: #06222a;
 }
 
 .rov__prompt--alert {
