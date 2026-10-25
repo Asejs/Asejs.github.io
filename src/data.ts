@@ -174,6 +174,10 @@ export const projects: Project[] = [
     links: [
       { label: 'uissubsea.no', href: 'https://www.uissubsea.no/' },
       { label: 'Bacheloroppgaven (PDF)', href: '/projects/uis-subsea/bacheloroppgave.pdf' },
+      {
+        label: 'Resultater fra MATE ROV 2022',
+        href: 'https://20693798.fs1.hubspotusercontent-na1.net/hubfs/20693798/2022/2022_World_master_scoresheet_FINAL_EXPLORER.pdf',
+      },
       { label: 'Kildekode på GitHub', href: 'https://github.com/VebjornRiiser/uis-subsea' },
     ],
     video: '/projects/uis-subsea/video.mp4',
