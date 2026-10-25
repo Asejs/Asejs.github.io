@@ -51,6 +51,7 @@ export interface Project {
   links?: Link[]
   cover?: string
   video?: string
+  model?: string
   coverOnPage?: boolean
   images?: ProjectImage[]
   hue: number
@@ -172,10 +173,11 @@ export const projects: Project[] = [
     tags: ['Python', 'PyQt', 'TCP', 'MJPEG'],
     links: [
       { label: 'uissubsea.no', href: 'https://www.uissubsea.no/' },
+      { label: 'Bacheloroppgaven (PDF)', href: '/projects/uis-subsea/bacheloroppgave.pdf' },
       { label: 'Kildekode på GitHub', href: 'https://github.com/VebjornRiiser/uis-subsea' },
-      { label: 'Tidlig prototype', href: 'https://github.com/Asejs/UiS-Subsea-GUI' },
     ],
     video: '/projects/uis-subsea/video.mp4',
+    model: '/projects/uis-subsea/fenris.glb',
     coverOnPage: false,
     images: [
       {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import BackLink from './BackLink.vue'
 import type { Project } from '../data'
 import LogoEmblem from './LogoEmblem.vue'
@@ -7,6 +7,7 @@ import ProjectCover from './ProjectCover.vue'
 
 const props = defineProps<{ project: Project }>()
 
+const RovPlayground = defineAsyncComponent(() => import('./RovPlayground.vue'))
 const bannerImage = computed(() => props.project.cover ?? props.project.images?.[0]?.src)
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 </script>
@@ -49,6 +50,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     <ul class="tags">
       <li v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</li>
     </ul>
+
+    <RovPlayground v-if="project.model" :model="project.model" class="detail__rov" />
 
     <div v-if="project.coverOnPage !== false || project.images?.length" class="gallery">
       <ProjectCover v-if="project.coverOnPage !== false" :project="project" />
@@ -116,6 +119,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 .detail__list,
 .tags,
 .gallery,
+.detail__rov,
 .detail__links {
   position: relative;
   z-index: 1;
