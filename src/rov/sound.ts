@@ -246,6 +246,9 @@ export function createSound() {
       motor.hum.frequency.setTargetAtTime(50 + level * 20, now, 0.5)
       motor.whine.frequency.setTargetAtTime(220 + level * 260, now, 0.5)
     },
+    powerUp() {
+      ;[523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((frequency, index) => tone(frequency, index * 0.06, 0.25, 0.12, 'square'))
+    },
     timeUp() {
       ;[392, 329.63, 261.63].forEach((frequency, index) => tone(frequency, index * 0.32, 0.7, 0.16, 'triangle'))
       tone(130.81, 0.96, 1.6, 0.18, 'triangle')

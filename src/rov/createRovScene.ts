@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
+import { createBoostStars, createBubbleTrail } from './effects'
 import { createMines } from './mines'
 import { createMission, type MissionSnapshot } from './mission'
 import { createBubbles, createPool, FLOOR_Y, POOL, SURFACE_Y } from './pool'
@@ -17,6 +18,7 @@ export interface RovTelemetry extends MissionSnapshot {
   surge: number
   heave: number
   gripClosed: boolean
+  boost: number
 }
 
 export interface RovScene {
@@ -119,6 +121,11 @@ export async function createRovScene(
   const guide = createGuide()
   scene.add(guide.beacon)
   const mines = createMines(scene)
+  const trail = createBubbleTrail(scene)
+  const stars = createBoostStars(scene)
+  const exhaust = new THREE.Vector3()
+  const backward = new THREE.Vector3()
+  let boostTimer = 0
   let stunTimer = 0
   let shake = 0
   const knock = new THREE.Vector3()
@@ -159,8 +166,9 @@ export async function createRovScene(
     heading += yawRate * dt
 
     forward.set(-Math.sin(heading), 0, -Math.cos(heading))
-    velocity.addScaledVector(forward, steering.surge * 4.6 * dt)
-    velocity.y += steering.heave * 3 * dt
+    const boost = boostTimer > 0 ? 1.9 : 1
+    velocity.addScaledVector(forward, steering.surge * 4.6 * boost * dt)
+    velocity.y += steering.heave * 3 * boost * dt
     velocity.multiplyScalar(Math.exp(-1.4 * dt))
     rov.position.addScaledVector(velocity, dt)
 
@@ -196,13 +204,22 @@ export async function createRovScene(
     desiredCamera.x = THREE.MathUtils.clamp(desiredCamera.x, POOL.minX + 0.15, POOL.maxX - 0.15)
     desiredCamera.z = THREE.MathUtils.clamp(desiredCamera.z, POOL.minZ + 0.15, POOL.maxZ - 0.15)
     desiredCamera.y = THREE.MathUtils.clamp(desiredCamera.y, FLOOR_Y + 0.2, SURFACE_Y - 0.1)
-    camera.position.lerp(desiredCamera, Math.min(1, dt * 2.5))
+    camera.position.lerp(desiredCamera, Math.min(1, dt * (boostTimer > 0 ? 4.5 : 2.5)))
     lookTarget.copy(rov.position).addScaledVector(forward, 0.6)
     camera.lookAt(lookTarget)
     if (shake > 0) {
       camera.position.x += (Math.random() - 0.5) * 0.12 * wobble
       camera.position.y += (Math.random() - 0.5) * 0.12 * wobble
     }
+
+    boostTimer = Math.max(0, boostTimer - dt)
+    if (stars.update(dt, rov.position)) boostTimer = 5
+    const thrust = Math.abs(steering.surge) + Math.abs(steering.heave) * 0.6 + Math.abs(steering.yaw) * 0.3
+    rov.updateMatrixWorld()
+    rov.localToWorld(exhaust.set(0, 0, 0.45))
+    backward.copy(forward).multiplyScalar(steering.surge < 0 ? 1 : -1)
+    trail.emit(exhaust, backward, thrust * (boostTimer > 0 ? 90 : 40), dt)
+    trail.update(dt)
 
     const hit = mines.update(dt, rov.position)
     if (hit) {
@@ -240,6 +257,7 @@ export async function createRovScene(
         surge: Math.max(-1, Math.min(1, forwardSpeed / 3.3)),
         heave: Math.max(-1, Math.min(1, velocity.y / 2.1)),
         gripClosed: mission.gripClosed,
+        boost: boostTimer,
         ...mission.snapshot(),
       })
     }

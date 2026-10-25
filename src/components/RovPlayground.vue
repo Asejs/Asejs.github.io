@@ -23,6 +23,7 @@ const telemetry = reactive<RovTelemetry>({
   tasks: [],
   prompt: '',
   explosions: 0,
+  boost: 0,
 })
 
 const groups = computed(() => {
@@ -76,6 +77,13 @@ watch(
   () => telemetry.explosions,
   (count, previous) => {
     if (count > previous) sound.explosion()
+  },
+)
+
+watch(
+  () => telemetry.boost > 0,
+  (boosting, was) => {
+    if (boosting && !was) sound.powerUp()
   },
 )
 
@@ -376,6 +384,8 @@ const TOUCH_BUTTONS = [
           </p>
         </div>
 
+        <p v-if="telemetry.boost > 0" class="rov__boost">★ Superfart! {{ Math.ceil(telemetry.boost) }}</p>
+
         <p
           v-if="!prompt && heaveTip && !usedHeave && telemetry.status === 'running'"
           class="rov__prompt rov__prompt--tip"
@@ -556,6 +566,32 @@ const TOUCH_BUTTONS = [
   font-weight: 600;
   white-space: nowrap;
   pointer-events: none;
+}
+
+.rov__boost {
+  position: absolute;
+  right: 0.75rem;
+  top: 3.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: #ffd400;
+  color: #3a2a00;
+  font-size: 0.8rem;
+  font-weight: 700;
+  pointer-events: none;
+  animation: rov-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes rov-pulse {
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rov__boost {
+    animation: none;
+  }
 }
 
 .rov__prompt--tip {
