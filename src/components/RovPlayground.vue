@@ -287,7 +287,7 @@ const TOUCH_BUTTONS = [
   <section class="rov">
     <h2 class="rov__title">Prøv selv</h2>
     <p class="rov__intro">
-      Kjør <a href="https://www.uissubsea.no/past-drones/fenris" target="_blank" rel="noopener">Fenris</a>, ROV-en fra bacheloroppgaven, gjennom Oppgave 1 – Maritim fornybar energi fra MATE ROV World Championship 2022. Du har 15 minutter, som i konkurransen.
+      Spill laget i etterkant med Three.js. Kjør <a href="https://www.uissubsea.no/past-drones/fenris" target="_blank" rel="noopener">Fenris</a>, ROV-en fra bacheloroppgaven, gjennom Oppgave 1 – Maritim fornybar energi fra MATE ROV World Championship 2022. Du har 15 minutter, som i konkurransen.
     </p>
 
     <div
@@ -463,7 +463,9 @@ const TOUCH_BUTTONS = [
 
 <style scoped>
 .rov {
-  margin-top: 3rem;
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--line);
 }
 
 .rov__title {

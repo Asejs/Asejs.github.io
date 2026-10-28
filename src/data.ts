@@ -34,6 +34,7 @@ export interface ProjectImage {
   alt: string
   caption?: string
   thumb?: string
+  video?: string
   width?: number
   height?: number
 }
@@ -150,6 +151,13 @@ export const projects: Project[] = [
     ],
     cover: '/projects/echo/cover.jpg',
     coverOnPage: false,
+    images: [
+      {
+        src: '/projects/echo/bouvet-kontor.jpg',
+        alt: 'Åse smiler ved pulten på Bouvet-kontoret, med en bærbar PC og en skjerm med kode',
+        caption: 'Fra intervjuet i Bouvet: New on deck',
+      },
+    ],
     hue: 350,
     logos: [equinorBrand, bouvetBrand],
   },
@@ -193,6 +201,12 @@ export const projects: Project[] = [
         src: '/projects/uis-subsea/team.jpg',
         alt: 'UiS Subsea-teamet i marineblå t-skjorter samlet rundt ROV-en Fenris og flyteren Frøya på en gressplen',
         caption: 'UiS Subsea-teamet med Fenris og flyteren Frøya under MATE ROV World Championship 2022',
+      },
+      {
+        src: '/projects/uis-subsea/runde-to.jpg',
+        video: '/projects/uis-subsea/runde-to.mp4',
+        alt: 'Video av Fenris under vann i konkurransebassenget og intervjuer med teamet',
+        caption: 'Runde to i MATE ROV 2022, der et brudd i fiberkabelen kuttet kontakten med Fenris. Video: UiS Subsea',
       },
     ],
     hue: 180,
@@ -304,6 +318,14 @@ export const interests: Interest[] = [
         height: 1800,
         thumb: '/interests/fotografering/01-varanasi-soloppgang-thumb.jpg',
         alt: 'Soloppgang over Ganges, sett fra ghatene med båter og bjeller',
+        caption: 'Varanasi, India',
+      },
+      {
+        src: '/interests/fotografering/fotograf-varanasi.jpg',
+        width: 1600,
+        height: 1067,
+        thumb: '/interests/fotografering/fotograf-varanasi-thumb.jpg',
+        alt: 'Åse fotograferer fra en båt på Ganges i Varanasi i skumringen',
         caption: 'Varanasi, India',
       },
       {

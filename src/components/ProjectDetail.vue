@@ -51,12 +51,19 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
       <li v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</li>
     </ul>
 
-    <RovPlayground v-if="project.model" :model="project.model" class="detail__rov" />
-
     <div v-if="project.coverOnPage !== false || project.images?.length" class="gallery">
       <ProjectCover v-if="project.coverOnPage !== false" :project="project" />
       <figure v-for="image in project.images" :key="image.src">
-        <img :src="image.src" :alt="image.alt" loading="lazy" />
+        <video
+          v-if="image.video"
+          :src="image.video"
+          :poster="image.src"
+          :aria-label="image.alt"
+          controls
+          playsinline
+          preload="none"
+        />
+        <img v-else :src="image.src" :alt="image.alt" loading="lazy" />
         <figcaption v-if="image.caption">{{ image.caption }}</figcaption>
       </figure>
     </div>
@@ -73,6 +80,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
         {{ link.label }} <span aria-hidden="true">↗</span>
       </a>
     </div>
+
+    <RovPlayground v-if="project.model" :model="project.model" class="detail__rov" />
   </article>
 </template>
 
@@ -231,7 +240,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   margin-top: 3rem;
 }
 
-.gallery img {
+.gallery img,
+.gallery video {
   display: block;
   width: 100%;
   border-radius: 12px;
