@@ -51,7 +51,7 @@ const year = new Date().getFullYear()
           <ContactLinks label="Kontakt" class="hero__links" />
         </div>
         <picture class="hero__picture">
-          <img class="hero__photo" src="/hero-portrait.jpg" :alt="profile.name" width="1000" height="1887" />
+          <img class="hero__photo" src="/hero-portrait.webp" fetchpriority="high" :alt="profile.name" width="900" height="1698" />
         </picture>
       </header>
       <div class="hero__edge" aria-hidden="true" />
