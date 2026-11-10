@@ -34,7 +34,7 @@ const hasGallery = computed(() => !!props.interest.images?.length)
   gap: 0.85rem;
   padding: 1rem;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
 .tile--link {

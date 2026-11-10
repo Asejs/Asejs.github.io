@@ -8,7 +8,7 @@ import ProjectCover from './ProjectCover.vue'
 const props = defineProps<{ project: Project }>()
 
 const RovPlayground = defineAsyncComponent(() => import('./RovPlayground.vue'))
-const bannerImage = computed(() => props.project.cover ?? props.project.images?.[0]?.src)
+const bannerImage = computed(() => props.project.banner ?? props.project.cover ?? props.project.images?.[0]?.src)
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 </script>
 
@@ -19,12 +19,12 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
       <img v-else :src="bannerImage" alt="" />
     </div>
 
-    <BackLink href="#prosjekter" class="detail__back" />
+    <BackLink href="#prosjekter" />
 
     <header class="detail__head">
       <div class="detail__heading">
         <span v-if="project.logos?.length" class="detail__logos">
-          <LogoEmblem v-for="(logo, index) in project.logos" :key="index" :logo="logo" size="3.5rem" />
+          <LogoEmblem v-for="(logo, index) in project.logos" :key="index" :logo="logo" size="calc(1.575rem + 0.89 * clamp(2rem, 6vw, 3rem))" />
         </span>
         <div>
           <p class="eyebrow">{{ project.subtitle }} · {{ project.period }}</p>
@@ -88,6 +88,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 <style scoped>
 .detail {
   position: relative;
+  display: flow-root;
 }
 
 .detail__banner {
@@ -122,7 +123,6 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   );
 }
 
-.detail__back,
 .detail__head,
 .detail__role,
 .detail__list,
@@ -134,13 +134,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   z-index: 1;
 }
 
-.detail__back {
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
-  backdrop-filter: blur(6px);
-}
-
 .detail__head {
-  margin-top: clamp(6rem, 22vw, 14rem);
+  margin-top: calc(clamp(6rem, 22vw, 14rem) + 3rem);
 }
 
 @media (max-width: 480px) {
@@ -151,13 +146,14 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent-text);
 }
 
 .detail__heading {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -165,6 +161,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 .detail__logos {
   display: flex;
   flex: none;
+  padding-bottom: 0.55rem;
 }
 
 .detail__logos > * + * {
@@ -201,7 +198,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .detail__links {

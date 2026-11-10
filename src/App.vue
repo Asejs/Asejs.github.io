@@ -56,20 +56,24 @@ const year = new Date().getFullYear()
   </main>
 
   <main v-else class="page">
-    <header class="hero">
-      <div class="hero__text">
-        <div class="hero__title">
-          <h1 class="hero__name">{{ profile.name }}</h1>
-          <p class="eyebrow">// {{ profile.role.toLowerCase() }}</p>
+    <div class="hero-shadow">
+      <header class="hero">
+        <div class="hero__text">
+          <div class="hero__title">
+            <h1 class="hero__name">{{ profile.name }}</h1>
+            <p class="eyebrow">// {{ profile.role.toLowerCase() }}</p>
+          </div>
+          <p class="hero__summary">{{ profile.summary }}</p>
+          <p class="hero__motivation">{{ profile.motivation }}</p>
+          <ContactLinks label="Kontakt" class="hero__links" />
         </div>
-        <p class="hero__summary">{{ profile.summary }}</p>
-        <ContactLinks label="Kontakt" class="hero__links" />
-      </div>
-      <picture class="hero__picture">
-        <source media="(max-width: 39.99rem)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
-        <img class="hero__photo" src="/portrait.jpg" :alt="profile.name" width="529" height="585" />
-      </picture>
-    </header>
+        <picture class="hero__picture">
+          <source media="(max-width: 39.99rem)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+          <img class="hero__photo" src="/hero-portrait.jpg" :alt="profile.name" width="1000" height="1887" />
+        </picture>
+      </header>
+      <div class="hero__edge" aria-hidden="true" />
+    </div>
 
     <section v-reveal class="section" aria-labelledby="prosjekter">
       <h2 id="prosjekter" class="section__label">Prosjekter</h2>
@@ -147,6 +151,31 @@ const year = new Date().getFullYear()
   padding-inline: clamp(1rem, 3vw, 2.5rem);
 }
 
+.hero-shadow {
+  position: relative;
+}
+
+.hero__edge {
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: min(6vw, 5rem);
+  pointer-events: none;
+  filter: drop-shadow(var(--hero-shadow));
+  clip-path: inset(-5rem 0 0 0);
+  transition: filter 0.3s;
+}
+
+.hero__edge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  transition: background-color 0.3s;
+}
+
 .hero {
   position: relative;
   display: flex;
@@ -157,6 +186,7 @@ const year = new Date().getFullYear()
   padding: 5rem 1.25rem 6rem;
   background: var(--hero-bg);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - min(6vw, 5rem)), 0 100%);
+  transition: background-color 0.3s;
 }
 
 .hero__picture {
@@ -176,32 +206,31 @@ const year = new Date().getFullYear()
 
 @media (min-width: 40rem) {
   .hero {
-    --photo-width: clamp(11rem, 22vw, 17rem);
+    --photo-width: clamp(12rem, 22vw, 19rem);
 
     display: grid;
     grid-template-columns: auto var(--photo-width);
     justify-content: space-between;
-    column-gap: clamp(2rem, 5vw, 6rem);
-    min-height: clamp(30rem, 28vw, 36rem);
+    column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
+    min-height: 0;
     padding: 0 max(2rem, 4vw);
   }
 
   .hero__text {
     grid-area: 1 / 1;
     align-self: center;
-    padding-block: 7rem 8rem;
+    padding-block: 4.5rem 5rem;
   }
 
   .hero__photo {
     grid-area: 1 / 2;
-    align-self: center;
+    align-self: stretch;
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    border-radius: 50%;
+    height: 0;
+    min-height: 100%;
     object-fit: cover;
-    object-position: center 30%;
+    object-position: center 78%;
   }
 }
 
@@ -210,12 +239,17 @@ const year = new Date().getFullYear()
     justify-content: center;
     padding-right: max(5rem, 5vw);
   }
+
+  .hero__photo {
+    translate: 1.5rem 0;
+  }
 }
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent-text);
 }
 
 .hero__name {
@@ -242,6 +276,14 @@ const year = new Date().getFullYear()
   max-width: 34rem;
   font-size: 1.15rem;
   color: var(--muted);
+}
+
+.hero__motivation {
+  margin-top: 0.6rem;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-wrap: pretty;
 }
 
 .hero__links {

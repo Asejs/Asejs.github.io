@@ -12,12 +12,18 @@ defineProps<{ href: string }>()
 
 <style scoped>
 .back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
   display: grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 1px solid var(--line);
   border-radius: 50%;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(6px);
   color: var(--muted);
   transition:
     border-color 0.2s,
@@ -32,8 +38,8 @@ defineProps<{ href: string }>()
 }
 
 .back svg {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.1rem;
+  height: 1.1rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;

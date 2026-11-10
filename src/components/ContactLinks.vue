@@ -1,31 +1,87 @@
 <script setup lang="ts">
+import { onUnmounted, ref, useId, watch } from 'vue'
+
 import { profile } from '../data'
 import LinkIcon from './LinkIcon.vue'
 
 defineProps<{ label: string }>()
 
+const isMenuOpen = ref(false)
+const menu = ref<HTMLElement>()
+const menuButton = ref<HTMLButtonElement>()
+const menuId = useId()
+
+const setMenu = (el: unknown) => {
+  menu.value = el instanceof HTMLElement ? el : undefined
+}
+
+const setMenuButton = (el: unknown) => {
+  menuButton.value = el instanceof HTMLButtonElement ? el : undefined
+}
+
 const opensInNewTab = (href: string) => href.startsWith('http') || href.endsWith('.pdf')
+
+const closeMenu = ({ restoreFocus = false } = {}) => {
+  isMenuOpen.value = false
+  if (restoreFocus) {
+    menuButton.value?.focus()
+  }
+}
+
+const onPointerDown = (event: PointerEvent) => {
+  if (!menu.value?.contains(event.target as Node)) {
+    closeMenu()
+  }
+}
+
+watch(isMenuOpen, (open) => {
+  if (open) {
+    document.addEventListener('pointerdown', onPointerDown)
+  } else {
+    document.removeEventListener('pointerdown', onPointerDown)
+  }
+})
+
+onUnmounted(() => document.removeEventListener('pointerdown', onPointerDown))
 </script>
 
 <template>
   <div class="contact">
     <nav class="contact__links" :aria-label="label">
       <template v-for="link in profile.links" :key="link.label">
-        <span v-if="link.variants" class="pill pill--split" role="group" :aria-label="link.label">
-          <LinkIcon v-if="link.icon" :icon="link.icon" />
-          {{ link.label }}
-          <a
-            v-for="variant in link.variants"
-            :key="variant.href"
-            :href="variant.href"
-            class="pill__variant"
-            :aria-label="variant.ariaLabel"
-            :target="opensInNewTab(variant.href) ? '_blank' : undefined"
-            rel="noopener"
+        <div
+          v-if="link.variants"
+          :ref="setMenu"
+          class="menu"
+          @keydown.esc="closeMenu({ restoreFocus: true })"
+        >
+          <button
+            :ref="setMenuButton"
+            type="button"
+            class="pill"
+            :aria-expanded="isMenuOpen"
+            :aria-controls="menuId"
+            @click="isMenuOpen = !isMenuOpen"
           >
-            {{ variant.label }}
-          </a>
-        </span>
+            <LinkIcon v-if="link.icon" :icon="link.icon" />
+            {{ link.label }}
+          </button>
+          <div v-show="isMenuOpen" :id="menuId" class="menu__popover">
+            <template v-for="(variant, index) in link.variants" :key="variant.href">
+              <span v-if="index > 0" class="menu__divider" aria-hidden="true">|</span>
+              <a
+                :href="variant.href"
+                class="menu__option"
+                :aria-label="variant.ariaLabel"
+                :target="opensInNewTab(variant.href) ? '_blank' : undefined"
+                rel="noopener"
+                @click="closeMenu()"
+              >
+                {{ variant.label }}
+              </a>
+            </template>
+          </div>
+        </div>
         <a
           v-else
           :href="link.href"
@@ -49,6 +105,10 @@ const opensInNewTab = (href: string) => href.startsWith('http') || href.endsWith
       <li class="detail">
         <span class="detail__icon"><LinkIcon icon="phone" /></span>
         <span class="detail__value">{{ profile.phone }}</span>
+      </li>
+      <li class="detail">
+        <span class="detail__icon"><LinkIcon icon="location" /></span>
+        <span class="detail__value">{{ profile.location }}</span>
       </li>
     </ul>
   </div>
@@ -82,30 +142,59 @@ const opensInNewTab = (href: string) => href.startsWith('http') || href.endsWith
   background: var(--accent-soft);
 }
 
-.pill--split {
-  padding-right: 0.4rem;
+.menu {
+  position: relative;
 }
 
-.pill--split:hover {
-  border-color: var(--line);
+button.pill {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: inherit;
   background: none;
+  cursor: pointer;
 }
 
-.pill__variant {
-  padding: 0.15rem 0.5rem;
+.pill[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.menu__popover {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.25rem;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  font-size: 0.8rem;
+  background: var(--bg);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.08);
+  transform: translateX(-50%);
+}
+
+.menu__option {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
   font-weight: 600;
   transition:
     color 0.2s,
     background-color 0.2s;
 }
 
-.pill__variant:hover,
-.pill__variant:focus-visible {
+.menu__option:hover,
+.menu__option:focus-visible {
   color: var(--accent);
   background: var(--accent-soft);
+}
+
+.menu__divider {
+  color: var(--line);
 }
 
 .contact__details {

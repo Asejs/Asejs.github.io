@@ -4,7 +4,7 @@ import horizon56Mark from './assets/logos/horizon56-mark.svg?raw'
 import uisLogo from './assets/logos/uis.svg?raw'
 import uisSubseaLogo from './assets/logos/uis-subsea.svg?raw'
 
-export type LinkIcon = 'linkedin' | 'github' | 'mail' | 'phone' | 'cv'
+export type LinkIcon = 'linkedin' | 'github' | 'mail' | 'phone' | 'cv' | 'location'
 
 export interface LinkVariant {
   label: string
@@ -58,6 +58,7 @@ export interface Project {
   tags: string[]
   links?: Link[]
   cover?: string
+  banner?: string
   video?: string
   model?: string
   coverOnPage?: boolean
@@ -93,7 +94,9 @@ export const profile = {
   email: 'aase.sagebakken@hotmail.com',
   phone: '+47 95 87 80 60',
   summary:
-    'Frontend-utvikler med erfaring fra konsulentbransjen og produktutvikling innen energisektoren.',
+    'Har over fire års erfaring med produktutvikling i energisektoren, både som konsulent for Equinor og i produktteam hos Horizon56.',
+  motivation:
+    'Motivert av å lage brukervennlige løsninger som gjør en forskjell i arbeidshverdagen. Kombinerer AI-verktøy, som Claude Code, med godt øye for detaljer og kvalitet.',
   links: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/asesagebakken', icon: 'linkedin' },
     { label: 'GitHub', href: 'https://github.com/Asejs', icon: 'github' },
@@ -117,22 +120,22 @@ export const projects: Project[] = [
     period: '2025 – nå',
     summary: 'Digitale arbeidsflyter for sikre og effektive brønnoperasjoner.',
     description: [
-      'Digital plattform for planlegging (RigBridge) og utførelse (RigFlow) av brønnoperasjoner, brukt på riggoperasjoner verden over.',
+      'Digital plattform for planlegging (RigBridge) og utførelse (RigFlow) av brønnoperasjoner, som erstatter papirbaserte arbeidsprosesser. Brukes på over 70 riggoperasjoner verden over.',
     ],
     role: [
-      'Frontend-utvikler i produktteam fra juni 2025, fra oppgave til produksjon. Vue 3 og TypeScript, med enkelte backend-oppgaver i C#/.NET og GraphQL.',
+      'Frontend-utvikler i produktteam, i Vue 3 og TypeScript, med enkelte backend-oppgaver i C#/.NET og GraphQL. Leverer funksjoner helt til produksjon, med fokus på brukeropplevelse og kvalitet.',
     ],
     highlights: [
-      'Utvikler nye funksjoner i operasjonslogg, rapportering fra riggen og godkjenningsflyt',
+      'Utvikler report-backs og actual values på tvers av RigFlow og RigBridge, og ROV log',
       'Optimaliserer ytelsen i visninger med mye data',
+      'Forbedrer tilgjengelighet og tar UX-avgjørelser i teamet',
       'Bygger gjenbrukbare komponenter i felles komponentbibliotek, dokumentert i Storybook',
-      'Tar UX- og designavgjørelser i teamet',
-      'Gjennomgår kode på tvers av teamene',
-      'Retter feil og bedrer stabiliteten på tvers av kundeinstallasjoner',
+      'Gjennomgår kode på tvers av teamene og løser supportsaker',
     ],
     tags: ['Vue 3', 'TypeScript', 'GraphQL', 'Storybook', 'C# / .NET'],
     links: [{ label: 'horizon56.io', href: 'https://horizon56.io/' }],
     cover: '/projects/horizon56/cover.jpg',
+    banner: '/projects/horizon56/banner.jpg',
     coverOnPage: false,
     hue: 200,
     logos: [horizon56Brand],
@@ -140,22 +143,21 @@ export const projects: Project[] = [
   {
     slug: 'echo',
     title: 'Equinor Echo',
-    subtitle: 'Konsulent · Bouvet Stavanger',
+    subtitle: 'Konsulent, systemutvikler · Bouvet Stavanger',
     period: '2022 – 2025',
     summary: 'Visuell digital tvilling for drift av Equinors plattformer.',
     description: [
-      'Visuell digital tvilling av Equinors plattformer for søk og navigering i drifts- og prosjektdata, på desktop, nettbrett og mobil.',
+      'Visuell digital tvilling av Equinors plattformer for søk og navigering i drifts- og prosjektdata. Brukt på over 50 anlegg onshore og offshore, på desktop, nettbrett og mobil.',
     ],
     role: [
-      'Konsulent i Equinors Echo-team fra august 2022 til mai 2025. React og TypeScript, i tett samarbeid med UX og backend.',
+      'Konsulent i Equinors Echo-team, i React og TypeScript. Jobbet tett med UX og backend.',
     ],
     highlights: [
-      'Utviklet første versjon av Global Selection, der brukeren samler tags og arbeidsordrer i én liste',
-      'Utviklet responsivt design og Progressive Web App for bruk i felt',
+      'Utviklet MVP-en av Global Selection, der brukeren samler tags og arbeidsordrer i én liste, integrert med plattformens 3D-modell',
+      'Utviklet responsivt design og PWA for bruk i felt',
       'Bygde gjenbrukbare komponenter etter Equinor Design System (EDS)',
       'Hadde ansvar for release av Echo-CLI og integrering av teammoduler',
-      'Hadde ansvar for sikkerhetsoppdateringer med Snyk i CI/CD',
-      'Skrev enhetstester med Jest',
+      'Hadde ansvar for sikkerhetsoppdateringer med Snyk i CI/CD, og skrev enhetstester med Jest',
     ],
     tags: ['React', 'TypeScript', 'NX', 'Zustand', 'TanStack Query', 'AG Grid', 'Jest', 'Storybook'],
     links: [
@@ -236,29 +238,31 @@ export const experience: Entry[] = [
     location: 'Stavanger',
     period: '2025 – nå',
     points: [
-      'Utvikler RigBridge og RigFlow i produktteam, fra oppgave til produksjon',
-      'Tar UX- og designavgjørelser i teamet',
-      'Gjennomgår kode på tvers av teamene',
-      'Bruker Claude Code daglig, med tester og kodegjennomgang før merge',
+      'Utvikler RigBridge og RigFlow i produktteam og leverer funksjoner helt til produksjon',
+      'Tar UX-avgjørelser i teamet og samarbeider tett med UX, QA og produkteier',
+      'Gjennomgår kode på tvers av teamene og løser supportsaker',
+      'Bruker Claude Code aktivt og sikrer kvalitet med tester og kodegjennomgang',
     ],
     logo: horizon56Brand,
   },
   {
-    title: 'Konsulent',
+    title: 'Konsulent, systemutvikler',
     org: 'Bouvet',
     location: 'Stavanger',
     period: '2022 – 2025',
     points: [
-      'Jobbet som frontend-utvikler for Equinor i Echo-teamet',
-      'Samarbeidet med UX og backend om estimering og planlegging i Scrum',
-      'Gjennomgikk kode og skrev teknisk dokumentasjon',
+      'Jobbet som frontend-utvikler for Equinor i Echo-teamet, i React og TypeScript',
+      'Utviklet MVP-en av Global Selection og responsivt design for bruk i felt',
+      'Hadde ansvar for release av Echo-CLI og sikkerhetsoppdateringer med Snyk',
+      'Samarbeidet tett med UX og backend og deltok i estimering og planlegging i Scrum',
+      'Gjennomgikk kode og bidro til teknisk dokumentasjon i README og på GitHub Pages',
     ],
     logo: bouvetBrand,
   },
 ]
 
 export const skills = {
-  daily: ['Vue.js', 'TypeScript', 'JavaScript', 'GraphQL', 'HTML / CSS / SCSS', 'Vite', 'Vitest', 'Storybook', 'Git', 'Azure DevOps'],
+  daily: ['Vue.js', 'TypeScript', 'JavaScript', 'GraphQL', 'HTML / CSS / SCSS', 'Vite', 'Vitest', 'Storybook', 'Git', 'Azure DevOps', 'CI/CD', 'Claude Code'],
   used: ['React', 'Zustand', 'TanStack Query', 'Jest', 'C# / .NET'],
 }
 

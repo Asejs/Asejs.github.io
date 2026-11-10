@@ -45,7 +45,7 @@ defineProps<{ project: Project }>()
   content: '';
   position: absolute;
   inset: 0;
-  background: rgb(6 12 14 / 0.4);
+  background: var(--card-veil);
   transition: background-color 0.4s ease;
   pointer-events: none;
 }
@@ -56,7 +56,7 @@ defineProps<{ project: Project }>()
 }
 
 .card:hover .card__cover::after {
-  background: rgb(6 12 14 / 0.2);
+  background: var(--card-veil-hover);
 }
 
 .card__body {
