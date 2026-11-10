@@ -10,6 +10,7 @@ defineProps<{ logo: Logo; size?: string }>()
     :class="{ 'emblem--badge': logo.badge }"
     :style="{
       height: size ?? logo.height,
+      width: logo.badge ? (size ?? logo.height) : undefined,
       color: logo.badge?.color ?? logo.color,
       background: logo.badge?.background,
     }"

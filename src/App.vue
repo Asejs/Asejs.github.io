@@ -68,7 +68,6 @@ const year = new Date().getFullYear()
           <ContactLinks label="Kontakt" class="hero__links" />
         </div>
         <picture class="hero__picture">
-          <source media="(max-width: 39.99rem)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
           <img class="hero__photo" src="/hero-portrait.jpg" :alt="profile.name" width="1000" height="1887" />
         </picture>
       </header>
@@ -194,7 +193,14 @@ const year = new Date().getFullYear()
 }
 
 .hero__photo {
-  display: none;
+  order: -1;
+  display: block;
+  width: calc(100% + 2.5rem);
+  height: min(62vh, 125vw);
+  margin: -5rem -1.25rem 2rem;
+  object-fit: cover;
+  object-position: center 30%;
+  mask-image: linear-gradient(to bottom, #000 65%, transparent);
 }
 
 .hero__title {
@@ -223,12 +229,15 @@ const year = new Date().getFullYear()
   }
 
   .hero__photo {
+    order: 0;
     grid-area: 1 / 2;
     align-self: stretch;
     display: block;
     width: 100%;
     height: 0;
     min-height: 100%;
+    margin: 0;
+    mask-image: none;
     object-fit: cover;
     object-position: center 78%;
   }
