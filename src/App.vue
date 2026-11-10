@@ -215,10 +215,10 @@ const year = new Date().getFullYear()
 
     display: grid;
     grid-template-columns: auto var(--photo-width);
-    justify-content: space-between;
+    justify-content: center;
     column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
     min-height: 0;
-    padding: 0 max(2rem, 4vw);
+    padding: 0 min((100vw - 40rem) * 0.15, max(3.5rem, 5vw - 1.5rem)) 0 max(2rem, 4vw);
   }
 
   .hero__text {
@@ -239,17 +239,6 @@ const year = new Date().getFullYear()
     mask-image: none;
     object-fit: cover;
     object-position: center 78%;
-  }
-}
-
-@media (min-width: 64rem) {
-  .hero {
-    justify-content: center;
-    padding-right: max(5rem, 5vw);
-  }
-
-  .hero__photo {
-    translate: 1.5rem 0;
   }
 }
 
