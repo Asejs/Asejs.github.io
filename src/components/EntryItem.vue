@@ -82,7 +82,7 @@ defineProps<{ entry: Entry }>()
 
 .entry__main {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.85rem;
 }
 
@@ -103,10 +103,13 @@ defineProps<{ entry: Entry }>()
 }
 
 @media (max-width: 59.99rem) {
+  .entry__head {
+    row-gap: 0.6rem;
+  }
+
   .entry__period {
     order: -1;
     width: 100%;
-    margin-bottom: 0.4rem;
   }
 
   .entry::before {

@@ -30,23 +30,6 @@ const year = new Date().getFullYear()
 </script>
 
 <template>
-  <button
-    class="theme-toggle"
-    type="button"
-    :aria-label="theme === 'dark' ? 'Bytt til lyst tema' : 'Bytt til mørkt tema'"
-    @click="toggle"
-  >
-    <svg v-if="theme === 'dark'" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="4.5" />
-      <path
-        d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-      />
-    </svg>
-    <svg v-else viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
-    </svg>
-  </button>
-
   <main v-if="activeProject" class="page">
     <ProjectDetail :project="activeProject" />
   </main>
@@ -134,6 +117,22 @@ const year = new Date().getFullYear()
 
     <footer class="footer">
       <span>© {{ year }} {{ profile.name }}</span>
+      <button
+        class="theme-toggle"
+        type="button"
+        :aria-label="theme === 'dark' ? 'Bytt til lyst tema' : 'Bytt til mørkt tema'"
+        @click="toggle"
+      >
+        <svg v-if="theme === 'dark'" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.5" />
+          <path
+            d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+          />
+        </svg>
+        <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
+        </svg>
+      </button>
     </footer>
   </main>
 </template>
@@ -195,11 +194,11 @@ const year = new Date().getFullYear()
 .hero__photo {
   order: -1;
   display: block;
-  width: calc(100% + 2.5rem);
-  height: min(62vh, 125vw);
-  margin: -5rem -1.25rem 2rem;
+  width: 72%;
+  height: min(42vh, 88vw);
+  margin: -5rem auto 2rem;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center 38%;
   mask-image: linear-gradient(to bottom, #000 65%, transparent);
 }
 
@@ -356,6 +355,7 @@ const year = new Date().getFullYear()
 .footer {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 6rem;
@@ -366,10 +366,6 @@ const year = new Date().getFullYear()
 }
 
 .theme-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 10;
   display: grid;
   place-items: center;
   width: 2.5rem;
