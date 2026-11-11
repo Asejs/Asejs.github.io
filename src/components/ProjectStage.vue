@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, useTemplateRef } from 'vue'
+import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
 import type { Project } from '../data'
 import ProjectCard from './ProjectCard.vue'
 
@@ -16,6 +16,7 @@ function render() {
   if (Math.abs(target - current) < 0.002) current = target
   row.value?.querySelectorAll<HTMLElement>('.projects__card').forEach((card, i) => {
     card.style.setProperty('--d', String(i - current))
+    card.style.zIndex = String(10 - Math.round(Math.abs(i - current) * 2))
   })
   frame = current === target ? 0 : requestAnimationFrame(render)
 }
@@ -34,7 +35,22 @@ function onPointerLeave() {
   frame ||= requestAnimationFrame(render)
 }
 
-onBeforeUnmount(() => cancelAnimationFrame(frame))
+// Shading fades in as the window narrows and the cards start to overlap (around 1340px),
+// reaching full strength 240px narrower
+function updateShade() {
+  const shade = Math.min(Math.max((1344 - innerWidth) / 240, 0), 1)
+  row.value?.style.setProperty('--shade', String(shade))
+}
+
+onMounted(() => {
+  updateShade()
+  addEventListener('resize', updateShade)
+})
+
+onBeforeUnmount(() => {
+  cancelAnimationFrame(frame)
+  removeEventListener('resize', updateShade)
+})
 </script>
 
 <template>
@@ -44,7 +60,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame))
       :key="project.slug"
       :project="project"
       class="projects__card"
-      :style="{ '--d': i, zIndex: projects.length - i }"
+      :style="{ '--d': i, zIndex: 10 - i * 2 }"
     />
   </div>
 </template>
@@ -64,13 +80,13 @@ onBeforeUnmount(() => cancelAnimationFrame(frame))
   .projects {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2rem;
-    width: min(100vw - 3rem, 85vw);
+    width: calc(100vw - 3rem);
     margin-left: 50%;
     translate: -50% 0;
     perspective: 1400px;
   }
 
-  /* Cards keep a readable width; on narrower screens they overlap like a hand of cards, first on top */
+  /* Cards keep a readable width; on narrower screens they overlap like a hand of cards, the one in focus on top */
   .projects__card {
     position: relative;
     width: max(100%, 26rem);
@@ -80,7 +96,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame))
     justify-self: center;
     --a: max(var(--d), -1 * var(--d));
     transform: translateZ(calc(var(--a) * -110px)) rotateY(calc(var(--d) * -9deg));
-    filter: brightness(calc(1 - var(--a) * 0.28));
+    filter: brightness(calc(1 - var(--a) * 0.28 * var(--shade, 1)));
   }
 
   .projects__card :deep(.card__body) {

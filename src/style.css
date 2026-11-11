@@ -140,3 +140,8 @@ ul.tags {
     transform: none;
   }
 }
+
+/* Keep the page still behind an open modal */
+html:has(dialog[open]) {
+  overflow: hidden;
+}

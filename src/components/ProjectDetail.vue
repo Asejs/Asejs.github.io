@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import BackLink from './BackLink.vue'
 import type { Project } from '../data'
 import LogoEmblem from './LogoEmblem.vue'
 import ProjectCover from './ProjectCover.vue'
@@ -18,8 +17,6 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
       <video v-if="project.video" :src="project.video" :autoplay="!reduceMotion" muted loop playsinline />
       <img v-else :src="bannerImage" alt="" />
     </div>
-
-    <BackLink href="#prosjekter" />
 
     <header class="detail__head">
       <div class="detail__heading">
@@ -96,7 +93,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   z-index: 0;
   top: -6rem;
   left: 50%;
-  width: 100vw;
+  width: 100cqw;
   height: clamp(18rem, 42vw, 30rem);
   transform: translateX(-50%);
   overflow: hidden;

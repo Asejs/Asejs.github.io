@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BackLink from './BackLink.vue'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Interest } from '../data'
 
@@ -49,7 +48,10 @@ const columns = computed(() =>
 
 function onKeydown(event: KeyboardEvent) {
   if (openIndex.value === undefined) return
-  if (event.key === 'Escape') openIndex.value = undefined
+  if (event.key === 'Escape') {
+    event.preventDefault() // close only the lightbox, not the surrounding modal
+    openIndex.value = undefined
+  }
   else if (event.key === 'ArrowRight') step(1)
   else if (event.key === 'ArrowLeft') step(-1)
 }
@@ -66,8 +68,6 @@ onBeforeUnmount(() => {
 
 <template>
   <article>
-    <BackLink href="#interesser" />
-
     <h1 class="visually-hidden">{{ interest.galleryTitle ?? interest.title }}</h1>
     <p v-if="interest.galleryDescription" class="head__desc">{{ interest.galleryDescription }}</p>
 

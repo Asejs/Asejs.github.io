@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { nextTick, watch } from 'vue'
+import { computed, watch } from 'vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
 import InterestTile from './components/InterestTile.vue'
 import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
+import RouteModal from './components/RouteModal.vue'
 import { useHashRoute } from './composables/useHashRoute'
 import { useTheme } from './composables/useTheme'
 import { education, experience, interests, profile, projects, roles, skills } from './data'
@@ -14,31 +15,33 @@ import { vReveal } from './directives/reveal'
 const { theme, toggle } = useTheme()
 const { activeProject, activeInterest } = useHashRoute()
 
-watch([activeProject, activeInterest], async ([project, interest]) => {
-  await nextTick()
-  if (project || interest) {
-    window.scrollTo({ top: 0 })
-    return
-  }
-  const anchor = window.location.hash.slice(1)
-  const target = anchor ? document.getElementById(anchor) : null
-  if (target) target.scrollIntoView()
-  else window.scrollTo({ top: 0 })
+// Projects and galleries open as modals over the page. Closing goes back in history
+// when the modal was opened from the page, so the back button and scroll position stay intact.
+const modalOpen = computed(() => Boolean(activeProject.value || activeInterest.value))
+let openedFromPage = false
+watch(modalOpen, (open) => {
+  if (open) openedFromPage = true
 })
+
+function closeModal() {
+  if (openedFromPage) history.back()
+  else location.replace(activeProject.value ? '#prosjekter' : '#interesser')
+  openedFromPage = false
+}
 
 const year = new Date().getFullYear()
 </script>
 
 <template>
-  <main v-if="activeProject" class="page">
+  <RouteModal v-if="activeProject" :key="activeProject.slug" @close="closeModal">
     <ProjectDetail :project="activeProject" />
-  </main>
+  </RouteModal>
 
-  <main v-else-if="activeInterest" class="page page--wide">
+  <RouteModal v-else-if="activeInterest" :key="activeInterest.slug" wide @close="closeModal">
     <InterestGallery :interest="activeInterest" />
-  </main>
+  </RouteModal>
 
-  <main v-else class="page">
+  <main class="page">
     <div class="hero-shadow">
       <header class="hero">
         <div class="hero__text">
@@ -140,11 +143,6 @@ const year = new Date().getFullYear()
   max-width: 44rem;
   margin: 0 auto;
   padding: 6rem 1.25rem 3rem;
-}
-
-.page--wide {
-  max-width: none;
-  padding-inline: clamp(1rem, 3vw, 2.5rem);
 }
 
 .hero-shadow {
