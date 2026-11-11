@@ -19,6 +19,7 @@ defineProps<{ project: Project }>()
           <h3 class="card__title">{{ project.title }}</h3>
           <p class="card__subtitle">{{ project.subtitle }}</p>
         </div>
+        <span class="card__period">{{ project.period }}</span>
       </div>
       <p class="card__summary">{{ project.summary }}</p>
     </div>
@@ -67,6 +68,15 @@ defineProps<{ project: Project }>()
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.card__period {
+  align-self: flex-start;
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 .card__logos {

@@ -4,7 +4,7 @@ import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
 import InterestTile from './components/InterestTile.vue'
-import ProjectCard from './components/ProjectCard.vue'
+import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
 import { useHashRoute } from './composables/useHashRoute'
 import { useTheme } from './composables/useTheme'
@@ -59,15 +59,20 @@ const year = new Date().getFullYear()
 
     <section v-reveal class="section" aria-labelledby="prosjekter">
       <h2 id="prosjekter" class="section__label">Prosjekter</h2>
-      <div class="project-grid">
-        <ProjectCard v-for="project in projects" :key="project.slug" :project="project" />
-      </div>
+      <ProjectStage :projects="projects" />
     </section>
 
     <section v-reveal class="section" aria-labelledby="erfaring">
       <h2 id="erfaring" class="section__label">Erfaring</h2>
       <div class="stack">
         <EntryItem v-for="entry in experience" :key="entry.org" :entry="entry" />
+      </div>
+    </section>
+
+    <section v-reveal class="section" aria-labelledby="utdanning">
+      <h2 id="utdanning" class="section__label">Utdanning</h2>
+      <div class="stack">
+        <EntryItem v-for="entry in education" :key="entry.title" :entry="entry" />
       </div>
     </section>
 
@@ -86,13 +91,6 @@ const year = new Date().getFullYear()
             <li v-for="skill in skills.used" :key="skill" class="tag">{{ skill }}</li>
           </ul>
         </div>
-      </div>
-    </section>
-
-    <section v-reveal class="section" aria-labelledby="utdanning">
-      <h2 id="utdanning" class="section__label">Utdanning</h2>
-      <div class="stack">
-        <EntryItem v-for="entry in education" :key="entry.title" :entry="entry" />
       </div>
     </section>
 
@@ -330,11 +328,6 @@ const year = new Date().getFullYear()
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   gap: 1rem;
-}
-
-.project-grid {
-  display: grid;
-  gap: 3rem;
 }
 
 .section__label {
