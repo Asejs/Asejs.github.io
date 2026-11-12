@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
 import type { Project } from '../data'
 import ProjectCard from './ProjectCard.vue'
 import { setModalOrigin } from '../composables/modalOrigin'
+import { useLayoutGlide } from '../composables/useLayoutGlide'
 
 defineProps<{ projects: Project[] }>()
 const row = useTemplateRef<HTMLElement>('row')
@@ -78,41 +79,12 @@ function onScroll() {
 }
 
 function onResize() {
-  if (stacked.matches !== wasStacked) return onLayoutChange()
   if (stacked.matches) onScroll()
   else render()
-  rects = cards().map(pageRect)
 }
 
-// --- Switching layout: the cards glide from where they were to where they now belong ---
-let rects: DOMRect[] = []
-let wasStacked = stacked.matches
-const pageRect = (el: HTMLElement) => {
-  const r = el.getBoundingClientRect()
-  return new DOMRect(r.left + scrollX, r.top + scrollY, r.width, r.height)
-}
-
-function onLayoutChange() {
-  const before = rects.length ? rects : undefined
-  wasStacked = stacked.matches
-  onResize()
-  if (!before || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  cards().forEach((card, i) => {
-    const from = before[i]
-    const to = rects[i]
-    card.animate(
-      [
-        // Centre to centre, since cards scale around their middle
-        {
-          translate: `${from.left + from.width / 2 - to.left - to.width / 2}px ${from.top + from.height / 2 - to.top - to.height / 2}px`,
-          scale: `${from.width / to.width}`,
-        },
-        { translate: '0 0', scale: '1' },
-      ],
-      { duration: 500, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
-    )
-  })
-}
+// Switching layout: the cards glide from the row into the stack and back
+useLayoutGlide(stacked, cards)
 
 onMounted(() => {
   onResize()

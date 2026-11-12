@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
@@ -8,11 +8,17 @@ import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
 import RouteModal from './components/RouteModal.vue'
 import { useHashRoute } from './composables/useHashRoute'
+import { useLayoutGlide } from './composables/useLayoutGlide'
 import { useTheme } from './composables/useTheme'
 import { education, experience, interests, profile, projects, roles, skills } from './data'
 import { vReveal } from './directives/reveal'
 
 const { theme, toggle } = useTheme()
+
+// Crossing the phone breakpoint, the photo glides between the side and the top
+const heroText = useTemplateRef<HTMLElement>('heroText')
+const heroPhoto = useTemplateRef<HTMLElement>('heroPhoto')
+useLayoutGlide(matchMedia('(max-width: 39.99rem)'), () => [heroText.value, heroPhoto.value])
 const { activeProject, activeInterest } = useHashRoute()
 
 // Projects and galleries open as modals over the page. Closing goes back in history
@@ -44,7 +50,7 @@ const year = new Date().getFullYear()
   <main class="page">
     <div class="hero-shadow">
       <header class="hero">
-        <div class="hero__text">
+        <div ref="heroText" class="hero__text">
           <div class="hero__title">
             <h1 class="hero__name">{{ profile.name }}</h1>
             <p class="eyebrow">// {{ profile.role.toLowerCase() }}</p>
@@ -54,7 +60,7 @@ const year = new Date().getFullYear()
           <ContactLinks label="Kontakt" class="hero__links" />
         </div>
         <picture class="hero__picture">
-          <img class="hero__photo" src="/hero-portrait.webp" fetchpriority="high" :alt="profile.name" width="900" height="1698" />
+          <img ref="heroPhoto" class="hero__photo" src="/hero-portrait.webp" fetchpriority="high" :alt="profile.name" width="900" height="1698" />
         </picture>
       </header>
       <div class="hero__edge" aria-hidden="true" />
