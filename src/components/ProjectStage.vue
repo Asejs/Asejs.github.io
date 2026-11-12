@@ -7,8 +7,12 @@ import { setModalOrigin } from '../composables/modalOrigin'
 defineProps<{ projects: Project[] }>()
 const row = useTemplateRef<HTMLElement>('row')
 
-// Which card is in front (0 = first). It glides there smoothly.
+// Phones get a swipeable row; wider screens a fanned-out 3D stack
+const phone = matchMedia('(max-width: 39.99rem)')
 const active = ref(0)
+const cards = () => [...(row.value?.querySelectorAll<HTMLElement>('.projects__card') ?? [])]
+
+// --- Stack: the card in front (0 = first) glides there smoothly ---
 let target = 0
 let current = 0
 let frame = 0
@@ -17,7 +21,7 @@ function render() {
   current += (target - current) * 0.1
   if (Math.abs(target - current) < 0.002) current = target
   active.value = Math.round(current)
-  row.value?.querySelectorAll<HTMLElement>('.projects__card').forEach((card, i) => {
+  cards().forEach((card, i) => {
     card.style.setProperty('--d', String(i - current))
     card.style.zIndex = String(10 - Math.round(Math.abs(i - current) * 2))
   })
@@ -25,20 +29,26 @@ function render() {
 }
 
 function goTo(i: number) {
+  if (phone.matches) {
+    // Scroll only the row sideways (scrollIntoView would also move the page)
+    const card = cards()[i]
+    if (card && row.value) row.value.scrollTo({ left: card.offsetLeft - (row.value.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' })
+    return
+  }
   target = i
   frame ||= requestAnimationFrame(render)
 }
 
 // Mouse: the card under the pointer comes forward, and the first one when it leaves
 function onCardEnter(i: number, event: PointerEvent) {
-  if (event.pointerType === 'mouse') goTo(i)
+  if (event.pointerType === 'mouse' && !phone.matches) goTo(i)
 }
 
 function onPointerLeave(event: PointerEvent) {
-  if (event.pointerType === 'mouse') goTo(0)
+  if (event.pointerType === 'mouse' && !phone.matches) goTo(0)
 }
 
-// Tapping a card behind brings it forward instead of opening it (touch has no hover).
+// Tapping a card that isn't in front brings it forward instead of opening it.
 // Opening the front card remembers where it is, so the modal can be flung out of it.
 function onCardClick(i: number, event: MouseEvent) {
   const card = event.currentTarget as HTMLElement
@@ -47,27 +57,42 @@ function onCardClick(i: number, event: MouseEvent) {
   goTo(i)
 }
 
-// Shading fades in as the window narrows and the cards start to overlap (around 1340px),
-// reaching full strength 240px narrower
-function updateShade() {
+// --- Swipe row: each card's distance from the centre, in card widths ---
+function onScroll() {
+  if (!phone.matches || !row.value) return
+  const r = row.value.getBoundingClientRect()
+  const centre = r.left + r.width / 2
+  cards().forEach((card, i) => {
+    const c = card.getBoundingClientRect()
+    const d = (c.left + c.width / 2 - centre) / c.width
+    card.style.setProperty('--d', String(d))
+    if (Math.abs(d) < 0.5) active.value = i
+  })
+}
+
+// Shading fades in as the window narrows and the stacked cards start to overlap
+// (around 1340px), reaching full strength 240px narrower
+function onResize() {
   const shade = Math.min(Math.max((1344 - innerWidth) / 240, 0), 1)
   row.value?.style.setProperty('--shade', String(shade))
+  if (phone.matches) onScroll()
+  else render()
 }
 
 onMounted(() => {
-  updateShade()
-  addEventListener('resize', updateShade)
+  onResize()
+  addEventListener('resize', onResize)
 })
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(frame)
-  removeEventListener('resize', updateShade)
+  removeEventListener('resize', onResize)
 })
 </script>
 
 <template>
   <div>
-    <div ref="row" class="projects" @pointerleave="onPointerLeave">
+    <div ref="row" class="projects" @pointerleave="onPointerLeave" @scroll.passive="onScroll">
       <ProjectCard
         v-for="(project, i) in projects"
         :key="project.slug"
@@ -94,48 +119,82 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/*
- * All three cards side by side. The card in front is full size; the others sit
- * further back, turned toward it and in shadow. The narrower the screen, the more
- * they overlap, like a hand of cards.
- * --d is the card's distance from the front card (negative = to the left).
- */
-.projects {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.5rem, 2vw, 2rem);
-  width: calc(100vw - 3rem);
-  margin-left: 50%;
-  translate: -50% 0;
-  perspective: 1400px;
-}
-
 .projects__card {
   --a: max(var(--d), -1 * var(--d));
   position: relative;
-  /* Readable width: never narrower than 26rem, unless the screen itself is */
-  width: max(100%, min(26rem, 100vw - 8rem));
-  justify-self: center;
   background: color-mix(in srgb, var(--text) 4%, var(--bg));
   border-radius: 10px;
   overflow: hidden;
-  transform: translateZ(calc(var(--a) * -110px)) rotateY(calc(var(--d) * -9deg));
-  filter: brightness(calc(1 - var(--a) * 0.28 * var(--shade, 1)));
 }
 
 .projects__card :deep(.card__body) {
   padding: 0 1.25rem 1.25rem;
 }
 
-.projects__card:first-child {
-  justify-self: start;
+/*
+ * Phones: a swipeable row that snaps one card at a time, with the next card
+ * peeking in. Cards away from the centre shrink and darken as you swipe.
+ */
+@media (max-width: 39.99rem) {
+  .projects {
+    --w: 82vw;
+    display: flex;
+    gap: 0.75rem;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: 0.5rem calc((100vw - var(--w)) / 2) 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .projects::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projects__card {
+    flex: 0 0 var(--w);
+    scroll-snap-align: center;
+    transform: scale(calc(1 - min(var(--a), 1) * 0.06));
+    filter: brightness(calc(1 - min(var(--a), 1) * 0.35));
+  }
 }
 
-.projects__card:last-child {
-  justify-self: end;
+/*
+ * Wider screens: all three cards side by side. The card in front is full size; the
+ * others sit further back, turned toward it and in shadow. The narrower the screen,
+ * the more they overlap, like a hand of cards.
+ * --d is the card's distance from the front card (negative = to the left).
+ */
+@media (min-width: 40rem) {
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.5rem, 2vw, 2rem);
+    width: calc(100vw - 3rem);
+    margin-left: 50%;
+    translate: -50% 0;
+    perspective: 1400px;
+  }
+
+  .projects__card {
+    /* Readable width: never narrower than 26rem; the cards overlap instead */
+    width: max(100%, 26rem);
+    justify-self: center;
+    transform: translateZ(calc(var(--a) * -110px)) rotateY(calc(var(--d) * -9deg));
+    filter: brightness(calc(1 - var(--a) * 0.28 * var(--shade, 1)));
+  }
+
+  .projects__card:first-child {
+    justify-self: start;
+  }
+
+  .projects__card:last-child {
+    justify-self: end;
+  }
 }
 
-/* Dots to switch cards where the cards overlap most (and there is no hover on touch) */
+/* Dots to switch cards where there is no hover (and the cards overlap most) */
 .dots {
   display: flex;
   justify-content: center;
@@ -180,7 +239,7 @@ onBeforeUnmount(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .projects__card {
-    transform: none;
+    transform: none !important;
   }
 }
 </style>
