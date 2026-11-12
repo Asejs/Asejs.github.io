@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
@@ -36,6 +36,13 @@ function closeModal() {
 }
 
 const year = new Date().getFullYear()
+
+const copied = ref(false)
+async function copyEmail() {
+  await navigator.clipboard.writeText(profile.email)
+  copied.value = true
+  setTimeout(() => (copied.value = false), 2000)
+}
 </script>
 
 <template>
@@ -126,7 +133,15 @@ const year = new Date().getFullYear()
 
     <section v-reveal class="section" aria-labelledby="kontakt">
       <h2 id="kontakt" class="section__label">Kontakt</h2>
-      <ContactLinks label="Kontakt nederst" />
+      <p class="contact-cta__lead">Ta gjerne kontakt, enten det gjelder en stilling, et prosjekt eller bare en prat.</p>
+      <div class="contact-cta__mail">
+        <a :href="`mailto:${profile.email}`">{{ profile.email }}</a>
+        <button type="button" class="contact-cta__copy" @click="copyEmail">
+          {{ copied ? 'Kopiert' : 'Kopier' }}
+        </button>
+        <span class="visually-hidden" aria-live="polite">{{ copied ? 'E-postadressen er kopiert' : '' }}</span>
+      </div>
+      <ContactLinks label="Kontakt nederst" class="contact-cta__links" />
     </section>
 
     <footer class="footer">
@@ -284,10 +299,11 @@ const year = new Date().getFullYear()
 }
 
 .hero__summary {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   max-width: 34rem;
-  font-size: 1.15rem;
-  color: var(--muted);
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  line-height: 1.5;
+  color: var(--text);
 }
 
 .hero__motivation {
@@ -392,6 +408,60 @@ const year = new Date().getFullYear()
 
 .section__label {
   scroll-margin-top: 2rem;
+}
+
+.contact-cta__lead {
+  max-width: 34rem;
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.contact-cta__mail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-top: 1.5rem;
+}
+
+.contact-cta__mail a {
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 3.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.2s;
+}
+
+.contact-cta__mail a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.contact-cta__copy {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  font: 500 0.75rem var(--mono);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.contact-cta__copy:hover {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.contact-cta__links {
+  margin-top: 2rem;
 }
 
 .footer {
