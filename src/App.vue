@@ -337,7 +337,7 @@ const year = new Date().getFullYear()
   padding-left: 1.5rem;
 }
 
-/* Editorial section headings: a hairline, then a large title */
+/* Editorial section headings: large titles, set apart by space alone */
 .section__label {
   margin-bottom: 2.25rem;
   font-family: var(--display);
@@ -345,13 +345,6 @@ const year = new Date().getFullYear()
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
-}
-
-.section__label::before {
-  content: '';
-  display: block;
-  margin-bottom: 1.25rem;
-  border-top: 1px solid var(--line);
 }
 
 .stack {
