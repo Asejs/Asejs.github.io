@@ -130,6 +130,7 @@ const year = new Date().getFullYear()
     </section>
 
     <footer class="footer">
+      <div class="footer__band" aria-hidden="true" />
       <span>© {{ year }} {{ profile.name }}</span>
       <button
         class="theme-toggle"
@@ -362,21 +363,29 @@ const year = new Date().getFullYear()
   gap: 0.5rem;
   position: relative;
   isolation: isolate;
-  margin: 6rem 0 -3rem;
+  margin: calc(6rem + min(6vw, 5rem)) 0 -3rem;
   padding: 1.75rem 0 2.25rem;
   font-size: 0.85rem;
   color: var(--muted);
 }
 
-/* A full-width band across the bottom of the page, raised like the hero's edge;
-   the content stays in the column */
-.footer::before {
-  content: '';
+/* A full-width band across the bottom of the page, with a slanted, shadowed top edge
+   parallel to the hero's; the content stays in the column. The shadow sits on the
+   wrapper because clip-path would cut off a shadow on the shape itself. */
+.footer__band {
   position: absolute;
   z-index: -1;
-  inset: 0 calc(50% - 50vw);
+  inset: calc(-1 * min(6vw, 5rem)) calc(50% - 50vw) 0;
+  filter: drop-shadow(var(--hero-shadow));
+  pointer-events: none;
+}
+
+.footer__band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: var(--hero-bg);
-  box-shadow: var(--hero-shadow);
+  clip-path: polygon(0 min(6vw, 5rem), 100% 0, 100% 100%, 0 100%);
 }
 
 .theme-toggle {
