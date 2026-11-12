@@ -83,13 +83,13 @@ const year = new Date().getFullYear()
       <h2 id="teknologier" class="section__label">Teknologier</h2>
       <div class="skill-groups">
         <div>
-          <h3 class="skill-groups__label">Jobber med daglig</h3>
+          <h3 class="skill-groups__label">Bruker daglig</h3>
           <ul class="tags">
             <li v-for="skill in skills.daily" :key="skill" class="tag">{{ skill }}</li>
           </ul>
         </div>
         <div>
-          <h3 class="skill-groups__label">Erfaring fra tidligere prosjekter</h3>
+          <h3 class="skill-groups__label">Tidligere erfaring</h3>
           <ul class="tags">
             <li v-for="skill in skills.used" :key="skill" class="tag">{{ skill }}</li>
           </ul>
@@ -290,10 +290,15 @@ const year = new Date().getFullYear()
 
 .skill-groups__label {
   margin-bottom: 0.75rem;
-  font-size: 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
   font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--muted);
+  opacity: 0.7;
 }
+
 .section {
   margin-top: 5rem;
 }
