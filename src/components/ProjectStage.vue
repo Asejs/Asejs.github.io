@@ -23,7 +23,8 @@ function render() {
   active.value = Math.round(current)
   cards().forEach((card, i) => {
     card.style.setProperty('--d', String(i - current))
-    card.style.zIndex = String(10 - Math.round(Math.abs(i - current) * 2))
+    // Fine-grained so two cards never share a level mid-glide and swap back and forth
+    card.style.zIndex = String(1000 - Math.round(Math.abs(i - current) * 100))
   })
   frame = current === target ? 0 : requestAnimationFrame(render)
 }
@@ -39,9 +40,18 @@ function goTo(i: number) {
   frame ||= requestAnimationFrame(render)
 }
 
-// Mouse: the card under the pointer comes forward, and the first one when it leaves
-function onCardEnter(i: number, event: PointerEvent) {
-  if (event.pointerType === 'mouse' && !phone.matches) goTo(i)
+// Mouse: the card under the pointer comes forward, and the first one when it leaves.
+// Which card that is comes from the cards' layout boxes (offsetLeft ignores transforms),
+// so a card moving or turning under a still pointer can't flip the choice back and forth.
+function onPointerMove(event: PointerEvent) {
+  if (event.pointerType !== 'mouse' || phone.matches || !row.value) return
+  const x = event.clientX - row.value.getBoundingClientRect().left
+  let nearest = 0
+  cards().forEach((card, i) => {
+    const centre = (c: HTMLElement) => Math.abs(c.offsetLeft + c.offsetWidth / 2 - x)
+    if (centre(card) < centre(cards()[nearest])) nearest = i
+  })
+  if (nearest !== target) goTo(nearest)
 }
 
 function onPointerLeave(event: PointerEvent) {
@@ -70,6 +80,9 @@ function onScroll() {
   })
 }
 
+// --d and z-index are set here only, never in the template: Vue re-applies bound styles on
+// every re-render (e.g. when `active` changes), which would snap the cards back for a frame.
+
 // Shading fades in as the window narrows and the stacked cards start to overlap
 // (around 1340px), reaching full strength 240px narrower
 function onResize() {
@@ -92,14 +105,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <div ref="row" class="projects" @pointerleave="onPointerLeave" @scroll.passive="onScroll">
+    <div ref="row" class="projects" @pointermove="onPointerMove" @pointerleave="onPointerLeave" @scroll.passive="onScroll">
       <ProjectCard
         v-for="(project, i) in projects"
         :key="project.slug"
         :project="project"
         class="projects__card"
-        :style="{ '--d': i, zIndex: 10 - i * 2 }"
-        @pointerenter="onCardEnter(i, $event)"
         @click="onCardClick(i, $event)"
       />
     </div>
