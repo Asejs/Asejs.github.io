@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import BackLink from './BackLink.vue'
 import type { Project } from '../data'
 import LogoEmblem from './LogoEmblem.vue'
 import ProjectCover from './ProjectCover.vue'
@@ -18,8 +17,6 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
       <video v-if="project.video" :src="project.video" :autoplay="!reduceMotion" muted loop playsinline />
       <img v-else :src="bannerImage" alt="" />
     </div>
-
-    <BackLink href="#prosjekter" />
 
     <header class="detail__head">
       <div class="detail__heading">
@@ -87,6 +84,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
 <style scoped>
 .detail {
+  /* Banner height follows the modal's width (cqw), not the window's */
+  --banner-height: clamp(12rem, 34cqw, 20rem);
   position: relative;
   display: flow-root;
 }
@@ -96,8 +95,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   z-index: 0;
   top: -6rem;
   left: 50%;
-  width: 100vw;
-  height: clamp(18rem, 42vw, 30rem);
+  width: 100cqw;
+  height: var(--banner-height);
   transform: translateX(-50%);
   overflow: hidden;
   pointer-events: none;
@@ -135,7 +134,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 }
 
 .detail__head {
-  margin-top: calc(clamp(6rem, 22vw, 14rem) + 3rem);
+  /* The title overlaps the faded bottom of the banner */
+  margin-top: max(4rem, var(--banner-height) - 12rem);
 }
 
 @media (max-width: 480px) {
@@ -241,7 +241,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 .gallery video {
   display: block;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 3px;
   border: 1px solid var(--line);
 }
 

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BackLink from './BackLink.vue'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Interest } from '../data'
 
@@ -39,17 +38,24 @@ const SIZES = [
 const srcset = (image: { src: string; thumb?: string }) =>
   image.thumb ? `${image.thumb} 460w, ${image.src} 1200w` : undefined
 
-const columns = computed(() =>
-  Array.from({ length: columnCount.value }, (_, column) =>
-    images.value
-      .map((image, index) => ({ image, index }))
-      .filter(({ index }) => index % columnCount.value === column),
-  ),
-)
+// Each image goes into whichever column is shortest so far (heights from the images'
+// own proportions), so the columns end roughly level instead of one running long.
+const columns = computed(() => {
+  const cols = Array.from({ length: columnCount.value }, () => ({ height: 0, items: [] as { image: (typeof images.value)[number]; index: number }[] }))
+  images.value.forEach((image, index) => {
+    const shortest = cols.reduce((a, b) => (b.height < a.height ? b : a))
+    shortest.items.push({ image, index })
+    shortest.height += image.width && image.height ? image.height / image.width : 1
+  })
+  return cols.map((c) => c.items)
+})
 
 function onKeydown(event: KeyboardEvent) {
   if (openIndex.value === undefined) return
-  if (event.key === 'Escape') openIndex.value = undefined
+  if (event.key === 'Escape') {
+    event.preventDefault() // close only the lightbox, not the surrounding modal
+    openIndex.value = undefined
+  }
   else if (event.key === 'ArrowRight') step(1)
   else if (event.key === 'ArrowLeft') step(-1)
 }
@@ -66,8 +72,6 @@ onBeforeUnmount(() => {
 
 <template>
   <article>
-    <BackLink href="#interesser" />
-
     <h1 class="visually-hidden">{{ interest.galleryTitle ?? interest.title }}</h1>
     <p v-if="interest.galleryDescription" class="head__desc">{{ interest.galleryDescription }}</p>
 
@@ -86,6 +90,8 @@ onBeforeUnmount(() => {
             :srcset="srcset(image)"
             :sizes="SIZES"
             :alt="image.alt"
+            :width="image.width"
+            :height="image.height"
             loading="lazy"
             decoding="async"
           />
@@ -121,15 +127,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .head__desc {
   margin-top: 2rem;
   color: var(--muted);
@@ -162,6 +159,7 @@ onBeforeUnmount(() => {
 .grid__item img {
   display: block;
   width: 100%;
+  height: auto;
   transition: transform 0.4s ease;
 }
 

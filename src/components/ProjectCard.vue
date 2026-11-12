@@ -15,8 +15,11 @@ defineProps<{ project: Project }>()
         <span v-if="project.logos?.length" class="card__logos">
           <LogoEmblem v-for="(logo, index) in project.logos" :key="index" :logo="logo" size="2.75rem" />
         </span>
-        <div>
-          <h3 class="card__title">{{ project.title }}</h3>
+        <div class="card__heading">
+          <div class="card__title-row">
+            <h3 class="card__title">{{ project.title }}</h3>
+            <span class="card__period">{{ project.period }}</span>
+          </div>
           <p class="card__subtitle">{{ project.subtitle }}</p>
         </div>
       </div>
@@ -67,6 +70,26 @@ defineProps<{ project: Project }>()
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.card__heading {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The period shares the title's line, so the subtitle below gets the full width */
+.card__title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.card__period {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text);
+  white-space: nowrap;
 }
 
 .card__logos {

@@ -6,7 +6,11 @@ defineProps<{ entry: Entry }>()
 </script>
 
 <template>
-  <article class="entry">
+  <article
+    class="entry"
+    :class="{ 'entry--emblem': entry.logo?.emblem, 'entry--minor': entry.minor }"
+    :style="entry.logo?.emblem ? { '--emblem-height': entry.logo.height } : undefined"
+  >
     <header class="entry__head">
       <div class="entry__main">
         <LogoEmblem v-if="entry.logo?.emblem" :logo="entry.logo" />
@@ -33,23 +37,80 @@ defineProps<{ entry: Entry }>()
 .entry {
   position: relative;
   padding-left: 1.5rem;
-  border-left: 1px solid var(--line);
 }
 
 .entry:not(:last-child) {
-  padding-bottom: 2.25rem;
+  padding-bottom: 3.5rem;
 }
 
 .entry::before {
   content: '';
   position: absolute;
-  left: -5px;
-  top: 0.45rem;
-  width: 9px;
-  height: 9px;
+  z-index: 1;
+  left: -6px;
+  top: var(--dot-top);
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   background: var(--bg);
+  border: 2px solid var(--line);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+}
+
+.entry.is-lit::before {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 45%, transparent);
+  animation: dot-pop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.entry::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: var(--dot-top);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
   border: 2px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.entry.is-lit::after {
+  animation: dot-ripple 0.9s ease-out;
+}
+
+@keyframes dot-pop {
+  0% {
+    scale: 1;
+  }
+  40% {
+    scale: 1.6;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes dot-ripple {
+  from {
+    opacity: 0.8;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 3.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry.is-lit::before,
+  .entry.is-lit::after {
+    animation: none;
+  }
 }
 
 .entry__head {
@@ -69,6 +130,14 @@ defineProps<{ entry: Entry }>()
   color: var(--muted);
 }
 
+.entry--minor .entry__title {
+  font-size: 0.95rem;
+}
+
+.entry--minor .entry__org {
+  font-size: 0.88rem;
+}
+
 .entry__logo {
   display: block;
   margin-top: 0.35rem;
@@ -86,19 +155,10 @@ defineProps<{ entry: Entry }>()
   gap: 0.85rem;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .entry__period {
   font-family: var(--mono);
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--text);
   white-space: nowrap;
 }
 
@@ -112,9 +172,6 @@ defineProps<{ entry: Entry }>()
     width: 100%;
   }
 
-  .entry::before {
-    top: 0.3rem;
-  }
 }
 
 @media (min-width: 60rem) {
@@ -123,6 +180,15 @@ defineProps<{ entry: Entry }>()
     right: calc(100% + 1.25rem);
     top: 0.2rem;
     text-align: right;
+  }
+
+  .entry--emblem {
+    --dot-top: calc(var(--emblem-height) / 2 - 6.5px);
+  }
+
+  .entry--emblem .entry__period {
+    top: calc(var(--emblem-height) / 2);
+    translate: 0 -50%;
   }
 }
 

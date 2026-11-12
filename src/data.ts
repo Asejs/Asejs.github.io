@@ -1,10 +1,12 @@
 import bouvetLogo from './assets/logos/bouvet.svg?raw'
 import equinorMark from './assets/logos/equinor-mark.svg?raw'
 import horizon56Mark from './assets/logos/horizon56-mark.svg?raw'
+import nordhordlandFhsLogo from './assets/logos/nordhordland-fhs.svg?raw'
+import ntnuLogo from './assets/logos/ntnu.svg?raw'
 import uisLogo from './assets/logos/uis.svg?raw'
 import uisSubseaLogo from './assets/logos/uis-subsea.svg?raw'
 
-export type LinkIcon = 'linkedin' | 'github' | 'mail' | 'phone' | 'cv' | 'location'
+export type LinkIcon = 'linkedin' | 'github' | 'mail' | 'phone' | 'cv' | 'location' | 'instagram'
 
 export interface LinkVariant {
   label: string
@@ -26,6 +28,7 @@ export interface Entry {
   period: string
   points?: string[]
   logo?: Logo
+  minor?: boolean
 }
 
 export interface Logo {
@@ -87,8 +90,20 @@ const equinorBrand: Logo = {
 }
 const uisSubseaBrand: Logo = { svg: uisSubseaLogo, height: '3.5rem', emblem: true }
 
+export const aboutGreeting = 'Hei, jeg er Åse!'
+
+export const about = [
+  'Jeg har alltid vært nysgjerrig på hvordan ting er bygget opp. Som liten utforsket jeg kildekoden til nettsider, lagde egne design og brukte resten av tiden med et kamera og Photoshop. Jeg startet på energi og miljø, men byttet til **dataingeniørstudiet** for å jobbe med programmering.',
+  'Siden da har jeg jobbet **over fire år** med produktutvikling i **energisektoren**. Det som driver meg, er å lage noe som **skaper verdi** for brukerne – gjerne med det lille ekstra på toppen.',
+]
+
+export type FavoriteModel = 'laptop' | 'coffee' | 'camera' | 'palette' | 'polaroid'
+
+export const favorites: FavoriteModel[] = ['laptop', 'coffee', 'camera', 'palette', 'polaroid']
+
 export const profile = {
   name: 'Åse Sagebakken',
+  instagram: { handle: 'aaase.js', href: 'https://www.instagram.com/aaase.js' },
   role: 'Frontend-utvikler',
   location: 'Stavanger',
   email: 'aase.sagebakken@hotmail.com',
@@ -143,14 +158,14 @@ export const projects: Project[] = [
   {
     slug: 'echo',
     title: 'Equinor Echo',
-    subtitle: 'Konsulent, systemutvikler · Bouvet Stavanger',
+    subtitle: 'Konsulent · Bouvet · Stavanger',
     period: '2022 – 2025',
     summary: 'Visuell digital tvilling for drift av Equinors plattformer.',
     description: [
       'Visuell digital tvilling av Equinors plattformer for søk og navigering i drifts- og prosjektdata. Brukt på over 50 anlegg onshore og offshore, på desktop, nettbrett og mobil.',
     ],
     role: [
-      'Konsulent i Equinors Echo-team, i React og TypeScript. Jobbet tett med UX og backend.',
+      'Konsulent i Bouvet, utleid til Equinors Echo-team. Utviklet i React og TypeScript, i tett samarbeid med UX og backend.',
     ],
     highlights: [
       'Utviklet MVP-en av Global Selection, der brukeren samler tags og arbeidsordrer i én liste, integrert med plattformens 3D-modell',
@@ -261,9 +276,30 @@ export const experience: Entry[] = [
   },
 ]
 
-export const skills = {
-  daily: ['Vue.js', 'TypeScript', 'JavaScript', 'GraphQL', 'HTML / CSS / SCSS', 'Vite', 'Vitest', 'Storybook', 'Git', 'Azure DevOps', 'CI/CD', 'Claude Code'],
-  used: ['React', 'Zustand', 'TanStack Query', 'Jest', 'C# / .NET'],
+export const skills: Record<'daily' | 'used', { name: string; href?: string }[]> = {
+  daily: [
+    { name: 'Vue.js', href: 'https://vuejs.org/' },
+    { name: 'TypeScript', href: 'https://www.typescriptlang.org/' },
+    { name: 'JavaScript', href: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript' },
+    { name: 'GraphQL', href: 'https://graphql.org/' },
+    { name: 'HTML / CSS / SCSS', href: 'https://developer.mozilla.org/en-US/docs/Web' },
+    { name: 'Vite', href: 'https://vite.dev/' },
+    { name: 'Vitest', href: 'https://vitest.dev/' },
+    { name: 'Storybook', href: 'https://storybook.js.org/' },
+    { name: 'Git', href: 'https://git-scm.com/' },
+    { name: 'Azure DevOps', href: 'https://azure.microsoft.com/products/devops' },
+    { name: 'CI/CD' },
+    { name: 'Claude Code', href: 'https://www.claude.com/product/claude-code' },
+  ],
+  used: [
+    { name: 'React', href: 'https://react.dev/' },
+    { name: 'Zustand', href: 'https://github.com/pmndrs/zustand' },
+    { name: 'TanStack Query', href: 'https://tanstack.com/query' },
+    { name: 'Jest', href: 'https://jestjs.io/' },
+    { name: 'C# / .NET', href: 'https://dotnet.microsoft.com/' },
+    { name: 'Python', href: 'https://www.python.org/' },
+    { name: 'PyQt', href: 'https://www.riverbankcomputing.com/software/pyqt/' },
+  ],
 }
 
 export const education: Entry[] = [
@@ -276,6 +312,30 @@ export const education: Entry[] = [
       height: '3.5rem',
       emblem: true,
       badge: { background: '#083ba0', color: '#ffffff' },
+    },
+  },
+  {
+    title: 'Sivilingeniør, energi og miljø (påbegynt)',
+    minor: true,
+    org: 'NTNU',
+    period: '2017 – 2019',
+    logo: {
+      svg: ntnuLogo,
+      height: '2.5rem',
+      emblem: true,
+      badge: { background: '#0c0087', color: '#ffffff' },
+    },
+  },
+  {
+    title: 'FotoGlobal – foto & reise',
+    minor: true,
+    org: 'Nordhordland folkehøyskole',
+    period: '2016 – 2017',
+    logo: {
+      svg: nordhordlandFhsLogo,
+      height: '2.5rem',
+      emblem: true,
+      badge: { background: '#ffffff', color: '#111111' },
     },
   },
 ]
