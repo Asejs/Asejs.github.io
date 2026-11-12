@@ -316,24 +316,33 @@ const year = new Date().getFullYear()
   margin-top: clamp(5rem, 10vw, 7.5rem);
 }
 
-.section__label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  font-family: var(--mono);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+.page {
+  counter-reset: section;
 }
 
-.section__label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--line);
+.section {
+  counter-increment: section;
+}
+
+/* Editorial section headings: a small number over a hairline, then a large title */
+.section__label {
+  margin-bottom: 2.25rem;
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.section__label::before {
+  content: counter(section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+  font: 500 0.75rem var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--accent-text);
 }
 
 .stack {
