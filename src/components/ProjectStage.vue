@@ -9,7 +9,8 @@ const row = useTemplateRef<HTMLElement>('row')
 
 // Wide screens lay the cards out side by side, narrower ones stacked under each other.
 // Either way, --d is each card's distance from the one in front (in cards).
-const stacked = matchMedia('(max-width: 59.99rem)')
+// The switch happens where three cards side by side would get too narrow to read.
+const stacked = matchMedia('(max-width: 74.99rem)')
 const cards = () => [...(row.value?.querySelectorAll<HTMLElement>('.projects__card') ?? [])]
 
 // Set here only, never in the template: Vue re-applies bound styles on every re-render,
@@ -76,13 +77,41 @@ function onScroll() {
   })
 }
 
-// Shading fades in as the window narrows and side-by-side cards start to overlap
-// (around 1340px), reaching full strength 240px narrower
 function onResize() {
-  const shade = Math.min(Math.max((1344 - innerWidth) / 240, 0), 1)
-  row.value?.style.setProperty('--shade', String(stacked.matches ? 1 : shade))
+  if (stacked.matches !== wasStacked) return onLayoutChange()
   if (stacked.matches) onScroll()
   else render()
+  rects = cards().map(pageRect)
+}
+
+// --- Switching layout: the cards glide from where they were to where they now belong ---
+let rects: DOMRect[] = []
+let wasStacked = stacked.matches
+const pageRect = (el: HTMLElement) => {
+  const r = el.getBoundingClientRect()
+  return new DOMRect(r.left + scrollX, r.top + scrollY, r.width, r.height)
+}
+
+function onLayoutChange() {
+  const before = rects.length ? rects : undefined
+  wasStacked = stacked.matches
+  onResize()
+  if (!before || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  cards().forEach((card, i) => {
+    const from = before[i]
+    const to = rects[i]
+    card.animate(
+      [
+        // Centre to centre, since cards scale around their middle
+        {
+          translate: `${from.left + from.width / 2 - to.left - to.width / 2}px ${from.top + from.height / 2 - to.top - to.height / 2}px`,
+          scale: `${from.width / to.width}`,
+        },
+        { translate: '0 0', scale: '1' },
+      ],
+      { duration: 500, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+    )
+  })
 }
 
 onMounted(() => {
@@ -122,7 +151,6 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--text) 4%, var(--bg));
   border-radius: 10px;
   overflow: hidden;
-  filter: brightness(calc(1 - min(var(--a), 1) * 0.28 * var(--shade, 1)));
 }
 
 .projects__card :deep(.card__body) {
@@ -134,7 +162,7 @@ onBeforeUnmount(() => {
  * screen is in front; the ones above and below tip back and darken, and the next
  * one comes forward as you scroll.
  */
-@media (max-width: 59.99rem) {
+@media (max-width: 74.99rem) {
   .projects {
     display: grid;
     gap: 2rem;
@@ -142,15 +170,15 @@ onBeforeUnmount(() => {
 
   .projects__card {
     transform: translateZ(calc(min(var(--a), 1.5) * -60px)) rotateX(calc(clamp(-1.5, var(--d, 0), 1.5) * 8deg));
+    filter: brightness(calc(1 - min(var(--a), 1) * 0.28));
   }
 }
 
 /*
  * Wide screens: all three cards side by side. The card in front is full size; the
- * others sit further back, turned toward it and in shadow. The narrower the screen,
- * the more they overlap, like a hand of cards.
+ * others sit further back, turned toward it.
  */
-@media (min-width: 60rem) {
+@media (min-width: 75rem) {
   .projects {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -162,19 +190,7 @@ onBeforeUnmount(() => {
   }
 
   .projects__card {
-    /* Readable width: never narrower than 26rem; the cards overlap instead */
-    width: max(100%, 26rem);
-    justify-self: center;
     transform: translateZ(calc(var(--a) * -110px)) rotateY(calc(var(--d, 0) * -9deg));
-    filter: brightness(calc(1 - var(--a) * 0.28 * var(--shade, 1)));
-  }
-
-  .projects__card:first-child {
-    justify-self: start;
-  }
-
-  .projects__card:last-child {
-    justify-self: end;
   }
 }
 
