@@ -66,7 +66,7 @@ const year = new Date().getFullYear()
       <div class="hero__edge" aria-hidden="true" />
     </div>
 
-    <section v-reveal class="section" aria-labelledby="prosjekter">
+    <section v-reveal class="section section--band" aria-labelledby="prosjekter">
       <h2 id="prosjekter" class="section__label">Prosjekter</h2>
       <ProjectStage :projects="projects" />
     </section>
@@ -225,10 +225,11 @@ const year = new Date().getFullYear()
 
     display: grid;
     grid-template-columns: auto var(--photo-width);
-    justify-content: center;
+    justify-content: start;
     column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
     min-height: 0;
-    padding: 0 min((100vw - 40rem) * 0.15, max(3.5rem, 5vw - 1.5rem)) 0 max(2rem, 4vw);
+    /* The text starts on the same left edge as the sections below (the page column) */
+    padding: 0 max(2rem, 4vw) 0 max(1.25rem, 50vw - 20.75rem);
   }
 
   .hero__text {
@@ -320,6 +321,22 @@ const year = new Date().getFullYear()
 
 /* Carries the timeline of the section above on through this one; the heading
    steps in so the line runs beside it rather than through it */
+/* A full-width band of its own, with slanted edges like the hero's and the footer's */
+.section--band {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(4rem, 8vw, 6rem);
+}
+
+.section--band::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 calc(50% - 50vw);
+  background: color-mix(in srgb, var(--text) 3%, var(--bg));
+  clip-path: polygon(0 min(6vw, 5rem), 100% 0, 100% calc(100% - min(6vw, 5rem)), 0 100%);
+}
+
 .section--continued {
   position: relative;
 }

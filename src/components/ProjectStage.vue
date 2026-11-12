@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
 .projects__card {
   --a: max(var(--d, 0), -1 * var(--d, 0));
   position: relative;
-  background: color-mix(in srgb, var(--text) 4%, var(--bg));
+  background: var(--bg);
   border-radius: 10px;
   overflow: hidden;
 }
