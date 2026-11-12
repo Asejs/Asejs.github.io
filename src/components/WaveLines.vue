@@ -2,7 +2,7 @@
 import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
 
 // Slow, thin wave lines drawn behind the hero. They bend toward the mouse as it moves
-// over the hero. Only animates while on screen and the tab is visible; with reduced
+// over the hero, and a click sends a ripple out through them. Only animates while on screen and the tab is visible; with reduced
 // motion it draws one still frame.
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -28,6 +28,30 @@ function onPointerMove(event: PointerEvent) {
 
 function onPointerLeave() {
   target.pull = 0
+}
+
+// Clicks on the background (not on links or buttons) start a ripple
+const ripples: { x: number; y: number; start: number }[] = []
+function onPointerDown(event: PointerEvent) {
+  if ((event.target as HTMLElement).closest('a, button')) return
+  const r = canvas.value!.getBoundingClientRect()
+  ripples.push({ x: event.clientX - r.left, y: event.clientY - r.top, start: performance.now() })
+  if (ripples.length > 4) ripples.shift()
+  resume()
+}
+
+// How far a point is lifted by the ripples passing through it right now
+function rippleAt(x: number, y: number, time: number) {
+  let offset = 0
+  for (const ripple of ripples) {
+    const age = (time - ripple.start) / 1000
+    if (age < 0 || age > 2.2) continue
+    const front = age * 320 // px from the click
+    const distance = Math.hypot(x - ripple.x, y - ripple.y) - front
+    const fade = (1 - age / 2.2) ** 2
+    offset += Math.sin(distance * 0.06) * Math.exp(-(distance ** 2) / 1800) * 14 * fade
+  }
+  return offset
 }
 
 function resize() {
@@ -64,7 +88,7 @@ function draw(time: number) {
         l * height * 0.012
       // Near the mouse, each line is drawn part of the way toward it
       const bend = mouse.pull * Math.exp(-((x - mouse.x) ** 2) / (2 * reach ** 2)) * 0.35
-      const yy = y + (mouse.y - y) * bend
+      const yy = y + (mouse.y - y) * bend + rippleAt(x, y, time)
       if (x === 0) ctx.moveTo(x, yy)
       else ctx.lineTo(x, yy)
     }
@@ -91,6 +115,7 @@ onMounted(() => {
   // The canvas ignores the pointer (so the hero stays clickable); listen on the hero
   canvas.value!.parentElement!.addEventListener('pointermove', onPointerMove, { passive: true })
   canvas.value!.parentElement!.addEventListener('pointerleave', onPointerLeave)
+  canvas.value!.parentElement!.addEventListener('pointerdown', onPointerDown)
 })
 
 onBeforeUnmount(() => {
@@ -98,6 +123,7 @@ onBeforeUnmount(() => {
   observer?.disconnect()
   canvas.value?.parentElement?.removeEventListener('pointermove', onPointerMove)
   canvas.value?.parentElement?.removeEventListener('pointerleave', onPointerLeave)
+  canvas.value?.parentElement?.removeEventListener('pointerdown', onPointerDown)
   removeEventListener('resize', resize)
   document.removeEventListener('visibilitychange', resume)
 })
