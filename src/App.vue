@@ -365,7 +365,7 @@ const year = new Date().getFullYear()
   isolation: isolate;
   margin: calc(6rem + min(6vw, 5rem)) 0 -3rem;
   /* As wide as the project row, so the footer spans the page on big screens too */
-  margin-inline: calc((100% - min(100vw - 2.5rem, 88rem)) / 2);
+  margin-inline: calc((100% - min(100vw - 2 * max(1.25rem, 4vw), 88rem)) / 2);
   padding: 1.75rem 0 2.25rem;
   font-size: 0.85rem;
   color: var(--muted);
