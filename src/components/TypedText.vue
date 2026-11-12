@@ -48,7 +48,7 @@ onBeforeUnmount(() => clearTimeout(timer))
   height: 0.9em;
   margin: 0 -0.04em;
   vertical-align: -0.05em;
-  background: var(--accent);
+  background: var(--text);
 }
 
 /* Solid while typing, blinking once it stops, like a real text cursor */

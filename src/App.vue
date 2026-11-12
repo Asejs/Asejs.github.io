@@ -216,7 +216,7 @@ const year = new Date().getFullYear()
   display: contents;
 }
 
-/* A faint light that follows the mouse over the hero (position set by usePointerGlow) */
+/* A faint, warm light that follows the mouse over the hero (position set by usePointerGlow) */
 .hero::before {
   content: '';
   position: absolute;
@@ -225,7 +225,7 @@ const year = new Date().getFullYear()
   pointer-events: none;
   background: radial-gradient(
     900px circle at var(--glow-x, 50%) var(--glow-y, 50%),
-    color-mix(in srgb, var(--accent) 4%, transparent),
+    rgb(255 214 150 / 0.05),
     transparent 70%
   );
   opacity: 0;

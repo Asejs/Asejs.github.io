@@ -11,6 +11,7 @@ const LINES = 22
 let frame = 0
 let visible = true
 let observer: IntersectionObserver | undefined
+let sizes: ResizeObserver | undefined
 let width = 0
 let height = 0
 
@@ -57,6 +58,19 @@ function rippleAt(x: number, y: number, time: number) {
 function resize() {
   const el = canvas.value
   if (!el) return
+  // Keep the lines out from behind the text and photo: the mask (in CSS) clears the
+  // span they cover and lets the lines show at the sides and along the bottom edge
+  const box = el.getBoundingClientRect()
+  const covered = [...el.parentElement!.children]
+    .filter((child) => child !== el)
+    // A wrapper with display: contents has no box of its own; use what's inside it
+    .flatMap((child) => (getComputedStyle(child).display === 'contents' ? [...child.children] : [child]))
+    .map((child) => child.getBoundingClientRect())
+    .filter((r) => r.width && r.height)
+  if (covered.length) {
+    el.style.setProperty('--clear-left', `${Math.min(...covered.map((r) => r.left)) - box.left}px`)
+    el.style.setProperty('--clear-right', `${Math.max(...covered.map((r) => r.right)) - box.left}px`)
+  }
   const dpr = Math.min(devicePixelRatio || 1, 2)
   width = el.clientWidth
   height = el.clientHeight
@@ -105,7 +119,9 @@ function resume() {
 onMounted(() => {
   resize()
   draw(0)
-  addEventListener('resize', resize)
+  // Re-measure when the hero or what's in it changes size (the photo loading, say)
+  sizes = new ResizeObserver(resize)
+  canvas.value!.parentElement!.querySelectorAll(':scope > *, :scope > * > img').forEach((child) => sizes!.observe(child))
   document.addEventListener('visibilitychange', resume)
   observer = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting
@@ -124,7 +140,7 @@ onBeforeUnmount(() => {
   canvas.value?.parentElement?.removeEventListener('pointermove', onPointerMove)
   canvas.value?.parentElement?.removeEventListener('pointerleave', onPointerLeave)
   canvas.value?.parentElement?.removeEventListener('pointerdown', onPointerDown)
-  removeEventListener('resize', resize)
+  sizes?.disconnect()
   document.removeEventListener('visibilitychange', resume)
 })
 </script>
@@ -142,5 +158,18 @@ onBeforeUnmount(() => {
   height: 100%;
   color: var(--text);
   pointer-events: none;
+  /* Visible at the sides (outside --clear-left/--clear-right, set in resize) and in a strip
+     along the bottom; faded out behind the text and photo */
+  --fade: 6rem;
+  mask-image:
+    linear-gradient(
+      to right,
+      #000 calc(var(--clear-left, 0px) - var(--fade)),
+      transparent var(--clear-left, 0px),
+      transparent var(--clear-right, 100%),
+      #000 calc(var(--clear-right, 100%) + var(--fade))
+    ),
+    linear-gradient(to bottom, transparent 80%, #000 95%);
+  mask-composite: add;
 }
 </style>
