@@ -38,13 +38,17 @@ const SIZES = [
 const srcset = (image: { src: string; thumb?: string }) =>
   image.thumb ? `${image.thumb} 460w, ${image.src} 1200w` : undefined
 
-const columns = computed(() =>
-  Array.from({ length: columnCount.value }, (_, column) =>
-    images.value
-      .map((image, index) => ({ image, index }))
-      .filter(({ index }) => index % columnCount.value === column),
-  ),
-)
+// Each image goes into whichever column is shortest so far (heights from the images'
+// own proportions), so the columns end roughly level instead of one running long.
+const columns = computed(() => {
+  const cols = Array.from({ length: columnCount.value }, () => ({ height: 0, items: [] as { image: (typeof images.value)[number]; index: number }[] }))
+  images.value.forEach((image, index) => {
+    const shortest = cols.reduce((a, b) => (b.height < a.height ? b : a))
+    shortest.items.push({ image, index })
+    shortest.height += image.width && image.height ? image.height / image.width : 1
+  })
+  return cols.map((c) => c.items)
+})
 
 function onKeydown(event: KeyboardEvent) {
   if (openIndex.value === undefined) return
@@ -86,6 +90,8 @@ onBeforeUnmount(() => {
             :srcset="srcset(image)"
             :sizes="SIZES"
             :alt="image.alt"
+            :width="image.width"
+            :height="image.height"
             loading="lazy"
             decoding="async"
           />
@@ -162,6 +168,7 @@ onBeforeUnmount(() => {
 .grid__item img {
   display: block;
   width: 100%;
+  height: auto;
   transition: transform 0.4s ease;
 }
 
