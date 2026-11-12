@@ -15,6 +15,7 @@ import { usePointerGlow } from './composables/usePointerGlow'
 import { useTheme } from './composables/useTheme'
 import { about, education, experience, interests, profile, projects, roles, skills } from './data'
 import { vReveal } from './directives/reveal'
+import { vTimelineFill } from './directives/timelineFill'
 
 const { theme, toggle } = useTheme()
 usePointerGlow()
@@ -89,14 +90,14 @@ const year = new Date().getFullYear()
 
     <section v-reveal class="section" aria-labelledby="erfaring">
       <h2 id="erfaring" class="section__label">Erfaring</h2>
-      <div class="stack">
+      <div v-timeline-fill class="stack timeline">
         <EntryItem v-for="entry in experience" :key="entry.org" :entry="entry" />
       </div>
     </section>
 
     <section v-reveal class="section section--continued" aria-labelledby="utdanning">
       <h2 id="utdanning" class="section__label">Utdanning</h2>
-      <div class="stack">
+      <div v-timeline-fill class="stack timeline">
         <EntryItem v-for="entry in education" :key="entry.title" :entry="entry" />
       </div>
     </section>
@@ -121,7 +122,7 @@ const year = new Date().getFullYear()
 
     <section v-reveal class="section" aria-labelledby="verv">
       <h2 id="verv" class="section__label">Verv</h2>
-      <div class="stack">
+      <div v-timeline-fill class="stack timeline">
         <EntryItem v-for="entry in roles" :key="entry.title" :entry="entry" />
       </div>
     </section>
@@ -403,6 +404,22 @@ const year = new Date().getFullYear()
 
 .stack {
   display: grid;
+}
+
+/* The accent line that fills the timeline as you scroll (see vTimelineFill) */
+.timeline {
+  position: relative;
+}
+
+.timeline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: calc(var(--fill, 0) * 100%);
+  background: var(--accent);
+  pointer-events: none;
 }
 
 .about {

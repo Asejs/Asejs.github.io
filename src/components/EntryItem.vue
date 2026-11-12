@@ -43,13 +43,23 @@ defineProps<{ entry: Entry }>()
 .entry::before {
   content: '';
   position: absolute;
+  z-index: 1;
   left: -5px;
   top: 0.45rem;
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: var(--bg);
-  border: 2px solid var(--accent);
+  border: 2px solid var(--line);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+}
+
+/* Lit once the timeline fill reaches it (see vTimelineFill) */
+.entry.is-lit::before {
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 .entry__head {
