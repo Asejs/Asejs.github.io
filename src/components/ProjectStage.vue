@@ -29,7 +29,7 @@ let frame = 0
 let front = 0
 
 function render() {
-  current += (target - current) * 0.1
+  current += (target - current) * 0.07
   if (Math.abs(target - current) < 0.002) current = target
   front = Math.round(current)
   cards().forEach((card, i) => place(card, i - current))
@@ -141,7 +141,7 @@ onBeforeUnmount(() => {
   }
 
   .projects__card {
-    transform: translateZ(calc(min(var(--a), 1.5) * -60px)) rotateX(calc(clamp(-1.5, var(--d, 0), 1.5) * 8deg));
+    transform: translateZ(calc(min(var(--a), 1.5) * -30px)) rotateX(calc(clamp(-1.5, var(--d, 0), 1.5) * 4deg));
     filter: brightness(calc(1 - min(var(--a), 1) * 0.28));
   }
 }
@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
   }
 
   .projects__card {
-    transform: translateZ(calc(var(--a) * -55px)) rotateY(calc(var(--d, 0) * -4.5deg));
+    transform: translateZ(calc(var(--a) * -30px)) rotateY(calc(var(--d, 0) * -2.5deg));
   }
 }
 
