@@ -1,39 +1,43 @@
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, type Ref } from 'vue'
 
 /**
- * Keeps --glow-x / --glow-y on <html> at the mouse position, so CSS can paint a soft
- * light that follows the pointer. Mouse only; touch and reduced motion get none.
+ * Keeps --glow-x / --glow-y on `target` at the mouse position inside it, and toggles
+ * `has-glow` while the mouse is over it, so CSS can paint a soft light there.
+ * Mouse only; touch and reduced motion get none.
  */
-export function usePointerGlow() {
-  const root = document.documentElement
+export function usePointerGlow(target: Readonly<Ref<HTMLElement | null>>) {
   let frame = 0
-  let x = 0
-  let y = 0
+  let event: PointerEvent | undefined
 
-  function onMove(event: PointerEvent) {
-    if (event.pointerType !== 'mouse') return
-    x = event.clientX
-    y = event.clientY
-    frame ||= requestAnimationFrame(() => {
-      frame = 0
-      root.style.setProperty('--glow-x', `${x}px`)
-      root.style.setProperty('--glow-y', `${y}px`)
-      root.classList.add('has-glow')
-    })
+  function update() {
+    frame = 0
+    const el = target.value
+    if (!el || !event) return
+    const r = el.getBoundingClientRect()
+    el.style.setProperty('--glow-x', `${event.clientX - r.left}px`)
+    el.style.setProperty('--glow-y', `${event.clientY - r.top}px`)
+  }
+
+  function onMove(e: PointerEvent) {
+    if (e.pointerType !== 'mouse') return
+    event = e
+    target.value?.classList.add('has-glow')
+    frame ||= requestAnimationFrame(update)
   }
 
   function onLeave() {
-    root.classList.remove('has-glow')
+    target.value?.classList.remove('has-glow')
   }
 
   onMounted(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    addEventListener('pointermove', onMove, { passive: true })
-    document.addEventListener('pointerleave', onLeave)
+    const el = target.value
+    if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    el.addEventListener('pointermove', onMove, { passive: true })
+    el.addEventListener('pointerleave', onLeave)
   })
   onBeforeUnmount(() => {
     cancelAnimationFrame(frame)
-    removeEventListener('pointermove', onMove)
-    document.removeEventListener('pointerleave', onLeave)
+    target.value?.removeEventListener('pointermove', onMove)
+    target.value?.removeEventListener('pointerleave', onLeave)
   })
 }

@@ -18,7 +18,10 @@ import { vReveal } from './directives/reveal'
 import { vTimelineFill } from './directives/timelineFill'
 
 const { theme, toggle } = useTheme()
-usePointerGlow()
+
+// A soft light follows the mouse across the hero's background
+const hero = useTemplateRef<HTMLElement>('hero')
+usePointerGlow(hero)
 
 // Feeds the photo's parallax while the hero is on screen
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -63,7 +66,7 @@ const year = new Date().getFullYear()
 
   <main class="page">
     <div class="hero-shadow">
-      <header class="hero">
+      <header ref="hero" class="hero">
         <WaveLines />
         <div ref="heroText" class="hero__text">
           <div class="hero__title">
@@ -222,7 +225,27 @@ const year = new Date().getFullYear()
   display: contents;
 }
 
-/* Above the wave lines */
+/* A faint light that follows the mouse over the hero (position set by usePointerGlow) */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    500px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    color-mix(in srgb, var(--accent) 10%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+.hero.has-glow::before {
+  opacity: 1;
+}
+
+/* Above the wave lines and the glow */
 .hero__text,
 .hero__photo {
   position: relative;
