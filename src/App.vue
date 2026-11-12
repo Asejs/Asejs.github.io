@@ -360,12 +360,23 @@ const year = new Date().getFullYear()
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 6rem;
-  padding-top: 1.5rem;
-  /* A full-width line across the bottom of the page; the content stays in the column */
-  border-image: linear-gradient(var(--line), var(--line)) 1 0 0 / 1px 0 0 / 0 100vw;
+  position: relative;
+  isolation: isolate;
+  margin: 6rem 0 -3rem;
+  padding: 1.75rem 0 2.25rem;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+/* A full-width band across the bottom of the page, raised like the hero's edge;
+   the content stays in the column */
+.footer::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 calc(50% - 50vw);
+  background: var(--hero-bg);
+  box-shadow: var(--hero-shadow);
 }
 
 .theme-toggle {
