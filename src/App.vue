@@ -313,7 +313,7 @@ const year = new Date().getFullYear()
 }
 
 .section {
-  margin-top: 5rem;
+  margin-top: clamp(5rem, 10vw, 7.5rem);
 }
 
 .section__label {
