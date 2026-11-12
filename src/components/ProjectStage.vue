@@ -155,7 +155,8 @@ onBeforeUnmount(() => {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2rem;
-    width: calc(100vw - 3rem);
+    /* Grows with the window, but stops where the cards would dwarf the rest of the page */
+    width: min(100vw - 3rem, 88rem);
     margin-left: 50%;
     translate: -50% 0;
   }
