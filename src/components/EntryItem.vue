@@ -98,7 +98,7 @@ defineProps<{ entry: Entry }>()
 .entry__period {
   font-family: var(--mono);
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--text);
   white-space: nowrap;
 }
 

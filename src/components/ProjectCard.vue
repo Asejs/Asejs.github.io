@@ -75,7 +75,7 @@ defineProps<{ project: Project }>()
   margin-left: auto;
   font-family: var(--mono);
   font-size: 0.78rem;
-  color: var(--muted);
+  color: var(--text);
   white-space: nowrap;
 }
 
