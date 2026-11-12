@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
 
-// Slow, thin wave lines drawn behind the hero. They bend toward the mouse as it moves
-// over the hero, and a click sends a ripple out through them. Only animates while on screen and the tab is visible; with reduced
+// Thin, gently curved lines behind the hero, like strings. They bend toward the mouse
+// as it moves over the hero, and a click plucks the ones nearby so they vibrate. Only animates while on screen and the tab is visible; with reduced
 // motion it draws one still frame.
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -30,7 +30,7 @@ function onPointerLeave() {
   target.pull = 0
 }
 
-// Clicks on the background (not on links or buttons) start a ripple
+// Clicks on the background (not on links or buttons) pluck the strings there
 const ripples: { x: number; y: number; start: number }[] = []
 function onPointerDown(event: PointerEvent) {
   if ((event.target as HTMLElement).closest('a, button')) return
@@ -40,16 +40,16 @@ function onPointerDown(event: PointerEvent) {
   resume()
 }
 
-// How far a point is lifted by the ripples passing through it right now
+// How far a point on a string is displaced by the plucks right now: strings near the
+// click vibrate up and down, most where it was clicked, dying away over a second or two
 function rippleAt(x: number, y: number, time: number) {
   let offset = 0
-  for (const ripple of ripples) {
-    const age = (time - ripple.start) / 1000
-    if (age < 0 || age > 2.2) continue
-    const front = age * 320 // px from the click
-    const distance = Math.hypot(x - ripple.x, y - ripple.y) - front
-    const fade = (1 - age / 2.2) ** 2
-    offset += Math.sin(distance * 0.06) * Math.exp(-(distance ** 2) / 1800) * 14 * fade
+  for (const pluck of ripples) {
+    const age = (time - pluck.start) / 1000
+    if (age < 0 || age > 2) continue
+    const along = Math.exp(-((x - pluck.x) ** 2) / (2 * 160 ** 2))
+    const across = Math.exp(-((y - pluck.y) ** 2) / (2 * 60 ** 2))
+    offset += Math.sin(age * 28) * Math.exp(-age * 2.5) * 12 * along * across
   }
   return offset
 }
@@ -82,10 +82,10 @@ function draw(time: number) {
     for (let x = 0; x <= width; x += 6) {
       const k = x / width
       const y =
-        height * 0.55 +
-        Math.sin(k * 4 + time * 0.00018 + l * 0.07) * height * 0.13 +
-        Math.sin(k * 9 - time * 0.00012 + l * 0.04) * height * 0.04 +
-        l * height * 0.012
+        height * 0.5 +
+        Math.sin(k * 2.5 + time * 0.0001 + l * 0.05) * height * 0.05 +
+        Math.sin(k * 5 - time * 0.00007 + l * 0.03) * height * 0.012 +
+        l * height * 0.018
       // Near the mouse, each line is drawn part of the way toward it
       const bend = mouse.pull * Math.exp(-((x - mouse.x) ** 2) / (2 * reach ** 2)) * 0.35
       const yy = y + (mouse.y - y) * bend + rippleAt(x, y, time)
