@@ -84,6 +84,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
 <style scoped>
 .detail {
+  /* Banner height follows the modal's width (cqw), not the window's */
+  --banner-height: clamp(12rem, 34cqw, 20rem);
   position: relative;
   display: flow-root;
 }
@@ -94,7 +96,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   top: -6rem;
   left: 50%;
   width: 100cqw;
-  height: clamp(18rem, 42vw, 30rem);
+  height: var(--banner-height);
   transform: translateX(-50%);
   overflow: hidden;
   pointer-events: none;
@@ -132,7 +134,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 }
 
 .detail__head {
-  margin-top: calc(clamp(6rem, 22vw, 14rem) + 3rem);
+  /* The title overlaps the faded bottom of the banner */
+  margin-top: max(4rem, var(--banner-height) - 12rem);
 }
 
 @media (max-width: 480px) {
