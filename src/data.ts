@@ -94,7 +94,7 @@ export const aboutGreeting = 'Hei, jeg er Åse!'
 
 export const about = [
   'Jeg har alltid vært nysgjerrig på hvordan ting er bygget opp. Som liten utforsket jeg kildekoden til nettsider, lagde egne design og brukte resten av tiden med et kamera og Photoshop. Jeg startet på energi og miljø, men byttet til **dataingeniørstudiet** for å jobbe med programmering.',
-  'Siden da har jeg jobbet **over fire år** med produktutvikling i **energisektoren**. Det som driver meg, er å lage noe som **skaper verdi** for brukerne og gir det lille ekstra – også for oss i teamet.',
+  'Siden da har jeg jobbet **over fire år** med produktutvikling i **energisektoren**. Det som driver meg, er å lage noe som **skaper verdi** for brukerne – gjerne med det lille ekstra på toppen.',
 ]
 
 export type FavoriteModel = 'laptop' | 'coffee' | 'camera' | 'palette' | 'polaroid'
