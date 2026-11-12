@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
   }
 
   .projects__card {
-    transform: translateZ(calc(var(--a) * -110px)) rotateY(calc(var(--d, 0) * -9deg));
+    transform: translateZ(calc(var(--a) * -55px)) rotateY(calc(var(--d, 0) * -4.5deg));
   }
 }
 
