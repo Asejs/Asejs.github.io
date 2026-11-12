@@ -316,15 +316,7 @@ const year = new Date().getFullYear()
   margin-top: clamp(5rem, 10vw, 7.5rem);
 }
 
-.page {
-  counter-reset: section;
-}
-
-.section {
-  counter-increment: section;
-}
-
-/* Editorial section headings: a small number over a hairline, then a large title */
+/* Editorial section headings: a hairline, then a large title */
 .section__label {
   margin-bottom: 2.25rem;
   font-family: var(--display);
@@ -335,14 +327,10 @@ const year = new Date().getFullYear()
 }
 
 .section__label::before {
-  content: counter(section, decimal-leading-zero);
+  content: '';
   display: block;
-  margin-bottom: 1rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--line);
-  font: 500 0.75rem var(--mono);
-  letter-spacing: 0.12em;
-  color: var(--accent-text);
+  margin-bottom: 1.25rem;
+  border-top: 1px solid var(--line);
 }
 
 .stack {
