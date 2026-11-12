@@ -229,11 +229,11 @@ const year = new Date().getFullYear()
 
     display: grid;
     grid-template-columns: auto var(--photo-width);
-    justify-content: start;
+    /* Text and photo centred together as one group */
+    justify-content: center;
     column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
     min-height: 0;
-    /* The text starts on the same left edge as the sections below (the page column) */
-    padding: 0 max(2rem, 4vw) 0 max(1.25rem, 50vw - 20.75rem);
+    padding-inline: max(2rem, 4vw);
   }
 
   .hero__text {
