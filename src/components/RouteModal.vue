@@ -15,21 +15,20 @@ onMounted(() => {
   if (!reduceMotion) flingOpen(el)
 })
 
-// The modal is flung out of the card that opened it, overshoots a little and settles.
-// Without a card (a shared link), it just pops up from below.
+// The modal grows out of the card that opened it. Without a card (a shared link),
+// it fades up from just below.
 function flingOpen(el: HTMLDialogElement) {
   const from = takeModalOrigin()
   const to = el.getBoundingClientRect()
   const start = from
-    ? `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height}) rotate(-4deg)`
-    : 'translateY(3rem) scale(0.9) rotate(-2deg)'
+    ? `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`
+    : 'translateY(1.5rem) scale(0.97)'
   el.animate(
     [
-      { transform: start, transformOrigin: 'top left', opacity: 0.3 },
-      { transform: 'scale(1.015) rotate(0.6deg)', transformOrigin: 'top left', opacity: 1, offset: 0.7 },
+      { transform: start, transformOrigin: 'top left', opacity: 0.4 },
       { transform: 'none', transformOrigin: 'top left', opacity: 1 },
     ],
-    { duration: 560, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+    { duration: 380, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
   )
   el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, pseudoElement: '::backdrop' })
 }
