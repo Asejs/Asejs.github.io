@@ -233,8 +233,8 @@ const year = new Date().getFullYear()
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
-    500px circle at var(--glow-x, 50%) var(--glow-y, 50%),
-    color-mix(in srgb, var(--accent) 10%, transparent),
+    900px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    color-mix(in srgb, var(--accent) 4%, transparent),
     transparent 70%
   );
   opacity: 0;
