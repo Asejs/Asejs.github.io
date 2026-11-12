@@ -95,7 +95,7 @@ const year = new Date().getFullYear()
       </div>
     </section>
 
-    <section v-reveal class="section section--continued" aria-labelledby="utdanning">
+    <section v-reveal v-timeline-fill:gap class="section section--continued" aria-labelledby="utdanning">
       <h2 id="utdanning" class="section__label">Utdanning</h2>
       <div v-timeline-fill class="stack timeline">
         <EntryItem v-for="entry in education" :key="entry.title" :entry="entry" />
@@ -386,6 +386,16 @@ const year = new Date().getFullYear()
   bottom: 0;
   left: 0;
   border-left: 1px solid var(--line);
+}
+
+.section--continued::after {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--section-gap));
+  left: 0;
+  width: 1px;
+  height: calc(var(--fill, 0) * (100% + var(--section-gap)));
+  background: var(--accent);
 }
 
 .section--continued .section__label {
