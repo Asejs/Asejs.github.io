@@ -33,9 +33,10 @@ export function useLayoutGlide(query: MediaQueryList, elements: () => (HTMLEleme
           {
             // Centre to centre, since elements scale around their middle
             translate: `${from.left + from.width / 2 - to.left - to.width / 2}px ${from.top + from.height / 2 - to.top - to.height / 2}px`,
-            scale: `${from.width / to.width} ${from.height / to.height}`,
+            // Same factor both ways, so nothing (a face, say) gets stretched on the way
+            scale: `${from.width / to.width}`,
           },
-          { translate: '0 0', scale: '1 1' },
+          { translate: '0 0', scale: '1' },
         ],
         { duration: 500, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
       )
