@@ -78,7 +78,7 @@ const year = new Date().getFullYear()
       </div>
     </section>
 
-    <section v-reveal class="section" aria-labelledby="utdanning">
+    <section v-reveal class="section section--continued" aria-labelledby="utdanning">
       <h2 id="utdanning" class="section__label">Utdanning</h2>
       <div class="stack">
         <EntryItem v-for="entry in education" :key="entry.title" :entry="entry" />
@@ -314,7 +314,27 @@ const year = new Date().getFullYear()
 }
 
 .section {
-  margin-top: clamp(5rem, 10vw, 7.5rem);
+  --section-gap: clamp(5rem, 10vw, 7.5rem);
+  margin-top: var(--section-gap);
+}
+
+/* Carries the timeline of the section above on through this one; the heading
+   steps in so the line runs beside it rather than through it */
+.section--continued {
+  position: relative;
+}
+
+.section--continued::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--section-gap));
+  bottom: 0;
+  left: 0;
+  border-left: 1px solid var(--line);
+}
+
+.section--continued .section__label {
+  padding-left: 1.5rem;
 }
 
 /* Editorial section headings: a hairline, then a large title */
