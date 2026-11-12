@@ -821,7 +821,7 @@ function polaroid() {
   const cardH = photoH + margin + strip
 
   const card = mesh(new THREE.BoxGeometry(cardW, cardH, 0.02), physical('#f3f1ea', { roughness: 0.85 }))
-  const photo = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}favorites/polaroid.jpg`)
+  const photo = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}favorites/polaroid.webp`)
   photo.colorSpace = THREE.SRGBColorSpace
   photo.anisotropy = 8
   const picture = mesh(
