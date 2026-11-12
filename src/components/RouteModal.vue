@@ -72,7 +72,7 @@ function onClick(event: MouseEvent) {
   margin: auto;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 4px;
   background: var(--bg);
   color: var(--text);
   overflow: hidden;

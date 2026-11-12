@@ -2,19 +2,25 @@
 import { computed, useTemplateRef, watch } from 'vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
+import FavoriteThings from './components/FavoriteThings.vue'
 import InterestGallery from './components/InterestGallery.vue'
 import InterestTile from './components/InterestTile.vue'
+import LinkIcon from './components/LinkIcon.vue'
+import LogoEmblem from './components/LogoEmblem.vue'
 import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
 import RouteModal from './components/RouteModal.vue'
+import SiteNav from './components/SiteNav.vue'
 import TypedText from './components/TypedText.vue'
 import WaveLines from './components/WaveLines.vue'
+import greetingSvg from './assets/greeting.svg?raw'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
 import { usePointerGlow } from './composables/usePointerGlow'
 import { useTheme } from './composables/useTheme'
-import { about, education, experience, interests, profile, projects, roles, skills } from './data'
+import { about, aboutGreeting, education, experience, interests, profile, projects, roles, skills } from './data'
 import { vReveal } from './directives/reveal'
+import { vScrollLight } from './directives/scrollLight'
 import { vTimelineFill } from './directives/timelineFill'
 
 const { theme, toggle } = useTheme()
@@ -29,6 +35,8 @@ const heroPhoto = useTemplateRef<HTMLElement>('heroPhoto')
 useLayoutGlide(matchMedia('(max-width: 39.99rem)'), () => [heroText.value, heroPhoto.value])
 const { activeProject, activeInterest } = useHashRoute()
 
+const current = experience.find((entry) => entry.period.endsWith('nå'))
+
 // Projects and galleries open as modals over the page. Closing goes back in history
 // when the modal was opened from the page, so the back button and scroll position stay intact.
 const modalOpen = computed(() => Boolean(activeProject.value || activeInterest.value))
@@ -39,7 +47,12 @@ watch(modalOpen, (open) => {
 
 function closeModal() {
   if (openedFromPage) history.back()
-  else location.replace(activeProject.value ? '#prosjekter' : '#interesser')
+  else {
+    const section = document.getElementById(activeProject.value ? 'prosjekter' : 'interesser')
+    history.replaceState(null, '', location.pathname + location.search)
+    window.dispatchEvent(new HashChangeEvent('hashchange'))
+    section?.scrollIntoView({ block: 'start' })
+  }
   openedFromPage = false
 }
 
@@ -55,6 +68,8 @@ const year = new Date().getFullYear()
     <InterestGallery :interest="activeInterest" />
   </RouteModal>
 
+  <SiteNav :hero="hero" />
+
   <main class="page">
     <div class="hero-shadow">
       <header ref="hero" class="hero">
@@ -68,6 +83,13 @@ const year = new Date().getFullYear()
           </div>
           <p class="hero__summary">{{ profile.summary }}</p>
           <p class="hero__motivation">{{ profile.motivation }}</p>
+          <div v-if="current" class="now">
+            <LogoEmblem v-if="current.logo?.emblem" :logo="current.logo" size="2.5rem" />
+            <div>
+              <p class="now__label"><span class="now__dot" aria-hidden="true" />Nå</p>
+              <p class="now__role">{{ current.title }} · {{ current.org }}</p>
+            </div>
+          </div>
           <ContactLinks label="Kontakt" class="hero__links" />
         </div>
         <picture class="hero__picture">
@@ -98,17 +120,23 @@ const year = new Date().getFullYear()
 
     <section v-reveal class="section" aria-labelledby="teknologier">
       <h2 id="teknologier" class="section__label">Teknologier</h2>
-      <div class="skill-groups">
+      <div v-scroll-light class="skill-groups">
         <div>
           <h3 class="skill-groups__label">Bruker daglig</h3>
           <ul class="tags">
-            <li v-for="skill in skills.daily" :key="skill" class="tag">{{ skill }}</li>
+            <li v-for="skill in skills.daily" :key="skill.name">
+              <a v-if="skill.href" :href="skill.href" target="_blank" rel="noopener" class="tag">{{ skill.name }}</a>
+              <span v-else class="tag">{{ skill.name }}</span>
+            </li>
           </ul>
         </div>
         <div>
           <h3 class="skill-groups__label">Tidligere erfaring</h3>
           <ul class="tags">
-            <li v-for="skill in skills.used" :key="skill" class="tag">{{ skill }}</li>
+            <li v-for="skill in skills.used" :key="skill.name">
+              <a v-if="skill.href" :href="skill.href" target="_blank" rel="noopener" class="tag">{{ skill.name }}</a>
+              <span v-else class="tag">{{ skill.name }}</span>
+            </li>
           </ul>
         </div>
       </div>
@@ -121,28 +149,49 @@ const year = new Date().getFullYear()
       </div>
     </section>
 
-    <section v-reveal class="section" aria-labelledby="interesser">
-      <h2 id="interesser" class="section__label">Interesser</h2>
-      <div class="interest-grid">
-        <InterestTile v-for="interest in interests" :key="interest.slug" :interest="interest" />
-      </div>
-    </section>
+    <div class="section section--group">
+      <section v-reveal class="section section--about" aria-labelledby="om-meg">
+        <h2 id="om-meg" class="section__label">Om meg</h2>
+        <FavoriteThings>
+          <div class="about">
+            <p class="about__greeting">
+              <span class="visually-hidden">{{ aboutGreeting }}</span>
+              <span class="about__handwriting" aria-hidden="true" v-html="greetingSvg" />
+            </p>
+            <p class="about__tagline">Dataingeniør · Frontend-utvikler</p>
+            <p v-for="paragraph in about" :key="paragraph">
+              <template v-for="(part, i) in paragraph.split('**')" :key="i">
+                <strong v-if="i % 2">{{ part }}</strong>
+                <template v-else>{{ part }}</template>
+              </template>
+            </p>
+          </div>
+        </FavoriteThings>
+      </section>
 
-    <section v-reveal class="section" aria-labelledby="om-meg">
-      <h2 id="om-meg" class="section__label">Om meg</h2>
-      <div class="about">
-        <p v-for="paragraph in about" :key="paragraph">{{ paragraph }}</p>
-      </div>
-    </section>
+      <section v-reveal class="section" aria-labelledby="interesser">
+        <h2 id="interesser" class="section__label">Interesser</h2>
+        <div class="interest-grid">
+          <InterestTile v-for="interest in interests" :key="interest.slug" :interest="interest" />
+        </div>
+      </section>
+    </div>
 
     <section v-reveal class="section" aria-labelledby="kontakt">
       <h2 id="kontakt" class="section__label">Kontakt</h2>
+      <p class="contact__intro">Ta gjerne kontakt, enten det gjelder kode, prosjekter eller en faglig prat!</p>
       <ContactLinks label="Kontakt nederst" />
     </section>
 
     <footer class="footer">
       <div class="footer__band" aria-hidden="true" />
-      <span>© {{ year }} {{ profile.name }}</span>
+      <span class="footer__meta">
+        <span>© {{ year }} {{ profile.name }}</span>
+        <a class="footer__social" :href="profile.instagram.href" target="_blank" rel="noopener">
+          <LinkIcon icon="instagram" />
+          <span>@{{ profile.instagram.handle }}</span>
+        </a>
+      </span>
       <button
         class="theme-toggle"
         type="button"
@@ -224,7 +273,7 @@ const year = new Date().getFullYear()
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
-    900px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    1600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
     rgb(255 214 150 / 0.025),
     transparent 70%
   );
@@ -263,27 +312,26 @@ const year = new Date().getFullYear()
 
 @media (min-width: 40rem) {
   .hero {
-    --photo-width: clamp(12rem, 22vw, 19rem);
-
     display: grid;
-    grid-template-columns: auto var(--photo-width);
-    /* Text and photo centred together as one group */
-    justify-content: center;
-    column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
+    grid-template-columns:
+      minmax(max(2rem, 4vw), 1fr)
+      minmax(22rem, max-content)
+      minmax(14rem, 23rem)
+      minmax(0, 1fr);
     min-height: 0;
-    /* No vertical padding: the photo runs from the top edge down under the slant */
-    padding: 0 max(2rem, 4vw);
+    padding: 0;
   }
 
   .hero__text {
-    grid-area: 1 / 1;
+    grid-area: 1 / 2;
+    margin-right: clamp(2.5rem, 5vw, 5rem);
     align-self: center;
     padding-block: 4.5rem 5rem;
   }
 
   .hero__photo {
     order: 0;
-    grid-area: 1 / 2;
+    grid-area: 1 / 3;
     align-self: stretch;
     display: block;
     width: 100%;
@@ -293,6 +341,7 @@ const year = new Date().getFullYear()
     mask-image: none;
     object-fit: cover;
     object-position: center 78%;
+    clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
   }
 }
 
@@ -338,8 +387,61 @@ const year = new Date().getFullYear()
   text-wrap: pretty;
 }
 
+.now {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1rem 0.6rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+
+.now :deep(.emblem--badge) {
+  border-radius: 3px;
+}
+
+.now__label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.now__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3fb56b;
+  box-shadow: 0 0 0 0 rgb(63 181 107 / 0.5);
+  animation: now-pulse 2.4s ease-out infinite;
+}
+
+@keyframes now-pulse {
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px rgb(63 181 107 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .now__dot {
+    animation: none;
+  }
+}
+
+.now__role {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 .hero__links {
-  margin-top: 1.75rem;
+  margin-top: 1.5rem;
 }
 
 .skill-groups {
@@ -359,7 +461,7 @@ const year = new Date().getFullYear()
 }
 
 .section {
-  --section-gap: clamp(5rem, 10vw, 7.5rem);
+  --section-gap: clamp(6.5rem, 13vw, 10rem);
   margin-top: var(--section-gap);
 }
 
@@ -367,7 +469,7 @@ const year = new Date().getFullYear()
    steps in so the line runs beside it rather than through it */
 /* A full-width band of its own that starts right under the hero's slanted edge and
    ends in a slant like the footer's */
-.section--band {
+.section.section--band {
   position: relative;
   isolation: isolate;
   margin-top: 0;
@@ -384,6 +486,40 @@ const year = new Date().getFullYear()
   inset: 0 calc(50% - 50vw);
   background: var(--band-bg);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - min(6vw, 5rem)), 0 100%);
+}
+
+.section--group {
+  --slant: min(6vw, 5rem);
+  --band-pad: clamp(3rem, 6vw, 4.5rem);
+  position: relative;
+  isolation: isolate;
+  padding-block: calc(var(--band-pad) + var(--slant));
+}
+
+.section--group::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 calc(50% - 50vw);
+  background: var(--band-bg);
+  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+}
+
+.section--group > .section:first-child {
+  margin-top: 0;
+}
+
+.section--about {
+  padding-bottom: clamp(2rem, 6vw, 5rem);
+}
+
+.section--about + .section {
+  margin-top: calc(var(--section-gap) * 0.6);
+}
+
+.section--group .section__label {
+  position: relative;
+  z-index: 1;
 }
 
 .section--continued {
@@ -446,6 +582,36 @@ const year = new Date().getFullYear()
   background: var(--accent);
 }
 
+.about__greeting {
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+
+.about__tagline {
+  margin: -0.5rem 0 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.about__handwriting :deep(svg) {
+  display: block;
+  width: auto;
+  height: clamp(2.6rem, 6vw, 3.4rem);
+}
+
+.about strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.contact__intro {
+  margin: -1rem 0 1.5rem;
+  color: var(--muted);
+}
+
 .about {
   display: grid;
   gap: 1rem;
@@ -460,7 +626,33 @@ const year = new Date().getFullYear()
 }
 
 .section__label {
-  scroll-margin-top: 2rem;
+  scroll-margin-top: 5rem;
+}
+
+.footer__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer__social:hover {
+  color: var(--accent);
+}
+
+.footer__social:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .footer {
@@ -534,7 +726,7 @@ const year = new Date().getFullYear()
   }
 
   .section {
-    margin-top: 3.75rem;
+    margin-top: 5rem;
   }
 }
 </style>

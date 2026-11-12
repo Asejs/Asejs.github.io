@@ -44,7 +44,13 @@ function goTo(i: number) {
 // Which card is under the pointer comes from the cards' layout boxes (offsetLeft ignores
 // transforms), so a card moving or turning under a still pointer can't flip the choice.
 function onPointerMove(event: PointerEvent) {
-  if (event.pointerType !== 'mouse' || stacked.matches || !row.value) return
+  if (event.pointerType !== 'mouse' || !row.value) return
+  for (const card of cards()) {
+    const r = card.getBoundingClientRect()
+    card.style.setProperty('--spot-x', `${event.clientX - r.left}px`)
+    card.style.setProperty('--spot-y', `${event.clientY - r.top}px`)
+  }
+  if (stacked.matches) return
   const x = event.clientX - row.value.getBoundingClientRect().left
   const distance = (c: HTMLElement) => Math.abs(c.offsetLeft + c.offsetWidth / 2 - x)
   const all = cards()
@@ -121,8 +127,29 @@ onBeforeUnmount(() => {
   --a: max(var(--d, 0), -1 * var(--d, 0));
   position: relative;
   background: var(--bg);
-  border-radius: 10px;
+  border-radius: 3px;
   overflow: hidden;
+}
+
+.projects__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(180px circle at var(--spot-x, 50%) var(--spot-y, 50%), var(--edge-glow), transparent 70%);
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .projects__card:hover::after {
+    opacity: 1;
+  }
 }
 
 .projects__card :deep(.card__body) {

@@ -241,7 +241,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 .gallery video {
   display: block;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 3px;
   border: 1px solid var(--line);
 }
 
