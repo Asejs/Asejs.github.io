@@ -110,17 +110,17 @@ const year = new Date().getFullYear()
       </div>
     </section>
 
-    <section v-reveal class="section" aria-labelledby="om-meg">
-      <h2 id="om-meg" class="section__label">Om meg</h2>
-      <div class="about">
-        <p v-for="paragraph in about" :key="paragraph">{{ paragraph }}</p>
-      </div>
-    </section>
-
     <section v-reveal class="section" aria-labelledby="interesser">
       <h2 id="interesser" class="section__label">Interesser</h2>
       <div class="interest-grid">
         <InterestTile v-for="interest in interests" :key="interest.slug" :interest="interest" />
+      </div>
+    </section>
+
+    <section v-reveal class="section" aria-labelledby="om-meg">
+      <h2 id="om-meg" class="section__label">Om meg</h2>
+      <div class="about">
+        <p v-for="paragraph in about" :key="paragraph">{{ paragraph }}</p>
       </div>
     </section>
 
