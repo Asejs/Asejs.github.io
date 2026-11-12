@@ -88,10 +88,9 @@ const equinorBrand: Logo = {
 const uisSubseaBrand: Logo = { svg: uisSubseaLogo, height: '3.5rem', emblem: true }
 
 export const about = [
-  'Det startet med nysgjerrighet på hvordan nettsider var bygd opp. Som tenåring designet jeg egne maler og profilsider, og trykket «Vis kilde» på andres sider for å se hvordan de hadde gjort det.',
-  'Så kom kameraet. Lys, lukkertid, blenderåpning. Deretter Photoshop, og timevis med å flytte på piksler til det satt.',
-  'På videregående hadde jeg IT 1 og IT 2, og elsket det. Likevel startet jeg på energi og miljø, men skjønte fort at jeg heller ville bygge ting. Så jeg byttet til dataingeniør i Stavanger, ble med i UiS Subsea det siste året og skrev bacheloroppgaven om brukergrensesnittet til en fjernstyrt undervannsfarkost.',
-  'Nå lager jeg verktøy som brukes i energisektoren hver dag. Og jeg trykker fortsatt på «Vis kilde».',
+  'Jeg har alltid vært opptatt av å forstå hvordan ting er bygget opp. Det startet med nettsider, der jeg studerte kildekoden for å lære hvordan de fungerte, og fortsatte med fotografi og bildebehandling.',
+  'Etter IT på videregående begynte jeg på energi og miljø, men byttet til dataingeniør i Stavanger fordi jeg ville bygge ting selv. I bacheloroppgaven utviklet jeg operatørgrensesnittet til UiS Subsea sin fjernstyrte undervannsfarkost.',
+  'I dag kombinerer jeg den nysgjerrigheten med erfaring fra energisektoren, og lager verktøy som brukes i krevende arbeidshverdager.',
 ]
 
 export const profile = {

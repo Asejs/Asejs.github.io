@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, useTemplateRef, watch } from 'vue'
-import AboutText from './components/AboutText.vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
@@ -113,7 +112,9 @@ const year = new Date().getFullYear()
 
     <section v-reveal class="section" aria-labelledby="om-meg">
       <h2 id="om-meg" class="section__label">Om meg</h2>
-      <AboutText :paragraphs="about" />
+      <div class="about">
+        <p v-for="paragraph in about" :key="paragraph">{{ paragraph }}</p>
+      </div>
     </section>
 
     <section v-reveal class="section" aria-labelledby="interesser">
@@ -337,6 +338,13 @@ const year = new Date().getFullYear()
 
 .stack {
   display: grid;
+}
+
+.about {
+  display: grid;
+  gap: 1rem;
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .interest-grid {
