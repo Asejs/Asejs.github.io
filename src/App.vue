@@ -390,25 +390,6 @@ const year = new Date().getFullYear()
   position: relative;
 }
 
-.section--continued::before {
-  content: '';
-  position: absolute;
-  top: calc(-1 * var(--section-gap));
-  bottom: 0;
-  left: 0;
-  border-left: 1px solid var(--line);
-}
-
-.section--continued::after {
-  content: '';
-  position: absolute;
-  top: calc(-1 * var(--section-gap));
-  left: 0;
-  width: 1px;
-  height: calc(var(--fill, 0) * (100% + var(--section-gap)));
-  background: var(--accent);
-}
-
 .section--continued .section__label {
   padding-left: 1.5rem;
 }
@@ -427,8 +408,9 @@ const year = new Date().getFullYear()
   display: grid;
 }
 
-/* The timeline: a line from the first dot down, and an accent line that fills it
-   as you scroll (see vTimelineFill). --dot-top places the dots (in EntryItem). */
+/* The timeline: a line from the first dot to the last, and an accent line that fills it
+   as you scroll. vTimelineFill sets --line-start, --line-end and --fill; --dot-top places
+   the dots (in EntryItem). */
 .timeline {
   --dot-top: 0.3rem;
   position: relative;
@@ -441,22 +423,26 @@ const year = new Date().getFullYear()
 }
 
 .timeline::before,
-.timeline::after {
+.timeline::after,
+.section--continued::before,
+.section--continued::after {
   content: '';
   position: absolute;
-  top: calc(var(--dot-top) + 4.5px);
+  top: var(--line-start, 0);
   left: 0;
   width: 1px;
   pointer-events: none;
 }
 
-.timeline::before {
-  bottom: 0;
+.timeline::before,
+.section--continued::before {
+  height: calc(var(--line-end, 0px) - var(--line-start, 0px));
   background: var(--line);
 }
 
-.timeline::after {
-  height: calc(var(--fill, 0) * (100% - var(--dot-top) - 4.5px));
+.timeline::after,
+.section--continued::after {
+  height: calc(var(--fill, 0) * (var(--line-end, 0px) - var(--line-start, 0px)));
   background: var(--accent);
 }
 
