@@ -7,6 +7,7 @@ import InterestTile from './components/InterestTile.vue'
 import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
 import RouteModal from './components/RouteModal.vue'
+import TypedText from './components/TypedText.vue'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
 import { useTheme } from './composables/useTheme'
@@ -52,8 +53,10 @@ const year = new Date().getFullYear()
       <header class="hero">
         <div ref="heroText" class="hero__text">
           <div class="hero__title">
-            <h1 class="hero__name">{{ profile.name }}</h1>
-            <p class="eyebrow">// {{ profile.role.toLowerCase() }}</p>
+            <h1 class="hero__name"><TypedText :text="profile.name" :delay="300" /></h1>
+            <p class="eyebrow">
+              <TypedText :text="`// ${profile.role.toLowerCase()}`" :delay="300 + profile.name.length * 70 + 250" :speed="45" />
+            </p>
           </div>
           <p class="hero__summary">{{ profile.summary }}</p>
           <p class="hero__motivation">{{ profile.motivation }}</p>
