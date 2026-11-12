@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useTemplateRef, watch } from 'vue'
+import AboutText from './components/AboutText.vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
@@ -10,7 +11,7 @@ import RouteModal from './components/RouteModal.vue'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
 import { useTheme } from './composables/useTheme'
-import { education, experience, interests, profile, projects, roles, skills } from './data'
+import { about, education, experience, interests, profile, projects, roles, skills } from './data'
 import { vReveal } from './directives/reveal'
 
 const { theme, toggle } = useTheme()
@@ -108,6 +109,11 @@ const year = new Date().getFullYear()
       <div class="stack">
         <EntryItem v-for="entry in roles" :key="entry.title" :entry="entry" />
       </div>
+    </section>
+
+    <section v-reveal class="section" aria-labelledby="om-meg">
+      <h2 id="om-meg" class="section__label">Om meg</h2>
+      <AboutText :paragraphs="about" />
     </section>
 
     <section v-reveal class="section" aria-labelledby="interesser">

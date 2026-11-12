@@ -87,6 +87,13 @@ const equinorBrand: Logo = {
 }
 const uisSubseaBrand: Logo = { svg: uisSubseaLogo, height: '3.5rem', emblem: true }
 
+export const about = [
+  'Det startet med nysgjerrighet på hvordan nettsider var bygd opp. Som tenåring designet jeg egne maler og profilsider, og trykket «Vis kilde» på andres sider for å se hvordan de hadde gjort det.',
+  'Så kom kameraet. Lys, lukkertid, blenderåpning. Deretter Photoshop, og timevis med å flytte på piksler til det satt.',
+  'På videregående hadde jeg IT 1 og IT 2, og elsket det. Likevel startet jeg på energi og miljø, men skjønte fort at jeg heller ville bygge ting. Så jeg byttet til dataingeniør i Stavanger, ble med i UiS Subsea det siste året og skrev bacheloroppgaven om brukergrensesnittet til en fjernstyrt undervannsfarkost.',
+  'Nå lager jeg verktøy som brukes i energisektoren hver dag. Og jeg trykker fortsatt på «Vis kilde».',
+]
+
 export const profile = {
   name: 'Åse Sagebakken',
   role: 'Frontend-utvikler',
