@@ -1,30 +1,63 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef } from 'vue'
+import { takeModalOrigin } from '../composables/modalOrigin'
 
 defineProps<{ wide?: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 
 onMounted(() => {
-  dialog.value?.showModal()
+  const el = dialog.value!
+  el.showModal()
   // Focus the dialog itself, not the first focusable element inside (the scroll area)
-  dialog.value?.focus()
+  el.focus()
+  if (!reduceMotion) flingOpen(el)
 })
+
+// The modal is flung out of the card that opened it, overshoots a little and settles.
+// Without a card (a shared link), it just pops up from below.
+function flingOpen(el: HTMLDialogElement) {
+  const from = takeModalOrigin()
+  const to = el.getBoundingClientRect()
+  const start = from
+    ? `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height}) rotate(-4deg)`
+    : 'translateY(3rem) scale(0.9) rotate(-2deg)'
+  el.animate(
+    [
+      { transform: start, transformOrigin: 'top left', opacity: 0.3 },
+      { transform: 'scale(1.015) rotate(0.6deg)', transformOrigin: 'top left', opacity: 1, offset: 0.7 },
+      { transform: 'none', transformOrigin: 'top left', opacity: 1 },
+    ],
+    { duration: 560, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+  )
+  el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, pseudoElement: '::backdrop' })
+}
+
+let closing = false
+function close() {
+  if (closing) return
+  closing = true
+  if (reduceMotion) return emit('close')
+  dialog.value!
+    .animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(1rem) scale(0.96)' }], { duration: 180, easing: 'ease-in', fill: 'forwards' })
+    .finished.then(() => emit('close'))
+}
 
 // The content fills the dialog, so a click on the dialog itself is a click on the backdrop
 function onClick(event: MouseEvent) {
-  if (event.target === dialog.value) emit('close')
+  if (event.target === dialog.value) close()
 }
 </script>
 
 <template>
-  <dialog ref="dialog" class="modal" :class="{ 'modal--wide': wide }" @click="onClick" tabindex="-1" @cancel.prevent="emit('close')">
+  <dialog ref="dialog" class="modal" :class="{ 'modal--wide': wide }" @click="onClick" tabindex="-1" @cancel.prevent="close">
     <div class="modal__body">
       <div :class="{ modal__column: !wide }">
         <slot />
       </div>
     </div>
-    <button type="button" class="modal__close" aria-label="Lukk" @click="emit('close')">
+    <button type="button" class="modal__close" aria-label="Lukk" @click="close">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
   </dialog>

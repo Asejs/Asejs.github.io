@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import type { Project } from '../data'
 import ProjectCard from './ProjectCard.vue'
+import { setModalOrigin } from '../composables/modalOrigin'
 
 defineProps<{ projects: Project[] }>()
 const row = useTemplateRef<HTMLElement>('row')
@@ -37,9 +38,11 @@ function onPointerLeave(event: PointerEvent) {
   if (event.pointerType === 'mouse') goTo(0)
 }
 
-// Touch: tapping a card behind brings it forward instead of opening it
+// Tapping a card behind brings it forward instead of opening it (touch has no hover).
+// Opening the front card remembers where it is, so the modal can be flung out of it.
 function onCardClick(i: number, event: MouseEvent) {
-  if (i === active.value) return
+  const card = event.currentTarget as HTMLElement
+  if (i === active.value) return setModalOrigin(card.getBoundingClientRect())
   event.preventDefault()
   goTo(i)
 }
