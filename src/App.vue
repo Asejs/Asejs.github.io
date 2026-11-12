@@ -362,7 +362,8 @@ const year = new Date().getFullYear()
   gap: 0.5rem;
   margin-top: 6rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--line);
+  /* A full-width line across the bottom of the page; the content stays in the column */
+  border-image: linear-gradient(var(--line), var(--line)) 1 0 0 / 1px 0 0 / 0 100vw;
   font-size: 0.85rem;
   color: var(--muted);
 }
