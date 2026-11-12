@@ -143,7 +143,7 @@ export const projects: Project[] = [
   {
     slug: 'echo',
     title: 'Equinor Echo',
-    subtitle: 'Konsulent, systemutvikler · Bouvet Stavanger',
+    subtitle: 'Konsulent · Bouvet · Stavanger',
     period: '2022 – 2025',
     summary: 'Visuell digital tvilling for drift av Equinors plattformer.',
     description: [
