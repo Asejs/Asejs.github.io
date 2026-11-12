@@ -331,7 +331,10 @@ const year = new Date().getFullYear()
   position: relative;
   isolation: isolate;
   margin-top: 0;
-  padding-block: clamp(3rem, 6vw, 4.5rem) clamp(4rem, 8vw, 6rem);
+  /* Bottom = top + one slant, so the space above the title and below the cards
+     looks the same where the slanted edges meet in the middle */
+  --band-pad: clamp(3rem, 6vw, 4.5rem);
+  padding-block: var(--band-pad) calc(var(--band-pad) + min(6vw, 5rem));
 }
 
 .section--band::before {
