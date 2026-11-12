@@ -159,6 +159,10 @@ const year = new Date().getFullYear()
   padding: 6rem 1.25rem 3rem;
 }
 
+.page {
+  --band-bg: color-mix(in srgb, var(--text) 3%, var(--bg));
+}
+
 .hero-shadow {
   position: relative;
 }
@@ -179,7 +183,7 @@ const year = new Date().getFullYear()
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--bg);
+  background: var(--band-bg);
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
   transition: background-color 0.3s;
 }
@@ -321,11 +325,13 @@ const year = new Date().getFullYear()
 
 /* Carries the timeline of the section above on through this one; the heading
    steps in so the line runs beside it rather than through it */
-/* A full-width band of its own, with slanted edges like the hero's and the footer's */
+/* A full-width band of its own that starts right under the hero's slanted edge and
+   ends in a slant like the footer's */
 .section--band {
   position: relative;
   isolation: isolate;
-  padding-block: clamp(4rem, 8vw, 6rem);
+  margin-top: 0;
+  padding-block: clamp(3rem, 6vw, 4.5rem) clamp(4rem, 8vw, 6rem);
 }
 
 .section--band::before {
@@ -333,8 +339,8 @@ const year = new Date().getFullYear()
   position: absolute;
   z-index: -1;
   inset: 0 calc(50% - 50vw);
-  background: color-mix(in srgb, var(--text) 3%, var(--bg));
-  clip-path: polygon(0 min(6vw, 5rem), 100% 0, 100% calc(100% - min(6vw, 5rem)), 0 100%);
+  background: var(--band-bg);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - min(6vw, 5rem)), 0 100%);
 }
 
 .section--continued {
