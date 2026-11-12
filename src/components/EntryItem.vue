@@ -33,7 +33,6 @@ defineProps<{ entry: Entry }>()
 .entry {
   position: relative;
   padding-left: 1.5rem;
-  border-left: 1px solid var(--line);
 }
 
 .entry:not(:last-child) {
@@ -44,8 +43,8 @@ defineProps<{ entry: Entry }>()
   content: '';
   position: absolute;
   z-index: 1;
-  left: -5px;
-  top: 0.45rem;
+  left: -4px;
+  top: var(--dot-top);
   width: 9px;
   height: 9px;
   border-radius: 50%;
@@ -113,9 +112,6 @@ defineProps<{ entry: Entry }>()
     width: 100%;
   }
 
-  .entry::before {
-    top: 0.3rem;
-  }
 }
 
 @media (min-width: 60rem) {

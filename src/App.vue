@@ -439,20 +439,37 @@ const year = new Date().getFullYear()
   display: grid;
 }
 
-/* The accent line that fills the timeline as you scroll (see vTimelineFill) */
+/* The timeline: a line from the first dot down, and an accent line that fills it
+   as you scroll (see vTimelineFill). --dot-top places the dots (in EntryItem). */
 .timeline {
+  --dot-top: 0.3rem;
   position: relative;
 }
 
+@media (min-width: 60rem) {
+  .timeline {
+    --dot-top: 0.45rem;
+  }
+}
+
+.timeline::before,
 .timeline::after {
   content: '';
   position: absolute;
-  top: 0;
+  top: calc(var(--dot-top) + 4.5px);
   left: 0;
   width: 1px;
-  height: calc(var(--fill, 0) * 100%);
-  background: var(--accent);
   pointer-events: none;
+}
+
+.timeline::before {
+  bottom: 0;
+  background: var(--line);
+}
+
+.timeline::after {
+  height: calc(var(--fill, 0) * (100% - var(--dot-top) - 4.5px));
+  background: var(--accent);
 }
 
 .about {
