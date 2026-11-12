@@ -10,11 +10,13 @@ import RouteModal from './components/RouteModal.vue'
 import TypedText from './components/TypedText.vue'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
+import { usePointerGlow } from './composables/usePointerGlow'
 import { useTheme } from './composables/useTheme'
 import { about, education, experience, interests, profile, projects, roles, skills } from './data'
 import { vReveal } from './directives/reveal'
 
 const { theme, toggle } = useTheme()
+usePointerGlow()
 
 // Crossing the phone breakpoint, the photo glides between the side and the top
 const heroText = useTemplateRef<HTMLElement>('heroText')

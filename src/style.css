@@ -154,3 +154,23 @@ ul.tags {
 html:has(dialog[open]) {
   overflow: hidden;
 }
+
+/* A faint light that follows the mouse (position set by usePointerGlow) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    color-mix(in srgb, var(--accent) 10%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+.has-glow body::after {
+  opacity: 1;
+}
