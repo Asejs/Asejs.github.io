@@ -90,7 +90,7 @@ const uisSubseaBrand: Logo = { svg: uisSubseaLogo, height: '3.5rem', emblem: tru
 export const about = [
   'Jeg har alltid vært opptatt av å forstå hvordan ting er bygget opp. Det startet med nettsider, der jeg studerte kildekoden for å lære hvordan de fungerte, og fortsatte med fotografi og Photoshop.',
   'Etter IT-fag på videregående begynte jeg på master i energi og miljø, men byttet til dataingeniør i Stavanger for å jobbe med det som interesserte meg mest: programmering.',
-  'I dag kombinerer jeg den nysgjerrigheten med motivasjonen for å lage verktøy som gjør hverdagen enklere for dem som bruker dem.',
+  'Som utvikler går jeg etter årsaken til et problem, ikke bare symptomet, og jeg er opptatt av å forstå hverdagen til dem som bruker løsningene. Målet er å lage verktøy som gjør jobbhverdagen deres enklere.',
 ]
 
 export const profile = {
