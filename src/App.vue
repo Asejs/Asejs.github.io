@@ -8,6 +8,7 @@ import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
 import RouteModal from './components/RouteModal.vue'
 import TypedText from './components/TypedText.vue'
+import WaveLines from './components/WaveLines.vue'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
 import { usePointerGlow } from './composables/usePointerGlow'
@@ -62,6 +63,7 @@ const year = new Date().getFullYear()
   <main class="page">
     <div class="hero-shadow">
       <header class="hero">
+        <WaveLines />
         <div ref="heroText" class="hero__text">
           <div class="hero__title">
             <h1 class="hero__name"><TypedText :text="profile.name" :delay="300" /></h1>
@@ -217,6 +219,13 @@ const year = new Date().getFullYear()
 
 .hero__picture {
   display: contents;
+}
+
+/* Above the wave lines */
+.hero__text,
+.hero__photo {
+  position: relative;
+  z-index: 1;
 }
 
 .hero__photo {
