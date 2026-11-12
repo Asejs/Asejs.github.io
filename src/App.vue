@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import ContactLinks from './components/ContactLinks.vue'
 import EntryItem from './components/EntryItem.vue'
 import InterestGallery from './components/InterestGallery.vue'
@@ -22,15 +22,6 @@ const { theme, toggle } = useTheme()
 // A soft light follows the mouse across the hero's background
 const hero = useTemplateRef<HTMLElement>('hero')
 usePointerGlow(hero)
-
-// Feeds the photo's parallax while the hero is on screen
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
-function onHeroScroll() {
-  if (reduceMotion || !heroPhoto.value || scrollY > innerHeight) return
-  heroPhoto.value.style.setProperty('--hero-scroll', String(scrollY))
-}
-onMounted(() => addEventListener('scroll', onHeroScroll, { passive: true }))
-onBeforeUnmount(() => removeEventListener('scroll', onHeroScroll))
 
 // Crossing the phone breakpoint, the photo glides between the side and the top
 const heroText = useTemplateRef<HTMLElement>('heroText')
@@ -302,9 +293,6 @@ const year = new Date().getFullYear()
     mask-image: none;
     object-fit: cover;
     object-position: center 78%;
-    /* Parallax: the photo lags a little behind as you scroll, which makes it feel further
-       back. The gap this opens at its top is always above the top of the screen. */
-    transform: translateY(calc(var(--hero-scroll, 0) * 0.15px));
   }
 }
 
