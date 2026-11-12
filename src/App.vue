@@ -233,7 +233,8 @@ const year = new Date().getFullYear()
     justify-content: center;
     column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
     min-height: 0;
-    padding-inline: max(2rem, 4vw);
+    /* No vertical padding: the photo runs from the top edge down under the slant */
+    padding: 0 max(2rem, 4vw);
   }
 
   .hero__text {
