@@ -23,8 +23,25 @@ export function useHashRoute() {
     hash.value = window.location.hash
   }
 
+  // Opens route links without a real fragment jump: Safari scrolls the page to the top
+  // for a fragment that names no element, which flashes the hero before the modal opens.
+  function onClick(event: MouseEvent) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#/"]')
+    if (!link) return
+    event.preventDefault()
+    history.pushState(null, '', link.getAttribute('href'))
+    onHashChange()
+  }
+
   window.addEventListener('hashchange', onHashChange)
-  onBeforeUnmount(() => window.removeEventListener('hashchange', onHashChange))
+  window.addEventListener('popstate', onHashChange)
+  document.addEventListener('click', onClick)
+  onBeforeUnmount(() => {
+    window.removeEventListener('hashchange', onHashChange)
+    window.removeEventListener('popstate', onHashChange)
+    document.removeEventListener('click', onClick)
+  })
 
   const activeProject = computed(() => {
     const slug = slugAfter(hash.value, PROJECT_PREFIX)

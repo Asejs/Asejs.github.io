@@ -494,7 +494,6 @@ const TOUCH_BUTTONS = [
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 12px;
   background: #0a3442;
   outline: none;
   touch-action: none;
@@ -547,7 +546,7 @@ const TOUCH_BUTTONS = [
   left: 50%;
   transform: translateX(-50%);
   padding: 0.4rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: rgb(6 12 14 / 0.6);
   color: #e6f4f6;
   font-size: 0.85rem;
@@ -561,7 +560,7 @@ const TOUCH_BUTTONS = [
   left: 50%;
   transform: translateX(-50%);
   padding: 0.4rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: #ff6b35;
   color: #fff;
   font-size: 0.85rem;
@@ -575,7 +574,7 @@ const TOUCH_BUTTONS = [
   right: 0.75rem;
   top: 3.5rem;
   padding: 0.3rem 0.7rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: #ffd400;
   color: #3a2a00;
   font-size: 0.8rem;
@@ -631,7 +630,7 @@ const TOUCH_BUTTONS = [
   display: flex;
   gap: 1rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: rgb(6 12 14 / 0.55);
   color: #e6f4f6;
   font-family: var(--mono);
@@ -660,7 +659,7 @@ const TOUCH_BUTTONS = [
 .rov__bars span {
   position: relative;
   width: 0.4rem;
-  border-radius: 2px;
+  border-radius: var(--radius);
   background: rgb(255 255 255 / 0.15);
 }
 
@@ -668,7 +667,7 @@ const TOUCH_BUTTONS = [
   position: absolute;
   left: 0;
   right: 0;
-  border-radius: 2px;
+  border-radius: var(--radius);
   background: #86d2dc;
 }
 
@@ -705,7 +704,7 @@ const TOUCH_BUTTONS = [
 
 .rov__button {
   border: 1px solid rgb(255 255 255 / 0.25);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: rgb(6 12 14 / 0.55);
   color: #e6f4f6;
   font: inherit;
@@ -789,7 +788,7 @@ const TOUCH_BUTTONS = [
   margin-top: 0.4rem;
   padding: 0.6rem 1.2rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: #86d2dc;
   color: #06222a;
   font: inherit;
@@ -809,7 +808,7 @@ const TOUCH_BUTTONS = [
   height: 2.25rem;
   padding: 0 0.85rem;
   border: 1px solid rgb(255 255 255 / 0.25);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: rgb(6 12 14 / 0.55);
   color: #e6f4f6;
   font-family: var(--mono);
@@ -823,7 +822,7 @@ const TOUCH_BUTTONS = [
   left: 0.75rem;
   max-width: 60%;
   padding: 0.3rem 0.6rem;
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: rgb(6 12 14 / 0.45);
   color: #e6f4f6;
   font-size: 0.75rem;
@@ -839,7 +838,7 @@ const TOUCH_BUTTONS = [
   width: min(20rem, calc(100% - 1.5rem));
   overflow-y: auto;
   padding: 0.75rem 0.9rem;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: rgb(6 12 14 / 0.82);
   color: #e6f4f6;
 }

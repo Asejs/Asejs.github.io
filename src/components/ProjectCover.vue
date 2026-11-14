@@ -29,7 +29,6 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 .cover {
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: 6px;
   background: var(--tag-bg);
 }
 

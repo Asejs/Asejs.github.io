@@ -231,33 +231,150 @@ function laptop() {
   const screenW = W - bezel * 2
   const screenH = D - bezel - chin
 
+  // A real-looking editor: file tree, tabs, highlighted Vue code and a terminal, in the site's own colours
   const editor = painted(1024, Math.round((1024 * screenH) / screenW), (ctx) => {
+    const w = 1024
     const h = ctx.canvas.height
-    ctx.fillStyle = '#1b1f24'
-    ctx.fillRect(0, 0, 1024, h)
-    ctx.fillStyle = '#15181c'
-    ctx.fillRect(0, 0, 180, h)
-    ctx.fillStyle = '#101215'
-    ctx.fillRect(0, 0, 1024, 30)
-    ctx.fillStyle = '#23282e'
-    ctx.fillRect(180, 30, 844, 34)
-    for (let i = 0; i < 20; i++) {
-      ctx.fillStyle = i === 4 ? '#86d2dc' : '#3a414a'
-      ctx.fillRect(24 + (i % 4 === 0 ? 0 : 16), 84 + i * 28, 70 + ((i * 37) % 60), 9)
-    }
-    const syntax = ['#86d2dc', '#c792ea', '#f0b37e', '#a5d6a7', '#e6e6e6', '#82aaff', '#f07178']
-    for (let line = 0; line < 22; line++) {
-      ctx.fillStyle = '#4a525c'
-      ctx.fillRect(196, 86 + line * 28, 16, 9)
-      let x = 236 + ((line * 7) % 4) * 28
-      const words = 2 + ((line * 5) % 5)
-      for (let w = 0; w < words; w++) {
-        const width = 28 + ((line * 13 + w * 29) % 90)
-        ctx.fillStyle = syntax[(line + w * 2) % syntax.length]
-        ctx.fillRect(x, 86 + line * 28, width, 10)
-        x += width + 14
+    const mono = (size: number, weight = 400) => `${weight} ${size}px "JetBrains Mono", ui-monospace, monospace`
+    const C = { bg: '#0f1417', side: '#0b1013', bar: '#080b0d', line: '#1c2429', dim: '#4a5a62', text: '#c9d4d8', accent: '#86d2dc', key: '#c792ea', str: '#a5d6a7', fn: '#82aaff', num: '#f0b37e', tag: '#f07178', live: '#3fb56b' }
+
+    ctx.fillStyle = C.bg
+    ctx.fillRect(0, 0, w, h)
+
+    // Title bar
+    ctx.fillStyle = C.bar
+    ctx.fillRect(0, 0, w, 30)
+    ;['#ff5f57', '#febc2e', '#28c840'].forEach((colour, i) => {
+      ctx.fillStyle = colour
+      ctx.beginPath()
+      ctx.arc(18 + i * 18, 15, 5, 0, Math.PI * 2)
+      ctx.fill()
+    })
+    ctx.font = mono(12)
+    ctx.fillStyle = C.dim
+    ctx.textAlign = 'center'
+    ctx.fillText('asejs.github.io — App.vue', w / 2, 19)
+    ctx.textAlign = 'left'
+
+    // File tree
+    const sideW = 190
+    ctx.fillStyle = C.side
+    ctx.fillRect(0, 30, sideW, h - 30)
+    ctx.font = mono(11, 500)
+    ctx.fillStyle = C.dim
+    ctx.fillText('EXPLORER', 16, 54)
+    const tree: [number, string, boolean?][] = [
+      [0, '▾ src'], [1, '▾ components'], [2, 'ProjectCard.vue'], [2, 'SiteNav.vue'], [2, 'TypedText.vue'],
+      [1, '▾ favorites'], [2, 'models.ts'], [1, 'App.vue', true], [1, 'data.ts'], [1, 'main.ts'], [0, '▸ public'], [0, 'package.json'], [0, 'vite.config.ts'],
+    ]
+    ctx.font = mono(12)
+    tree.forEach(([depth, name, active], i) => {
+      const y = 80 + i * 22
+      if (active) {
+        ctx.fillStyle = '#16232a'
+        ctx.fillRect(0, y - 15, sideW, 22)
+        ctx.fillStyle = C.accent
+        ctx.fillRect(0, y - 15, 2, 22)
       }
-    }
+      ctx.fillStyle = active ? C.text : name.startsWith('▾') || name.startsWith('▸') ? C.text : '#7d8c93'
+      ctx.fillText(name, 16 + depth * 14, y)
+    })
+
+    // Tabs
+    ctx.fillStyle = C.bar
+    ctx.fillRect(sideW, 30, w - sideW, 32)
+    ;['App.vue', 'data.ts', 'SiteNav.vue'].forEach((tab, i) => {
+      const x = sideW + i * 120
+      ctx.fillStyle = i === 0 ? C.bg : C.bar
+      ctx.fillRect(x, 30, 120, 32)
+      if (i === 0) {
+        ctx.fillStyle = C.accent
+        ctx.fillRect(x, 30, 120, 2)
+      }
+      ctx.fillStyle = i === 0 ? C.text : C.dim
+      ctx.font = mono(12)
+      ctx.fillText(tab, x + 16, 51)
+    })
+
+    // Code, as [colour, text] runs per line
+    const code: [string, string][][] = [
+      [[C.dim, '<'], [C.tag, 'script'], [C.key, ' setup lang'], [C.dim, '='], [C.str, '"ts"'], [C.dim, '>']],
+      [[C.key, 'import'], [C.text, ' { computed } '], [C.key, 'from'], [C.str, " 'vue'"]],
+      [[C.key, 'import'], [C.text, ' { profile, projects } '], [C.key, 'from'], [C.str, " './data'"]],
+      [],
+      [[C.key, 'const'], [C.text, ' current '], [C.dim, '= '], [C.fn, 'computed'], [C.text, '(() '], [C.key, '=>']],
+      [[C.text, '  projects.'], [C.fn, 'find'], [C.text, '((p) '], [C.key, '=>'], [C.text, ' p.period.'], [C.fn, 'endsWith'], [C.text, '('], [C.str, "'nå'"], [C.text, '))']],
+      [[C.text, ')']],
+      [[C.dim, '</'], [C.tag, 'script'], [C.dim, '>']],
+      [],
+      [[C.dim, '<'], [C.tag, 'template'], [C.dim, '>']],
+      [[C.dim, '  <'], [C.tag, 'header'], [C.key, ' class'], [C.dim, '='], [C.str, '"hero"'], [C.dim, '>']],
+      [[C.dim, '    <'], [C.tag, 'h1'], [C.dim, '>'], [C.text, '{{ profile.name }}'], [C.dim, '</'], [C.tag, 'h1'], [C.dim, '>']],
+      [[C.dim, '    <'], [C.tag, 'p'], [C.key, ' class'], [C.dim, '='], [C.str, '"eyebrow"'], [C.dim, '>'], [C.accent, '// FRONTEND-UTVIKLER'], [C.dim, '</'], [C.tag, 'p'], [C.dim, '>']],
+      [[C.dim, '    <'], [C.tag, 'NowCard'], [C.key, ' v-if'], [C.dim, '='], [C.str, '"current"'], [C.key, ' :job'], [C.dim, '='], [C.str, '"current"'], [C.dim, ' />']],
+      [[C.dim, '  </'], [C.tag, 'header'], [C.dim, '>']],
+      [[C.dim, '</'], [C.tag, 'template'], [C.dim, '>']],
+    ]
+    const codeX = sideW + 56
+    const lineH = 22
+    ctx.font = mono(14)
+    code.forEach((runs, i) => {
+      const y = 92 + i * lineH
+      if (i === 12) {
+        ctx.fillStyle = '#131c20'
+        ctx.fillRect(sideW, y - 16, w - sideW, lineH)
+      }
+      ctx.fillStyle = i === 12 ? C.text : '#33414a'
+      ctx.textAlign = 'right'
+      ctx.fillText(String(i + 1), codeX - 18, y)
+      ctx.textAlign = 'left'
+      let x = codeX
+      for (const [colour, text] of runs) {
+        ctx.fillStyle = colour
+        ctx.fillText(text, x, y)
+        x += ctx.measureText(text).width
+      }
+      if (i === 12) {
+        ctx.fillStyle = C.accent
+        ctx.fillRect(x + 2, y - 14, 2, 18)
+      }
+    })
+
+    // Terminal
+    const termY = h - 150
+    ctx.fillStyle = C.bar
+    ctx.fillRect(sideW, termY, w - sideW, 128)
+    ctx.fillStyle = C.line
+    ctx.fillRect(sideW, termY, w - sideW, 1)
+    ctx.font = mono(11, 500)
+    ctx.fillStyle = C.text
+    ctx.fillText('TERMINAL', sideW + 16, termY + 22)
+    ctx.fillStyle = C.dim
+    ctx.fillText('PROBLEMS    OUTPUT', sideW + 100, termY + 22)
+    ctx.font = mono(13)
+    const term: [string, string][][] = [
+      [[C.live, '➜ '], [C.accent, 'asejs.github.io '], [C.key, 'git:('], [C.tag, 'main'], [C.key, ') '], [C.text, 'npm run build']],
+      [[C.dim, 'vite v6 building for production...']],
+      [[C.live, '✓ '], [C.text, '412 modules transformed. '], [C.dim, 'built in '], [C.num, '1.84s']],
+    ]
+    term.forEach((runs, i) => {
+      let x = sideW + 16
+      for (const [colour, text] of runs) {
+        ctx.fillStyle = colour
+        ctx.fillText(text, x, termY + 52 + i * 22)
+        x += ctx.measureText(text).width
+      }
+    })
+
+    // Status bar
+    ctx.fillStyle = '#0e4a4f'
+    ctx.fillRect(0, h - 22, w, 22)
+    ctx.font = mono(11)
+    ctx.fillStyle = '#d8f3f6'
+    ctx.fillText('⎇ main   ✓ 0  ⚠ 0', 12, h - 7)
+    ctx.textAlign = 'right'
+    ctx.fillText('Ln 13, Col 58   UTF-8   Vue   TypeScript 5.6', w - 12, h - 7)
+    ctx.textAlign = 'left'
   })
   const screen = mesh(
     new THREE.PlaneGeometry(screenW, screenH),
@@ -302,25 +419,68 @@ function laptop() {
 function coffee() {
   const group = new THREE.Group()
   const cup = new THREE.Group()
-  const ceramic = physical('#f3f1ec', { roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06 })
+  // Hand-thrown stoneware: soft, uneven walls and a mottled grey-white reactive glaze,
+  // painted per vertex (the lathe has no UVs) and darker where the glaze thins at the rim
+  const glaze = (x: number, y: number, z: number) =>
+    0.5 + 0.22 * Math.sin(x * 7.1 + y * 3.3) * Math.cos(z * 6.3 - y * 2.1) + 0.18 * Math.sin(x * 15.7 - z * 13.1 + y * 9.4) + 0.1 * Math.sin(y * 23 + x * 19)
+  const light = new THREE.Color('#ece9e2')
+  const dark = new THREE.Color('#aaa69d')
+  const rimTone = new THREE.Color('#8f897f')
+  const ceramic = physical('#ffffff', { vertexColors: true, roughness: 0.72, specularIntensity: 0.45, clearcoat: 0.25, clearcoatRoughness: 0.5 })
 
-  const outline: THREE.Vector2[] = [new THREE.Vector2(0, -0.6), new THREE.Vector2(0.46, -0.6)]
-  for (let i = 0; i <= 6; i++) {
-    const a = -Math.PI / 2 + (i / 6) * (Math.PI / 2)
-    outline.push(new THREE.Vector2(0.48 + Math.cos(a) * 0.05, -0.55 + Math.sin(a) * 0.05))
+  const outline: THREE.Vector2[] = [new THREE.Vector2(0, -0.6), new THREE.Vector2(0.44, -0.6)]
+  // A soft, rounded base
+  for (let i = 0; i <= 16; i++) {
+    const a = -Math.PI / 2 + (i / 16) * (Math.PI / 2)
+    outline.push(new THREE.Vector2(0.4 + Math.cos(a) * 0.13, -0.47 + Math.sin(a) * 0.13))
   }
-  outline.push(new THREE.Vector2(0.55, 0.5))
+  // Many points up the wall, so the uneven surface has vertices to bend
+  for (let i = 1; i <= 36; i++) outline.push(new THREE.Vector2(0.53 + (i / 36) * 0.015, -0.47 + (i / 36) * 0.97))
   for (let i = 0; i <= 10; i++) {
     const a = (i / 10) * Math.PI
-    outline.push(new THREE.Vector2(0.505 + Math.cos(a) * 0.045, 0.5 + Math.sin(a) * 0.045))
+    outline.push(new THREE.Vector2(0.5 + Math.cos(a) * 0.045, 0.5 + Math.sin(a) * 0.045))
   }
-  outline.push(new THREE.Vector2(0.46, -0.48), new THREE.Vector2(0, -0.48))
-  const mugGeometry = mergeVertices(new THREE.LatheGeometry(outline, 64).deleteAttribute('uv').deleteAttribute('normal'))
+  outline.push(new THREE.Vector2(0.455, -0.48), new THREE.Vector2(0, -0.48))
+  const mugGeometry = mergeVertices(new THREE.LatheGeometry(outline, 160).deleteAttribute('uv').deleteAttribute('normal'))
+  const wall = mugGeometry.attributes.position as THREE.BufferAttribute
+  const colours = new Float32Array(wall.count * 3)
+  const point = new THREE.Vector3()
+  const tone = new THREE.Color()
+  for (let i = 0; i < wall.count; i++) {
+    point.fromBufferAttribute(wall, i)
+    const radius = Math.hypot(point.x, point.z)
+    const angle = Math.atan2(point.z, point.x)
+    // Gentle, irregular dents, like a cup pressed by hand; strongest mid-wall, none at the base
+    if (radius > 0.3) {
+      const fade = THREE.MathUtils.smoothstep(point.y, -0.55, -0.3)
+      const dent = (0.012 * Math.sin(angle * 5 + point.y * 4.2) + 0.009 * Math.sin(angle * 3 - point.y * 6.5 + 1.3) + 0.005 * Math.sin(angle * 9 + point.y * 11)) * fade
+      const scale = (radius + dent) / radius
+      wall.setXYZ(i, point.x * scale, point.y, point.z * scale)
+    }
+    tone.lerpColors(dark, light, THREE.MathUtils.clamp(glaze(point.x, point.y, point.z), 0, 1))
+    if (point.y > 0.42 && radius > 0.47) tone.lerp(rimTone, THREE.MathUtils.smoothstep(point.y, 0.42, 0.53) * 0.7)
+    tone.toArray(colours, i * 3)
+  }
+  mugGeometry.setAttribute('color', new THREE.BufferAttribute(colours, 3))
   mugGeometry.computeVertexNormals()
   const mug = mesh(mugGeometry, ceramic)
   ;(mug.material as THREE.MeshPhysicalMaterial).side = THREE.DoubleSide
-  const handle = mesh(new THREE.TorusGeometry(0.27, 0.07, 20, 40, Math.PI * 1.15), ceramic, -0.52, -0.02, 0)
-  handle.rotation.z = Math.PI * 0.425
+  // A teardrop handle: a full, round curve at the top that tapers in towards the bottom
+  const handlePath = new THREE.CatmullRomCurve3(
+    [
+      [-0.48, 0.34], [-0.68, 0.42], [-0.88, 0.34], [-0.95, 0.12],
+      [-0.88, -0.1], [-0.72, -0.26], [-0.48, -0.32],
+    ].map(([x, y]) => new THREE.Vector3(x, y, 0)),
+  )
+  const handleGeometry = new THREE.TubeGeometry(handlePath, 64, 0.075, 20)
+  const handlePoints = handleGeometry.attributes.position as THREE.BufferAttribute
+  const handleColours = new Float32Array(handlePoints.count * 3)
+  for (let i = 0; i < handlePoints.count; i++) {
+    point.fromBufferAttribute(handlePoints, i)
+    tone.lerpColors(dark, light, THREE.MathUtils.clamp(glaze(point.x, point.y, point.z), 0, 1)).toArray(handleColours, i * 3)
+  }
+  handleGeometry.setAttribute('color', new THREE.BufferAttribute(handleColours, 3))
+  const handle = mesh(handleGeometry, ceramic)
   const crema = painted(128, 128, (ctx) => {
     const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
     gradient.addColorStop(0, '#1a0a03')
@@ -470,10 +630,13 @@ function camera() {
   grain.colorSpace = THREE.NoColorSpace
   grain.wrapS = grain.wrapT = THREE.RepeatWrapping
   grain.repeat.set(4, 4)
-  const shell = physical('#111214', { roughness: 0.88, envMapIntensity: 0.6 })
-  const leather = physical('#0e0f10', { roughness: 0.95, roughnessMap: grain, bumpMap: grain, bumpScale: 0.35, envMapIntensity: 0.5 })
+  // Low specular and a fine grain everywhere, so the body reads as matte magnesium and rubber, not glossy plastic
+  const fineGrain = grain.clone()
+  fineGrain.repeat.set(10, 10)
+  const shell = physical('#26272a', { roughness: 1, specularIntensity: 0.25, bumpMap: fineGrain, bumpScale: 0.12, envMapIntensity: 0.3 })
+  const leather = physical('#1f2022', { roughness: 1, specularIntensity: 0.2, roughnessMap: grain, bumpMap: grain, bumpScale: 0.7, envMapIntensity: 0.25 })
   const metal = physical('#8a8e94', { metalness: 0.8, roughness: 0.6 })
-  const black = physical('#0f1011', { roughness: 0.8 })
+  const black = physical('#212224', { roughness: 0.95, specularIntensity: 0.3, envMapIntensity: 0.3 })
 
   body.add(mesh(softBox(1.5, 0.95, 0.6, 0.12, 0.03), shell, 0, 0, 0))
   body.add(mesh(softBox(1.38, 0.8, 0.02, 0.01, 0.004), leather, 0.03, -0.04, 0.3))
@@ -491,14 +654,14 @@ function camera() {
   body.add(mesh(new THREE.BoxGeometry(0.22, 0.03, 0.2), metal, 0.06, 0.8, -0.04))
 
   const dial = new THREE.Group()
-  dial.add(mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.09, 40), physical('#141516', { roughness: 0.6, bumpMap: ridges(48), bumpScale: 1.5 })))
+  dial.add(mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.09, 40), physical('#242528', { roughness: 0.6, bumpMap: ridges(48), bumpScale: 1.5 })))
   dial.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.1, 20), black))
   dial.position.set(0.52, 0.52, -0.02)
   body.add(dial)
   const shutter = mesh(new THREE.CylinderGeometry(0.06, 0.065, 0.04, 24), metal, -0.6, 0.5, 0.3)
   shutter.rotation.x = 0.35
   body.add(shutter)
-  const wheel = mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 24), physical('#141516', { bumpMap: ridges(32), bumpScale: 1 }), -0.42, 0.46, 0.18)
+  const wheel = mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 24), physical('#242528', { bumpMap: ridges(32), bumpScale: 1 }), -0.42, 0.46, 0.18)
   wheel.rotation.z = Math.PI / 2
   body.add(wheel)
   const lcd = mesh(new THREE.PlaneGeometry(0.34, 0.2), physical('#3a4038', { roughness: 0.1, clearcoat: 1, emissive: '#1d221c', emissiveIntensity: 0.4 }), -0.32, 0.4755, -0.05)
@@ -509,9 +672,9 @@ function camera() {
   for (const side of [-1, 1]) body.add(mesh(new THREE.TorusGeometry(0.045, 0.015, 8, 20), metal, side * 0.77, 0.3, 0))
 
   const lens = new THREE.Group()
-  const barrel = physical('#141516', { roughness: 0.85, envMapIntensity: 0.6 })
-  const rubber = (count: number) => physical('#0e0f10', { roughness: 0.85, bumpMap: ridges(count), bumpScale: 2 })
-  lens.add(ring(0.36, 0.03, 0.3, metal))
+  const barrel = physical('#242528', { roughness: 1, specularIntensity: 0.25, bumpMap: fineGrain, bumpScale: 0.1, envMapIntensity: 0.3 })
+  const rubber = (count: number) => physical('#1c1d1f', { roughness: 0.95, specularIntensity: 0.25, bumpMap: ridges(count), bumpScale: 2, envMapIntensity: 0.3 })
+  lens.add(ring(0.36, 0.03, 0.3, black)) // the mount: hidden in black where the lens meets the body
   lens.add(ring(0.33, 0.1, 0.33, barrel))
   lens.add(ring(0.38, 0.16, 0.43, rubber(90)))
   lens.add(ring(0.38, 0.12, 0.59, barrel))
@@ -521,7 +684,7 @@ function camera() {
   lens.add(ring(0.4, 0.3, 0.71, rubber(110)))
   lens.add(ring(0.405, 0.022, 1.01, physical('#b3262b', { roughness: 0.7 }), 0.405, true))
   lens.add(ring(0.41, 0.1, 1.032, barrel, 0.4, true))
-  const frontRing = physical('#0b0b0c', { roughness: 0.75 })
+  const frontRing = physical('#1a1b1d', { roughness: 0.9, specularIntensity: 0.3 })
   lens.add(ring(0.415, 0.03, 1.13, frontRing, 0.415, true))
   lens.add(mesh(new THREE.RingGeometry(0.36, 0.415, 64), frontRing, 0, 0, 1.16))
   lens.add(mesh(new THREE.BoxGeometry(0.05, 0.16, 0.14), barrel, -0.38, 0.05, 0.62))
@@ -563,18 +726,18 @@ function camera() {
   }
   const facingBack = (geometry: THREE.BufferGeometry) => geometry.rotateY(Math.PI)
   onBack(mesh(facingBack(new THREE.PlaneGeometry(0.34, 0.95)), leather), -0.56, 0)
-  onBack(mesh(facingBack(roundedBox(0.8, 0.012, 0.6, 0.04).rotateX(Math.PI / 2)), physical('#0c0c0d', { roughness: 0.8 })), 0.24, -0.1, 0.004)
+  onBack(mesh(facingBack(roundedBox(0.8, 0.012, 0.6, 0.04).rotateX(Math.PI / 2)), physical('#1c1d1f', { roughness: 0.8 })), 0.24, -0.1, 0.004)
   onBack(mesh(facingBack(new THREE.PlaneGeometry(0.66, 0.47)), physical('#060708', { roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.02 })), 0.25, -0.09, 0.012)
   for (let i = 0; i < 5; i++) {
     onBack(mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 20).rotateX(Math.PI / 2), black), 0.66, 0.2 - i * 0.15, 0.012)
   }
-  onBack(mesh(softBox(0.38, 0.28, 0.12, 0.07, 0.025), physical('#0b0b0c', { roughness: 0.9 })), 0.06, 0.5, 0.05)
+  onBack(mesh(softBox(0.38, 0.28, 0.12, 0.07, 0.025), physical('#1a1b1d', { roughness: 0.9 })), 0.06, 0.5, 0.05)
   onBack(mesh(facingBack(new THREE.PlaneGeometry(0.18, 0.12)), physical('#1b2448', { roughness: 0.05, metalness: 0.5, clearcoat: 1, iridescence: 0.8 })), 0.06, 0.5, 0.111)
   for (const x of [-0.24, -0.4, -0.56]) {
     onBack(mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.03, 20).rotateX(Math.PI / 2), black), x, 0.32, 0.014)
   }
-  onBack(mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.04, 20).rotateX(Math.PI / 2), physical('#141516', { roughness: 0.7, bumpMap: ridges(24), bumpScale: 1 })), -0.2, 0.1, 0.02)
-  onBack(mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.04, 48).rotateX(Math.PI / 2), physical('#121314', { roughness: 0.75, bumpMap: ridges(60), bumpScale: 2 })), -0.32, -0.2, 0.02)
+  onBack(mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.04, 20).rotateX(Math.PI / 2), physical('#242528', { roughness: 0.7, bumpMap: ridges(24), bumpScale: 1 })), -0.2, 0.1, 0.02)
+  onBack(mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.04, 48).rotateX(Math.PI / 2), physical('#222326', { roughness: 0.75, bumpMap: ridges(60), bumpScale: 2 })), -0.32, -0.2, 0.02)
   onBack(mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.05, 32).rotateX(Math.PI / 2), physical('#1d1e20', { roughness: 0.8 })), -0.32, -0.2, 0.026)
   const lever = onBack(mesh(new THREE.BoxGeometry(0.14, 0.035, 0.02), physical('#2a2b2e', { roughness: 0.8 })), -0.2, -0.41, 0.012)
   lever.rotation.z = -0.35
@@ -634,14 +797,14 @@ function palette() {
   hgt.fillStyle = '#000'
   hgt.fillRect(0, 0, W, H)
   const zones: { x: number; y: number; rx: number; ry: number; colours: string[] }[] = [
-    { x: -0.3, y: 0.42, rx: 0.3, ry: 0.25, colours: ['#f2c230', '#e8b21e', '#f6d75a', '#d9a514', '#a8b83a'] },
-    { x: 0.08, y: 0.5, rx: 0.25, ry: 0.22, colours: ['#ee6a1f', '#f27f2e', '#e45812', '#f39a4a'] },
-    { x: 0.52, y: 0.34, rx: 0.35, ry: 0.32, colours: ['#c8312b', '#b3261f', '#d4442f', '#9e2a22', '#c9573a'] },
-    { x: 0.78, y: 0.06, rx: 0.18, ry: 0.2, colours: ['#2f8a3e', '#3a9a46', '#24702f', '#4aa652'] },
-    { x: -0.08, y: 0.06, rx: 0.32, ry: 0.22, colours: ['#f5f3ee', '#e8eef5', '#dfe7ef', '#ffffff', '#cfdcea'] },
-    { x: -0.55, y: -0.32, rx: 0.42, ry: 0.32, colours: ['#1f5fd6', '#2b6ff0', '#173f9e', '#4a86e8', '#0f2f7a', '#6ea0f0'] },
-    { x: 0.22, y: -0.42, rx: 0.3, ry: 0.22, colours: ['#a493de', '#b5a6e8', '#8c7ccf', '#c9bdf0', '#e0a0a0'] },
-    { x: 0.66, y: -0.34, rx: 0.2, ry: 0.2, colours: ['#2a2a2e', '#4a4a50', '#6e6e76', '#1a1a1d'] },
+    { x: -0.3, y: 0.42, rx: 0.3, ry: 0.25, colours: ['#8a6418', '#9c7420', '#6e4e12', '#a9832c', '#5c4a1a'] },
+    { x: 0.08, y: 0.5, rx: 0.25, ry: 0.22, colours: ['#7a2d12', '#8e3a18', '#5e220e', '#9a4a24'] },
+    { x: 0.52, y: 0.34, rx: 0.35, ry: 0.32, colours: ['#7a1018', '#5e0b12', '#8f1820', '#4a080e', '#a0222a'] },
+    { x: 0.78, y: 0.06, rx: 0.18, ry: 0.2, colours: ['#0e4a4f', '#14606a', '#0a3a3e', '#1f7a84'] },
+    { x: -0.08, y: 0.06, rx: 0.32, ry: 0.22, colours: ['#d8d2c4', '#c9c2b2', '#e4dfd3', '#b8b0a0', '#cfc8b8'] },
+    { x: -0.55, y: -0.32, rx: 0.42, ry: 0.32, colours: ['#14234a', '#1b2f60', '#0d1836', '#24407a', '#0a1228', '#2f4d86'] },
+    { x: 0.22, y: -0.42, rx: 0.3, ry: 0.22, colours: ['#3e2550', '#4e3064', '#2e1b3c', '#5e3c74', '#5a2a3a'] },
+    { x: 0.66, y: -0.34, rx: 0.2, ry: 0.2, colours: ['#121214', '#1e1e22', '#2c2c32', '#0a0a0c'] },
   ]
   for (const zone of zones) {
     const patch = new Path2D()
@@ -820,13 +983,40 @@ function polaroid() {
   const cardW = photoW + margin * 2
   const cardH = photoH + margin + strip
 
-  const card = mesh(new THREE.BoxGeometry(cardW, cardH, 0.02), physical('#f3f1ea', { roughness: 0.85 }))
+  // The embossed diamond texture of real instant-film frames, as a tiling bump map
+  const emboss = painted(64, 64, (ctx) => {
+    ctx.fillStyle = '#808080'
+    ctx.fillRect(0, 0, 64, 64)
+    for (let y = 0; y < 64; y += 8) {
+      for (let x = (y / 8) % 2 ? 4 : 0; x < 64 + 8; x += 8) {
+        const gradient = ctx.createRadialGradient(x - 1, y - 1, 0, x, y, 4)
+        gradient.addColorStop(0, '#d0d0d0')
+        gradient.addColorStop(1, '#606060')
+        ctx.fillStyle = gradient
+        ctx.beginPath()
+        ctx.moveTo(x, y - 3.5)
+        ctx.lineTo(x + 3.5, y)
+        ctx.lineTo(x, y + 3.5)
+        ctx.lineTo(x - 3.5, y)
+        ctx.fill()
+      }
+    }
+  })
+  emboss.colorSpace = THREE.NoColorSpace
+  emboss.wrapS = emboss.wrapT = THREE.RepeatWrapping
+  emboss.repeat.set(cardW * 22, cardH * 22)
+
+  // An aged, off-white frame that sits in the scene's shade instead of glowing
+  const card = mesh(
+    new THREE.BoxGeometry(cardW, cardH, 0.02),
+    physical('#bdb7aa', { roughness: 0.95, roughnessMap: emboss, bumpMap: emboss, bumpScale: 1.2, specularIntensity: 0.35, envMapIntensity: 0.5 }),
+  )
   const photo = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}favorites/polaroid.webp`)
   photo.colorSpace = THREE.SRGBColorSpace
   photo.anisotropy = 8
   const picture = mesh(
     new THREE.PlaneGeometry(photoW, photoH),
-    new THREE.MeshBasicMaterial({ map: photo, toneMapped: false }),
+    new THREE.MeshBasicMaterial({ map: photo, color: '#c8c8c8', toneMapped: false }),
     0,
     cardH / 2 - margin - photoH / 2,
     0.0105,
@@ -834,7 +1024,7 @@ function polaroid() {
   const filmBack = painted(512, Math.round((512 * cardH) / cardW), (ctx) => {
     const w = ctx.canvas.width
     const h = ctx.canvas.height
-    ctx.fillStyle = '#e9e7e1'
+    ctx.fillStyle = '#bdb7aa'
     ctx.fillRect(0, 0, w, h)
     ctx.fillStyle = '#9ea0a3'
     ctx.fillRect(10, 10, w - 20, h * 0.07)

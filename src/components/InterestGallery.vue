@@ -72,8 +72,13 @@ onBeforeUnmount(() => {
 
 <template>
   <article>
-    <h1 class="visually-hidden">{{ interest.galleryTitle ?? interest.title }}</h1>
-    <p v-if="interest.galleryDescription" class="head__desc">{{ interest.galleryDescription }}</p>
+    <header class="head">
+      <p class="head__eyebrow">
+        {{ interest.title }}<template v-if="interest.camera"> · {{ interest.camera }}</template> · {{ images.length }} bilder
+      </p>
+      <h1 class="head__title">{{ interest.galleryTitle ?? interest.title }}</h1>
+      <p v-if="interest.galleryDescription" class="head__desc">{{ interest.galleryDescription }}</p>
+    </header>
 
     <div class="grid">
       <div v-for="(column, columnIndex) in columns" :key="columnIndex" class="grid__column">
@@ -95,6 +100,7 @@ onBeforeUnmount(() => {
             loading="lazy"
             decoding="async"
           />
+          <span v-if="image.caption" class="grid__caption" aria-hidden="true">{{ image.caption }}</span>
         </button>
       </div>
     </div>
@@ -127,8 +133,25 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.head__eyebrow {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-text);
+}
+
+.head__title {
+  margin-top: 0.4rem;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
 .head__desc {
-  margin-top: 2rem;
+  margin-top: 1rem;
   color: var(--muted);
 }
 
@@ -136,7 +159,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .grid__column {
@@ -145,6 +168,7 @@ onBeforeUnmount(() => {
 }
 
 .grid__item {
+  position: relative;
   display: block;
   width: 100%;
   margin-bottom: 0.75rem;
@@ -153,19 +177,36 @@ onBeforeUnmount(() => {
   overflow: hidden;
   background: var(--tag-bg);
   cursor: zoom-in;
-  break-inside: avoid;
 }
 
 .grid__item img {
   display: block;
   width: 100%;
   height: auto;
-  transition: transform 0.4s ease;
 }
 
-.grid__item:hover img {
-  transform: scale(1.03);
+/* Where it was taken, shown over the picture on hover or keyboard focus */
+.grid__caption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 2.5rem 0.9rem 0.8rem;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.65), transparent);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
+
+.grid__item:hover .grid__caption,
+.grid__item:focus-visible .grid__caption {
+  opacity: 1;
+}
+
 
 .lightbox {
   position: fixed;
@@ -173,21 +214,32 @@ onBeforeUnmount(() => {
   z-index: 20;
   display: grid;
   place-items: center;
-  padding: 3.5rem 1rem;
+  /* Room at the sides for the arrows, so they don't sit on the picture */
+  padding: 2.5rem 4.5rem;
   background: rgb(0 0 0 / 0.9);
+}
+
+@media (max-width: 40rem) {
+  .lightbox {
+    padding: 3.5rem 0.5rem;
+  }
 }
 
 .lightbox__figure img {
   display: block;
-  max-width: min(100%, 72rem);
-  max-height: calc(100vh - 8rem);
+  max-width: 100%;
+  max-height: calc(100vh - 7rem);
   margin: 0 auto;
 }
 
 .lightbox__figure figcaption {
   margin-top: 0.75rem;
   text-align: center;
-  font-size: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: #c8d0d4;
 }
 

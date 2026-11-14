@@ -12,7 +12,7 @@ import RouteModal from './components/RouteModal.vue'
 import SiteNav from './components/SiteNav.vue'
 import TypedText from './components/TypedText.vue'
 import WaveLines from './components/WaveLines.vue'
-import greetingSvg from './assets/greeting.svg?raw'
+import signatureSvg from './assets/signature.svg?raw'
 import horizon56Wordmark from './assets/logos/horizon56.svg?raw'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
@@ -78,7 +78,7 @@ const year = new Date().getFullYear()
           <div class="hero__title">
             <h1 class="hero__name"><TypedText :text="profile.name" :delay="300" /></h1>
             <p class="eyebrow">
-              <TypedText :text="`// ${profile.role.toLowerCase()}`" :delay="300 + profile.name.length * 70 + 250" :speed="45" />
+              <TypedText :text="`// ${profile.role.toUpperCase()}`" :delay="300 + profile.name.length * 70 + 250" :speed="45" />
             </p>
           </div>
           <p class="hero__summary">{{ profile.summary }}</p>
@@ -152,8 +152,8 @@ const year = new Date().getFullYear()
         <FavoriteThings>
           <div class="about">
             <p class="about__greeting">
-              <span class="visually-hidden">{{ aboutGreeting }}</span>
-              <span class="about__handwriting" aria-hidden="true" v-html="greetingSvg" />
+              <span class="about__prompt" aria-hidden="true">&gt;</span>
+              <TypedText :text="aboutGreeting" keep-caret />
             </p>
             <p class="about__tagline">Dataingeniør · Frontend-utvikler</p>
             <p v-for="paragraph in about" :key="paragraph">
@@ -162,6 +162,7 @@ const year = new Date().getFullYear()
                 <template v-else>{{ part }}</template>
               </template>
             </p>
+            <span class="about__signature" role="img" aria-label="Åse" v-html="signatureSvg" />
           </div>
         </FavoriteThings>
       </section>
@@ -211,6 +212,7 @@ const year = new Date().getFullYear()
 
 <style scoped>
 .page {
+  counter-reset: section;
   max-width: 44rem;
   margin: 0 auto;
   padding: 6rem 1.25rem 3rem;
@@ -292,11 +294,13 @@ const year = new Date().getFullYear()
 .hero__photo {
   order: -1;
   display: block;
-  width: 72%;
-  height: min(42vh, 88vw);
-  margin: -5rem auto 2rem;
+  width: 66%;
+  height: min(36vh, 86vw);
+  margin: -5rem auto 1.5rem;
   object-fit: cover;
-  object-position: center 38%;
+  object-position: center 40%;
+  /* The same slant as on wider screens, fading out at the bottom */
+  clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
   mask-image: linear-gradient(to bottom, #000 65%, transparent);
 }
 
@@ -344,8 +348,9 @@ const year = new Date().getFullYear()
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
+  letter-spacing: 0.08em;
   color: var(--accent-text);
 }
 
@@ -403,7 +408,7 @@ const year = new Date().getFullYear()
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #3fb56b;
+  background: var(--live);
   box-shadow: 0 0 0 0 rgb(63 181 107 / 0.5);
   animation: now-pulse 2.4s ease-out infinite;
 }
@@ -525,12 +530,24 @@ const year = new Date().getFullYear()
 
 /* Editorial section headings: large titles, set apart by space alone */
 .section__label {
+  counter-increment: section;
   margin-bottom: 2.25rem;
   font-family: var(--display);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
+}
+
+/* A small running number above each title */
+.section__label::before {
+  content: counter(section, decimal-leading-zero) ' /';
+  margin-right: 0.7em;
+  font-family: var(--mono);
+  font-size: 0.6em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--accent-text);
 }
 
 .stack {
@@ -577,7 +594,16 @@ const year = new Date().getFullYear()
 
 .about__greeting {
   margin-bottom: 0.25rem;
+  font-family: var(--mono);
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--text);
+}
+
+.about__prompt {
+  margin-right: 0.6em;
+  color: var(--accent-text);
 }
 
 .about__tagline {
@@ -589,10 +615,17 @@ const year = new Date().getFullYear()
   color: var(--accent);
 }
 
-.about__handwriting :deep(svg) {
+.about__signature {
+  justify-self: end;
+  /* Tucks up beside the short last line of the text, like a signature under a letter */
+  margin-top: -2.25rem;
+  color: var(--text);
+}
+
+.about__signature :deep(svg) {
   display: block;
   width: auto;
-  height: clamp(2.6rem, 6vw, 3.4rem);
+  height: 4.5rem;
 }
 
 .about strong {
@@ -645,7 +678,7 @@ const year = new Date().getFullYear()
 .footer__social:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 
 .footer {

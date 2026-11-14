@@ -65,21 +65,25 @@ function onClick(event: MouseEvent) {
 <style scoped>
 .modal {
   container-type: inline-size;
-  width: min(80vw, 56rem); /* the text column plus some air */
+  width: min(88vw, 72rem); /* the text column plus some air */
   max-width: none;
   height: 88dvh;
   max-height: none;
   margin: auto;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
 }
 
+/* Galleries take the whole screen, so the pictures get all the room */
 .modal--wide {
-  width: 80vw;
+  width: 100vw;
+  height: 100dvh;
+  border: none;
+  border-radius: 0;
 }
 
 .modal:focus {
@@ -99,7 +103,7 @@ function onClick(event: MouseEvent) {
 }
 
 .modal__column {
-  max-width: 44rem;
+  max-width: 58rem;
   margin: 0 auto;
 }
 
@@ -139,12 +143,14 @@ function onClick(event: MouseEvent) {
   stroke-linecap: round;
 }
 
-@media (max-width: 39.99rem) {
+/* Phones, upright or on their side, get the whole screen */
+@media (max-width: 39.99rem), (max-height: 30rem) {
   .modal {
-    width: calc(100vw - 1rem);
-    height: calc(100dvh - 1rem);
+    width: 100vw;
+    height: 100dvh;
+    border: none;
+    border-radius: 0;
   }
-
 }
 
 @media (max-width: 480px) {

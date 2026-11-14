@@ -43,6 +43,8 @@ export interface ProjectImage {
   src: string
   alt: string
   caption?: string
+  /** A cut-out on a transparent background, shown without a frame */
+  cutout?: boolean
   thumb?: string
   video?: string
   width?: number
@@ -90,11 +92,11 @@ const equinorBrand: Logo = {
 }
 const uisSubseaBrand: Logo = { svg: uisSubseaLogo, height: '3.5rem', emblem: true }
 
-export const aboutGreeting = 'Hei, jeg er Åse!'
+export const aboutGreeting = 'Hei, jeg er Åse'
 
 export const about = [
   'Jeg har alltid vært nysgjerrig på hvordan ting er bygget opp. Som liten utforsket jeg kildekoden til nettsider, lagde egne design og brukte resten av tiden med et kamera og Photoshop. Jeg startet på energi og miljø, men byttet til **dataingeniørstudiet** for å jobbe med programmering.',
-  'Siden da har jeg jobbet **over fire år** med produktutvikling i **energisektoren**. Det som driver meg, er å lage noe som **skaper verdi** for brukerne – gjerne med det lille ekstra på toppen.',
+  'Siden da har jeg jobbet **over fire år** med produktutvikling i **energisektoren**. Det som driver meg, er å lage noe som **skaper verdi** for brukerne. Jeg fanger opp detaljene mange overser – og det er ofte de som utgjør den store forskjellen.',
 ]
 
 export type FavoriteModel = 'laptop' | 'coffee' | 'camera' | 'palette' | 'polaroid'
@@ -225,9 +227,10 @@ export const projects: Project[] = [
     coverOnPage: false,
     images: [
       {
-        src: '/projects/uis-subsea/gui.webp',
-        alt: 'Operatørgrensesnittet for ROV-en på en bærbar PC ved bassengkanten under testing',
-        caption: 'Operatørgrensesnittet i bruk under test i bassenget',
+        src: '/projects/uis-subsea/oppsett.webp',
+        alt: 'Toppside-oppsettet: operatørgrensesnittet på en bærbar PC, kamerabilder på to ekstra skjermer og en Xbox-kontroller for styring',
+        caption: 'Toppside-oppsettet med operatørgrensesnittet, kameraskjermer og kontroller',
+        cutout: true,
       },
       {
         src: '/projects/uis-subsea/team.webp',
@@ -344,6 +347,7 @@ export const roles: Entry[] = [
   {
     title: 'Arrangementansvarlig',
     org: 'Bouvet Stavanger',
+    location: 'Innseiling – for nyansatte',
     period: '2024',
     logo: bouvetBrand,
   },
@@ -365,6 +369,8 @@ export interface Interest {
   icon: InterestIcon
   galleryTitle?: string
   galleryDescription?: string
+  /** What the pictures were taken with, shown in the gallery's heading */
+  camera?: string
   images?: ProjectImage[]
 }
 
@@ -374,6 +380,7 @@ export const interests: Interest[] = [
     title: 'Fotografering',
     icon: 'camera',
     galleryTitle: 'Fotogalleri',
+    camera: 'Canon EOS 5D Mark II',
     images: [
       {
         src: '/interests/fotografering/17-lovinne-unger-lek.webp',

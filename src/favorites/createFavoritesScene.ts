@@ -86,13 +86,44 @@ export function createFavoritesScene(host: HTMLElement, canvas: HTMLCanvasElemen
   let hovered: Item | undefined
   const pointer = new THREE.Vector2()
 
+  const raycaster = new THREE.Raycaster()
+
+  // The tiles overlap, so pick the object actually under the pointer: the topmost one
+  // (drawn last) whose model the ray hits, falling back to the tile whose centre is nearest.
   function itemAt(event: MouseEvent) {
-    return items.find((item) => {
+    const under = items.filter((item) => {
       const r = item.tile.getBoundingClientRect()
-      if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) return false
-      pointer.set(((event.clientX - r.left) / r.width) * 2 - 1, ((event.clientY - r.top) / r.height) * 2 - 1)
-      return true
+      return event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom
     })
+    const hit =
+      under.reverse().find((item) => {
+        const r = item.tile.getBoundingClientRect()
+        const w = r.width * item.bleed
+        const h = r.height * item.bleed
+        const left = r.left - (w - r.width) / 2
+        const top = r.top - (h - r.height) / 2
+        aim(r, item.bleed)
+        raycaster.setFromCamera(new THREE.Vector2(((event.clientX - left) / w) * 2 - 1, -(((event.clientY - top) / h) * 2 - 1)), camera)
+        return raycaster.intersectObject(item.object, true).length > 0
+      }) ??
+      under.sort((a, b) => distanceToCentre(a, event) - distanceToCentre(b, event))[0]
+    if (hit) {
+      const r = hit.tile.getBoundingClientRect()
+      pointer.set(((event.clientX - r.left) / r.width) * 2 - 1, ((event.clientY - r.top) / r.height) * 2 - 1)
+    }
+    return hit
+  }
+
+  function distanceToCentre(item: Item, event: MouseEvent) {
+    const r = item.tile.getBoundingClientRect()
+    return Math.hypot(event.clientX - (r.left + r.width / 2), event.clientY - (r.top + r.height / 2))
+  }
+
+  // Sets the shared camera up for one tile, as render() draws it
+  function aim(r: DOMRect, bleed: number) {
+    camera.aspect = r.width / r.height
+    camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan((Math.tan(THREE.MathUtils.degToRad(16)) * bleed) / Math.min(camera.aspect, 1)))
+    camera.updateProjectionMatrix()
   }
   function onPointerMove(event: PointerEvent) {
     if (event.pointerType === 'mouse') hovered = itemAt(event)
@@ -138,9 +169,7 @@ export function createFavoritesScene(host: HTMLElement, canvas: HTMLCanvasElemen
       if (r.bottom < area.top || r.top > area.bottom) continue
       renderer.setViewport(x, y, w, h)
       renderer.setScissor(x, y, w, h)
-      camera.aspect = r.width / r.height
-      camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan((Math.tan(THREE.MathUtils.degToRad(16)) * item.bleed) / Math.min(camera.aspect, 1)))
-      camera.updateProjectionMatrix()
+      aim(r, item.bleed)
 
       if (!reduceMotion) {
         const moved = item.lastX === undefined ? 0 : r.left - item.lastX

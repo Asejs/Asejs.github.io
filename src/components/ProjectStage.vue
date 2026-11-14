@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
   --a: max(var(--d, 0), -1 * var(--d, 0));
   position: relative;
   background: var(--bg);
-  border-radius: 3px;
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
 }
 
 .projects__card :deep(.card__body) {
-  padding: 0 1.25rem 1.25rem;
+  padding: 0 1.75rem 1.75rem;
 }
 
 /*
@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2rem;
     /* Grows with the window, but stops where the cards would dwarf the rest of the page */
-    width: min(100vw - 3rem, 88rem);
+    width: min(100vw - 8rem, 110rem);
     margin-left: 50%;
     translate: -50% 0;
   }

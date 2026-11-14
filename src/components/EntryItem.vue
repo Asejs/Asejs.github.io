@@ -8,7 +8,7 @@ defineProps<{ entry: Entry }>()
 <template>
   <article
     class="entry"
-    :class="{ 'entry--emblem': entry.logo?.emblem, 'entry--minor': entry.minor }"
+    :class="{ 'entry--emblem': entry.logo?.emblem, 'entry--minor': entry.minor, 'entry--current': entry.period.endsWith('nå') }"
     :style="entry.logo?.emblem ? { '--emblem-height': entry.logo.height } : undefined"
   >
     <header class="entry__head">
@@ -81,6 +81,17 @@ defineProps<{ entry: Entry }>()
 
 .entry.is-lit::after {
   animation: dot-ripple 0.9s ease-out;
+}
+
+.entry--current.is-lit::before {
+  border-color: var(--live);
+  background: var(--live);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--live) 55%, transparent);
+}
+
+.entry--current.is-lit::after {
+  border-color: var(--live);
+  animation: dot-ripple 2.4s ease-out infinite;
 }
 
 @keyframes dot-pop {
