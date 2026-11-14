@@ -14,6 +14,15 @@ npm install
 npm run dev
 ```
 
+## Tester
+
+```bash
+npm test           # kjør testene
+npm run coverage   # med dekningsrapport (minst 80 %)
+```
+
+Testene bruker Vitest og Vue Test Utils. 3D-scenene (three.js) er holdt utenfor dekningskravet.
+
 Alt innhold ligger i `src/data.ts`.
 
 Bildene er mine og logoene tilhører de respektive selskapene – de kan ikke gjenbrukes.

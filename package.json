@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
     "cv": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf=public/Ase-Sagebakken-CV.pdf \"file://$PWD/cv/cv.html\"",
     "cv:en": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf=public/Ase-Sagebakken-CV-en.pdf \"file://$PWD/cv/cv.en.html\""
   },
@@ -21,9 +24,13 @@
     "@types/node": "^26.6.5",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-vue": "^6.0.10",
+    "@vitest/coverage-v8": "^5.1.0",
+    "@vue/test-utils": "^2.5.1",
     "@vue/tsconfig": "^0.9.1",
+    "jsdom": "^31.0.1",
     "typescript": "~5.9",
     "vite": "^8.3.5",
+    "vitest": "^5.1.0",
     "vue-tsc": "^3.3.13"
   }
 }
