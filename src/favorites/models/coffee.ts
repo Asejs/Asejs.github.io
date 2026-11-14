@@ -56,18 +56,18 @@ export function coffee() {
   mugGeometry.computeVertexNormals()
   const mug = mesh(mugGeometry, ceramic)
   ;(mug.material as THREE.MeshPhysicalMaterial).side = THREE.DoubleSide
-  const print = painted(1024, 96, (ctx) => {
-    ctx.font = '600 52px "Courier New", Courier, monospace'
+  const print = painted(1024, 168, (ctx) => {
+    ctx.font = '600 82px "Courier New", Courier, monospace'
     ctx.fillStyle = '#3b3936'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.filter = 'blur(0.6px)'
-    ctx.fillText('...but first, coffee', 512, 50)
+    ctx.fillText('...but first, coffee', 512, 88)
   })
-  const textY = 0.06
-  const textHeight = 0.09
-  const textArc = 2.2
-  const label = new THREE.CylinderGeometry(1, 1, textHeight, 96, 4, true, Math.PI / 2 - textArc / 2, textArc)
+  const textY = 0.02
+  const textHeight = 0.15
+  const textArc = 1.75
+  const label = new THREE.CylinderGeometry(1, 1, textHeight, 96, 4, true, -textArc / 2, textArc)
   const labelPoints = label.attributes.position as THREE.BufferAttribute
   for (let i = 0; i < labelPoints.count; i++) {
     point.fromBufferAttribute(labelPoints, i)
