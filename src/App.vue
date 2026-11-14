@@ -84,7 +84,7 @@ const year = new Date().getFullYear()
           <p class="hero__summary">{{ profile.summary }}</p>
           <p class="hero__motivation">{{ profile.motivation }}</p>
           <div v-if="current" class="now">
-            <p class="now__label"><span class="now__dot" aria-hidden="true" />For øyeblikket hos</p>
+            <p class="now__label"><span class="now__dot" aria-hidden="true" />{{ current.title }} hos</p>
             <span class="now__wordmark" role="img" :aria-label="current.org" v-html="horizon56Wordmark" />
           </div>
           <ContactLinks label="Kontakt" class="hero__links" />
