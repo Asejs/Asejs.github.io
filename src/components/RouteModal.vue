@@ -38,8 +38,12 @@ function close() {
   if (closing) return
   closing = true
   if (reduceMotion) return emit('close')
-  dialog.value!
-    .animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(1rem) scale(0.96)' }], { duration: 180, easing: 'ease-in', fill: 'forwards' })
+  dialog
+    .value!.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(1rem) scale(0.96)' }], {
+      duration: 180,
+      easing: 'ease-in',
+      fill: 'forwards',
+    })
     .finished.then(() => emit('close'))
 }
 
@@ -50,7 +54,7 @@ function onClick(event: MouseEvent) {
 </script>
 
 <template>
-  <dialog ref="dialog" class="modal" :class="{ 'modal--wide': wide }" @click="onClick" tabindex="-1" @cancel.prevent="close">
+  <dialog ref="dialog" class="modal" :class="{ 'modal--wide': wide }" tabindex="-1" @click="onClick" @cancel.prevent="close">
     <div class="modal__body">
       <div :class="{ modal__column: !wide }">
         <slot />

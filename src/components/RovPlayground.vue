@@ -287,7 +287,9 @@ const TOUCH_BUTTONS = [
   <section class="rov">
     <h2 class="rov__title">Prøv selv</h2>
     <p class="rov__intro">
-      Spill laget i etterkant med Three.js. Kjør <a href="https://www.uissubsea.no/past-drones/fenris" target="_blank" rel="noopener">Fenris</a>, ROV-en fra bacheloroppgaven, gjennom Oppgave 1 – Maritim fornybar energi fra MATE ROV World Championship 2022. Du har 15 minutter, som i konkurransen.
+      Spill laget i etterkant med Three.js. Kjør
+      <a href="https://www.uissubsea.no/past-drones/fenris" target="_blank" rel="noopener">Fenris</a>, ROV-en fra bacheloroppgaven, gjennom
+      Oppgave 1 – Maritim fornybar energi fra MATE ROV World Championship 2022. Du har 15 minutter, som i konkurransen.
     </p>
 
     <div
@@ -323,7 +325,7 @@ const TOUCH_BUTTONS = [
           </div>
           <div>
             <dt>Tid</dt>
-            <dd :class="{ 'rov__warn': telemetry.timeLeft < 60 }">{{ formatTime(telemetry.timeLeft) }}</dd>
+            <dd :class="{ rov__warn: telemetry.timeLeft < 60 }">{{ formatTime(telemetry.timeLeft) }}</dd>
           </div>
           <div>
             <dt>Poeng</dt>
@@ -364,9 +366,7 @@ const TOUCH_BUTTONS = [
           <span class="rov__tasks-word">Oppgaver </span>{{ doneCount }}/{{ telemetry.tasks.length }}
         </button>
 
-        <p v-if="telemetry.status === 'running' && nextTask && !showTasks" class="rov__next">
-          Neste: {{ nextTask.label }}
-        </p>
+        <p v-if="telemetry.status === 'running' && nextTask && !showTasks" class="rov__next">Neste: {{ nextTask.label }}</p>
 
         <div v-if="showTasks" class="rov__tasks">
           <div v-for="group in groups" :key="group.name" class="rov__group">
@@ -379,22 +379,24 @@ const TOUCH_BUTTONS = [
               </li>
             </ul>
           </div>
-          <p class="rov__note">
-            Poeng fra MATE 2022. Bonus: 1 poeng per hele minutt og 0,01 per sekund som er igjen når alt er gjort.
-          </p>
+          <p class="rov__note">Poeng fra MATE 2022. Bonus: 1 poeng per hele minutt og 0,01 per sekund som er igjen når alt er gjort.</p>
         </div>
 
         <p v-if="telemetry.boost > 0" class="rov__boost">★ Superfart! {{ Math.ceil(telemetry.boost) }}</p>
 
-        <p
-          v-if="!prompt && heaveTip && !usedHeave && telemetry.status === 'running'"
-          class="rov__prompt rov__prompt--tip"
-        >
+        <p v-if="!prompt && heaveTip && !usedHeave && telemetry.status === 'running'" class="rov__prompt rov__prompt--tip">
           <span class="rov__hint-desktop">Tips: Q dykker ned og E går opp</span>
           <span class="rov__hint-touch">Tips: Bruk Ned og Opp for å endre dybde</span>
         </p>
 
-        <p v-if="prompt" class="rov__prompt" :class="{ 'rov__prompt--quiet': !prompt.startsWith('Trykk') && !prompt.startsWith('Boom'), 'rov__prompt--alert': prompt.startsWith('Boom') }">
+        <p
+          v-if="prompt"
+          class="rov__prompt"
+          :class="{
+            'rov__prompt--quiet': !prompt.startsWith('Trykk') && !prompt.startsWith('Boom'),
+            'rov__prompt--alert': prompt.startsWith('Boom'),
+          }"
+        >
           {{ prompt }}
         </p>
 
@@ -407,20 +409,19 @@ const TOUCH_BUTTONS = [
           <template v-if="telemetry.status === 'ready'">
             <p class="rov__overlay-title">Oppgave 1 – Maritim fornybar energi</p>
             <p class="rov__overlay-text">
-              Vedlikehold en havvindpark: bytt en skadet strømkabel og oppdriftsmodul, overvåk miljøet og dokk ROV-en.
-              Unngå minene, hvert treff koster 30 sekunder.
+              Vedlikehold en havvindpark: bytt en skadet strømkabel og oppdriftsmodul, overvåk miljøet og dokk ROV-en. Unngå minene, hvert
+              treff koster 30 sekunder.
               <span class="rov__hint-desktop">W A S D kjører, E og Q går opp og ned, G griper.</span>
             </p>
             <button type="button" class="rov__start" @click="start">Start oppdraget</button>
           </template>
           <template v-else>
             <p class="rov__overlay-title">{{ allDone ? 'Oppdraget er fullført!' : 'Tiden er ute' }}</p>
-            <p class="rov__overlay-score">
-              {{ formatPoints(telemetry.score + telemetry.bonus) }} poeng
-            </p>
+            <p class="rov__overlay-score">{{ formatPoints(telemetry.score + telemetry.bonus) }} poeng</p>
             <p class="rov__overlay-text">
               {{ telemetry.score }} av {{ maxScore }} oppgavepoeng<template v-if="telemetry.bonus">
-                + {{ formatPoints(telemetry.bonus) }} i tidsbonus</template>
+                + {{ formatPoints(telemetry.bonus) }} i tidsbonus</template
+              >
             </p>
             <button type="button" class="rov__start" @click="restart">Prøv igjen</button>
           </template>
@@ -457,7 +458,6 @@ const TOUCH_BUTTONS = [
         </div>
       </template>
     </div>
-
   </section>
 </template>
 

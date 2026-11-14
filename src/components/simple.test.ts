@@ -24,7 +24,9 @@ describe('EntryItem', () => {
   })
 
   it('shows a wordmark logo with the organisation for screen readers', () => {
-    const wrapper = mount(EntryItem, { props: { entry: { title: 'Rolle', org: 'Firma', period: '2020', logo: { svg: '<svg/>', height: '1rem' } } } })
+    const wrapper = mount(EntryItem, {
+      props: { entry: { title: 'Rolle', org: 'Firma', period: '2020', logo: { svg: '<svg/>', height: '1rem' } } },
+    })
     expect(wrapper.find('.entry__logo').exists()).toBe(true)
     expect(wrapper.find('.visually-hidden').text()).toBe('Firma')
   })
@@ -42,7 +44,11 @@ describe('ProjectCard', () => {
 describe('ProjectCover', () => {
   const base = projects[0]
   it('prefers a video, then an image, then a placeholder', () => {
-    expect(mount(ProjectCover, { props: { project: { ...base, video: '/v.mp4' } } }).find('video').exists()).toBe(true)
+    expect(
+      mount(ProjectCover, { props: { project: { ...base, video: '/v.mp4' } } })
+        .find('video')
+        .exists(),
+    ).toBe(true)
     const image = mount(ProjectCover, { props: { project: { ...base, video: undefined, cover: '/c.webp' } } })
     expect(image.find('img').attributes('alt')).toBe(base.title)
     const placeholder = mount(ProjectCover, { props: { project: { ...base, video: undefined, cover: undefined } } })
@@ -77,7 +83,9 @@ describe('LogoEmblem', () => {
     const plain = mount(LogoEmblem, { props: { logo: { svg: '<svg/>', height: '2rem', color: 'red' } } })
     expect(plain.attributes('style')).toContain('height: 2rem')
     expect(plain.classes('emblem--badge')).toBe(false)
-    const badge = mount(LogoEmblem, { props: { logo: { svg: '<svg/>', height: '2rem', badge: { background: 'black', color: 'white' } }, size: '3rem' } })
+    const badge = mount(LogoEmblem, {
+      props: { logo: { svg: '<svg/>', height: '2rem', badge: { background: 'black', color: 'white' } }, size: '3rem' },
+    })
     expect(badge.classes('emblem--badge')).toBe(true)
     expect(badge.attributes('style')).toContain('width: 3rem')
   })

@@ -103,8 +103,7 @@ export function createFavoritesScene(host: HTMLElement, canvas: HTMLCanvasElemen
         aim(r, item.bleed)
         raycaster.setFromCamera(new THREE.Vector2(((event.clientX - left) / w) * 2 - 1, -(((event.clientY - top) / h) * 2 - 1)), camera)
         return raycaster.intersectObject(item.object, true).length > 0
-      }) ??
-      under.sort((a, b) => distanceToCentre(a, event) - distanceToCentre(b, event))[0]
+      }) ?? under.sort((a, b) => distanceToCentre(a, event) - distanceToCentre(b, event))[0]
     if (hit) {
       const r = hit.tile.getBoundingClientRect()
       pointer.set(((event.clientX - r.left) / r.width) * 2 - 1, ((event.clientY - r.top) / r.height) * 2 - 1)

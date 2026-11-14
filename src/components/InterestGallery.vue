@@ -6,9 +6,7 @@ const props = defineProps<{ interest: Interest }>()
 
 const images = computed(() => props.interest.images ?? [])
 const openIndex = ref<number>()
-const openImage = computed(() =>
-  openIndex.value === undefined ? undefined : images.value[openIndex.value],
-)
+const openImage = computed(() => (openIndex.value === undefined ? undefined : images.value[openIndex.value]))
 
 function step(delta: number) {
   if (openIndex.value === undefined) return
@@ -24,8 +22,7 @@ const BREAKPOINTS = [
 ]
 const WIDEST_COLUMNS = 5
 const queries = BREAKPOINTS.map(({ maxWidth }) => window.matchMedia(`(max-width: ${maxWidth}px)`))
-const currentColumnCount = () =>
-  BREAKPOINTS.find((_, i) => queries[i].matches)?.columns ?? WIDEST_COLUMNS
+const currentColumnCount = () => BREAKPOINTS.find((_, i) => queries[i].matches)?.columns ?? WIDEST_COLUMNS
 const columnCount = ref(currentColumnCount())
 function onWidthChange() {
   columnCount.value = currentColumnCount()
@@ -35,13 +32,15 @@ const SIZES = [
   ...BREAKPOINTS.map(({ maxWidth, columns }) => `(max-width: ${maxWidth}px) ${Math.round(100 / columns)}vw`),
   `${Math.round(100 / WIDEST_COLUMNS)}vw`,
 ].join(', ')
-const srcset = (image: { src: string; thumb?: string }) =>
-  image.thumb ? `${image.thumb} 460w, ${image.src} 1200w` : undefined
+const srcset = (image: { src: string; thumb?: string }) => (image.thumb ? `${image.thumb} 460w, ${image.src} 1200w` : undefined)
 
 // Each image goes into whichever column is shortest so far (heights from the images'
 // own proportions), so the columns end roughly level instead of one running long.
 const columns = computed(() => {
-  const cols = Array.from({ length: columnCount.value }, () => ({ height: 0, items: [] as { image: (typeof images.value)[number]; index: number }[] }))
+  const cols = Array.from({ length: columnCount.value }, () => ({
+    height: 0,
+    items: [] as { image: (typeof images.value)[number]; index: number }[],
+  }))
   images.value.forEach((image, index) => {
     const shortest = cols.reduce((a, b) => (b.height < a.height ? b : a))
     shortest.items.push({ image, index })
@@ -55,8 +54,7 @@ function onKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
     event.preventDefault() // close only the lightbox, not the surrounding modal
     openIndex.value = undefined
-  }
-  else if (event.key === 'ArrowRight') step(1)
+  } else if (event.key === 'ArrowRight') step(1)
   else if (event.key === 'ArrowLeft') step(-1)
 }
 
@@ -105,28 +103,15 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div
-      v-if="openImage"
-      class="lightbox"
-      role="dialog"
-      aria-modal="true"
-      :aria-label="openImage.alt"
-      @click.self="openIndex = undefined"
-    >
+    <div v-if="openImage" class="lightbox" role="dialog" aria-modal="true" :aria-label="openImage.alt" @click.self="openIndex = undefined">
       <figure class="lightbox__figure">
         <img :src="openImage.src" :alt="openImage.alt" />
         <figcaption v-if="openImage.caption">{{ openImage.caption }}</figcaption>
       </figure>
-      <button type="button" class="lightbox__close" aria-label="Lukk" @click="openIndex = undefined">
-        ✕
-      </button>
+      <button type="button" class="lightbox__close" aria-label="Lukk" @click="openIndex = undefined">✕</button>
       <template v-if="images.length > 1">
-        <button type="button" class="lightbox__nav lightbox__nav--prev" aria-label="Forrige" @click="step(-1)">
-          ←
-        </button>
-        <button type="button" class="lightbox__nav lightbox__nav--next" aria-label="Neste" @click="step(1)">
-          →
-        </button>
+        <button type="button" class="lightbox__nav lightbox__nav--prev" aria-label="Forrige" @click="step(-1)">←</button>
+        <button type="button" class="lightbox__nav lightbox__nav--next" aria-label="Neste" @click="step(1)">→</button>
       </template>
     </div>
   </article>
@@ -205,7 +190,6 @@ onBeforeUnmount(() => {
 .grid__item:focus-visible .grid__caption {
   opacity: 1;
 }
-
 
 .lightbox {
   position: fixed;

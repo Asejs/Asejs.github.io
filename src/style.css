@@ -31,7 +31,7 @@
     --accent-text: #86d2dc;
     --accent-soft: rgb(134 210 220 / 0.1);
     --tag-bg: #13222660;
-  --brand-bouvet: #f4f1e9;
+    --brand-bouvet: #f4f1e9;
     --hero-bg: #060c0e;
     --hero-shadow: 0 -10px 18px rgb(0 0 0 / 0.55);
     --card-veil: rgb(6 12 14 / 0.4);
@@ -78,7 +78,12 @@ body {
   overflow-x: clip;
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

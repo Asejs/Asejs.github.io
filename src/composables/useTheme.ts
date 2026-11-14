@@ -14,8 +14,7 @@ export function useTheme() {
     document.documentElement.dataset.theme = theme.value
     try {
       localStorage.setItem('theme', theme.value)
-    } catch {
-    }
+    } catch {}
   }
 
   async function toggle(event: MouseEvent) {

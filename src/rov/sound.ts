@@ -262,7 +262,7 @@ export function createSound() {
       const drive = ctx.createWaveShaper()
       const curve = new Float32Array(256)
       for (let i = 0; i < curve.length; i++) {
-        const x = (i / 128) - 1
+        const x = i / 128 - 1
         curve[i] = Math.tanh(x * 3)
       }
       drive.curve = curve

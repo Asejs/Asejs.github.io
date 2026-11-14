@@ -126,7 +126,13 @@ function laptop() {
   well.rotation.x = -Math.PI / 2
   const grilleTexture = grille()
   for (const side of [-1, 1]) {
-    const speaker = mesh(new THREE.PlaneGeometry(90 * px, 275 * px), physical('#ffffff', { map: grilleTexture, roughness: 0.7 }), side * 415 * px, top, wellZ)
+    const speaker = mesh(
+      new THREE.PlaneGeometry(90 * px, 275 * px),
+      physical('#ffffff', { map: grilleTexture, roughness: 0.7 }),
+      side * 415 * px,
+      top,
+      wellZ,
+    )
     speaker.rotation.x = -Math.PI / 2
     group.add(speaker)
   }
@@ -137,7 +143,13 @@ function laptop() {
     top,
     (909 - 732) * px,
   )
-  const scoop = mesh(new THREE.BoxGeometry(135 * px, T * 0.45, 0.012), physical('#1c1d1f', { metalness: 0.6, roughness: 0.4 }), 0, -T * 0.3, D / 2 - 0.004)
+  const scoop = mesh(
+    new THREE.BoxGeometry(135 * px, T * 0.45, 0.012),
+    physical('#1c1d1f', { metalness: 0.6, roughness: 0.4 }),
+    0,
+    -T * 0.3,
+    D / 2 - 0.004,
+  )
 
   const rows: [number, number[]][] = [
     [0.75, [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
@@ -208,8 +220,21 @@ function laptop() {
   )
   legends.rotation.x = -Math.PI / 2
 
-  for (const [fx, fz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
-    group.add(mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.01, 20), physical('#111112', { roughness: 0.9 }), fx * (W / 2 - 0.12), -T - 0.004, fz * (D / 2 - 0.12)))
+  for (const [fx, fz] of [
+    [-1, -1],
+    [1, -1],
+    [-1, 1],
+    [1, 1],
+  ]) {
+    group.add(
+      mesh(
+        new THREE.CylinderGeometry(0.035, 0.035, 0.01, 20),
+        physical('#111112', { roughness: 0.9 }),
+        fx * (W / 2 - 0.12),
+        -T - 0.004,
+        fz * (D / 2 - 0.12),
+      ),
+    )
   }
 
   const lid = new THREE.Group()
@@ -235,7 +260,21 @@ function laptop() {
     const w = 1024
     const h = ctx.canvas.height
     const mono = (size: number, weight = 400) => `${weight} ${size}px "JetBrains Mono", ui-monospace, monospace`
-    const C = { bg: '#0f1417', side: '#0b1013', bar: '#080b0d', line: '#1c2429', dim: '#4a5a62', text: '#c9d4d8', accent: '#86d2dc', key: '#c792ea', str: '#a5d6a7', fn: '#82aaff', num: '#f0b37e', tag: '#f07178', live: '#3fb56b' }
+    const C = {
+      bg: '#0f1417',
+      side: '#0b1013',
+      bar: '#080b0d',
+      line: '#1c2429',
+      dim: '#4a5a62',
+      text: '#c9d4d8',
+      accent: '#86d2dc',
+      key: '#c792ea',
+      str: '#a5d6a7',
+      fn: '#82aaff',
+      num: '#f0b37e',
+      tag: '#f07178',
+      live: '#3fb56b',
+    }
 
     ctx.fillStyle = C.bg
     ctx.fillRect(0, 0, w, h)
@@ -261,8 +300,19 @@ function laptop() {
     ctx.fillStyle = C.dim
     ctx.fillText('EXPLORER', 16, 54)
     const tree: [number, string, boolean?][] = [
-      [0, '▾ src'], [1, '▾ components'], [2, 'ProjectCard.vue'], [2, 'SiteNav.vue'], [2, 'TypedText.vue'],
-      [1, '▾ favorites'], [2, 'models.ts'], [1, 'App.vue', true], [1, 'data.ts'], [1, 'main.ts'], [0, '▸ public'], [0, 'package.json'], [0, 'vite.config.ts'],
+      [0, '▾ src'],
+      [1, '▾ components'],
+      [2, 'ProjectCard.vue'],
+      [2, 'SiteNav.vue'],
+      [2, 'TypedText.vue'],
+      [1, '▾ favorites'],
+      [2, 'models.ts'],
+      [1, 'App.vue', true],
+      [1, 'data.ts'],
+      [1, 'main.ts'],
+      [0, '▸ public'],
+      [0, 'package.json'],
+      [0, 'vite.config.ts'],
     ]
     ctx.font = mono(12)
     tree.forEach(([depth, name, active], i) => {
@@ -293,22 +343,108 @@ function laptop() {
     })
 
     const code: [string, string][][] = [
-      [[C.dim, '<'], [C.tag, 'script'], [C.key, ' setup lang'], [C.dim, '='], [C.str, '"ts"'], [C.dim, '>']],
-      [[C.key, 'import'], [C.text, ' { computed } '], [C.key, 'from'], [C.str, " 'vue'"]],
-      [[C.key, 'import'], [C.text, ' { profile, projects } '], [C.key, 'from'], [C.str, " './data'"]],
+      [
+        [C.dim, '<'],
+        [C.tag, 'script'],
+        [C.key, ' setup lang'],
+        [C.dim, '='],
+        [C.str, '"ts"'],
+        [C.dim, '>'],
+      ],
+      [
+        [C.key, 'import'],
+        [C.text, ' { computed } '],
+        [C.key, 'from'],
+        [C.str, " 'vue'"],
+      ],
+      [
+        [C.key, 'import'],
+        [C.text, ' { profile, projects } '],
+        [C.key, 'from'],
+        [C.str, " './data'"],
+      ],
       [],
-      [[C.key, 'const'], [C.text, ' current '], [C.dim, '= '], [C.fn, 'computed'], [C.text, '(() '], [C.key, '=>']],
-      [[C.text, '  projects.'], [C.fn, 'find'], [C.text, '((p) '], [C.key, '=>'], [C.text, ' p.period.'], [C.fn, 'endsWith'], [C.text, '('], [C.str, "'nå'"], [C.text, '))']],
+      [
+        [C.key, 'const'],
+        [C.text, ' current '],
+        [C.dim, '= '],
+        [C.fn, 'computed'],
+        [C.text, '(() '],
+        [C.key, '=>'],
+      ],
+      [
+        [C.text, '  projects.'],
+        [C.fn, 'find'],
+        [C.text, '((p) '],
+        [C.key, '=>'],
+        [C.text, ' p.period.'],
+        [C.fn, 'endsWith'],
+        [C.text, '('],
+        [C.str, "'nå'"],
+        [C.text, '))'],
+      ],
       [[C.text, ')']],
-      [[C.dim, '</'], [C.tag, 'script'], [C.dim, '>']],
+      [
+        [C.dim, '</'],
+        [C.tag, 'script'],
+        [C.dim, '>'],
+      ],
       [],
-      [[C.dim, '<'], [C.tag, 'template'], [C.dim, '>']],
-      [[C.dim, '  <'], [C.tag, 'header'], [C.key, ' class'], [C.dim, '='], [C.str, '"hero"'], [C.dim, '>']],
-      [[C.dim, '    <'], [C.tag, 'h1'], [C.dim, '>'], [C.text, '{{ profile.name }}'], [C.dim, '</'], [C.tag, 'h1'], [C.dim, '>']],
-      [[C.dim, '    <'], [C.tag, 'p'], [C.key, ' class'], [C.dim, '='], [C.str, '"eyebrow"'], [C.dim, '>'], [C.accent, '// FRONTEND-UTVIKLER'], [C.dim, '</'], [C.tag, 'p'], [C.dim, '>']],
-      [[C.dim, '    <'], [C.tag, 'NowCard'], [C.key, ' v-if'], [C.dim, '='], [C.str, '"current"'], [C.key, ' :job'], [C.dim, '='], [C.str, '"current"'], [C.dim, ' />']],
-      [[C.dim, '  </'], [C.tag, 'header'], [C.dim, '>']],
-      [[C.dim, '</'], [C.tag, 'template'], [C.dim, '>']],
+      [
+        [C.dim, '<'],
+        [C.tag, 'template'],
+        [C.dim, '>'],
+      ],
+      [
+        [C.dim, '  <'],
+        [C.tag, 'header'],
+        [C.key, ' class'],
+        [C.dim, '='],
+        [C.str, '"hero"'],
+        [C.dim, '>'],
+      ],
+      [
+        [C.dim, '    <'],
+        [C.tag, 'h1'],
+        [C.dim, '>'],
+        [C.text, '{{ profile.name }}'],
+        [C.dim, '</'],
+        [C.tag, 'h1'],
+        [C.dim, '>'],
+      ],
+      [
+        [C.dim, '    <'],
+        [C.tag, 'p'],
+        [C.key, ' class'],
+        [C.dim, '='],
+        [C.str, '"eyebrow"'],
+        [C.dim, '>'],
+        [C.accent, '// FRONTEND-UTVIKLER'],
+        [C.dim, '</'],
+        [C.tag, 'p'],
+        [C.dim, '>'],
+      ],
+      [
+        [C.dim, '    <'],
+        [C.tag, 'NowCard'],
+        [C.key, ' v-if'],
+        [C.dim, '='],
+        [C.str, '"current"'],
+        [C.key, ' :job'],
+        [C.dim, '='],
+        [C.str, '"current"'],
+        [C.dim, ' />'],
+      ],
+      [
+        [C.dim, '  </'],
+        [C.tag, 'header'],
+        [C.dim, '>'],
+      ],
+      [
+        [C.dim, '</'],
+        [C.tag, 'template'],
+        [C.dim, '>'],
+      ],
     ]
     const codeX = sideW + 56
     const lineH = 22
@@ -347,9 +483,21 @@ function laptop() {
     ctx.fillText('PROBLEMS    OUTPUT', sideW + 100, termY + 22)
     ctx.font = mono(13)
     const term: [string, string][][] = [
-      [[C.live, '➜ '], [C.accent, 'asejs.github.io '], [C.key, 'git:('], [C.tag, 'main'], [C.key, ') '], [C.text, 'npm run build']],
+      [
+        [C.live, '➜ '],
+        [C.accent, 'asejs.github.io '],
+        [C.key, 'git:('],
+        [C.tag, 'main'],
+        [C.key, ') '],
+        [C.text, 'npm run build'],
+      ],
       [[C.dim, 'vite v6 building for production...']],
-      [[C.live, '✓ '], [C.text, '412 modules transformed. '], [C.dim, 'built in '], [C.num, '1.84s']],
+      [
+        [C.live, '✓ '],
+        [C.text, '412 modules transformed. '],
+        [C.dim, 'built in '],
+        [C.num, '1.84s'],
+      ],
     ]
     term.forEach((runs, i) => {
       let x = sideW + 16
@@ -371,7 +519,14 @@ function laptop() {
   })
   const screen = mesh(
     new THREE.PlaneGeometry(screenW, screenH),
-    new THREE.MeshPhysicalMaterial({ map: editor, emissiveMap: editor, emissive: '#ffffff', emissiveIntensity: 0.85, roughness: 0.05, clearcoat: 1 }),
+    new THREE.MeshPhysicalMaterial({
+      map: editor,
+      emissiveMap: editor,
+      emissive: '#ffffff',
+      emissiveIntensity: 0.85,
+      roughness: 0.05,
+      clearcoat: 1,
+    }),
     0,
     chin + screenH / 2,
     0.0025,
@@ -400,7 +555,13 @@ function laptop() {
     }),
   )
 
-  const hinge = mesh(new THREE.CylinderGeometry(0.022, 0.022, W - 0.5, 20), physical('#1a1b1d', { metalness: 0.7, roughness: 0.4 }), 0, 0.0, -D / 2 + 0.02)
+  const hinge = mesh(
+    new THREE.CylinderGeometry(0.022, 0.022, W - 0.5, 20),
+    physical('#1a1b1d', { metalness: 0.7, roughness: 0.4 }),
+    0,
+    0.0,
+    -D / 2 + 0.02,
+  )
   hinge.rotation.z = Math.PI / 2
 
   group.add(base, well, trackpad, scoop, keys, legends, hinge, lid)
@@ -413,11 +574,20 @@ function coffee() {
   const group = new THREE.Group()
   const cup = new THREE.Group()
   const glaze = (x: number, y: number, z: number) =>
-    0.5 + 0.22 * Math.sin(x * 7.1 + y * 3.3) * Math.cos(z * 6.3 - y * 2.1) + 0.18 * Math.sin(x * 15.7 - z * 13.1 + y * 9.4) + 0.1 * Math.sin(y * 23 + x * 19)
+    0.5 +
+    0.22 * Math.sin(x * 7.1 + y * 3.3) * Math.cos(z * 6.3 - y * 2.1) +
+    0.18 * Math.sin(x * 15.7 - z * 13.1 + y * 9.4) +
+    0.1 * Math.sin(y * 23 + x * 19)
   const light = new THREE.Color('#ece9e2')
   const dark = new THREE.Color('#aaa69d')
   const rimTone = new THREE.Color('#8f897f')
-  const ceramic = physical('#ffffff', { vertexColors: true, roughness: 0.72, specularIntensity: 0.45, clearcoat: 0.25, clearcoatRoughness: 0.5 })
+  const ceramic = physical('#ffffff', {
+    vertexColors: true,
+    roughness: 0.72,
+    specularIntensity: 0.45,
+    clearcoat: 0.25,
+    clearcoatRoughness: 0.5,
+  })
 
   const outline: THREE.Vector2[] = [new THREE.Vector2(0, -0.6), new THREE.Vector2(0.44, -0.6)]
   for (let i = 0; i <= 16; i++) {
@@ -441,7 +611,11 @@ function coffee() {
     const angle = Math.atan2(point.z, point.x)
     if (radius > 0.3) {
       const fade = THREE.MathUtils.smoothstep(point.y, -0.55, -0.3)
-      const dent = (0.012 * Math.sin(angle * 5 + point.y * 4.2) + 0.009 * Math.sin(angle * 3 - point.y * 6.5 + 1.3) + 0.005 * Math.sin(angle * 9 + point.y * 11)) * fade
+      const dent =
+        (0.012 * Math.sin(angle * 5 + point.y * 4.2) +
+          0.009 * Math.sin(angle * 3 - point.y * 6.5 + 1.3) +
+          0.005 * Math.sin(angle * 9 + point.y * 11)) *
+        fade
       const scale = (radius + dent) / radius
       wall.setXYZ(i, point.x * scale, point.y, point.z * scale)
     }
@@ -455,8 +629,13 @@ function coffee() {
   ;(mug.material as THREE.MeshPhysicalMaterial).side = THREE.DoubleSide
   const handlePath = new THREE.CatmullRomCurve3(
     [
-      [-0.48, 0.34], [-0.68, 0.42], [-0.88, 0.34], [-0.95, 0.12],
-      [-0.88, -0.1], [-0.72, -0.26], [-0.48, -0.32],
+      [-0.48, 0.34],
+      [-0.68, 0.42],
+      [-0.88, 0.34],
+      [-0.95, 0.12],
+      [-0.88, -0.1],
+      [-0.72, -0.26],
+      [-0.48, -0.32],
     ].map(([x, y]) => new THREE.Vector3(x, y, 0)),
   )
   const handleGeometry = new THREE.TubeGeometry(handlePath, 64, 0.075, 20)
@@ -566,7 +745,10 @@ function coffee() {
         cup.localToWorld(lip.set(Math.cos(angle) * 0.5, 0.52, Math.sin(angle) * 0.5))
         const out = lip.clone().sub(rimCentre).setY(0).normalize()
         drop.position.copy(lip)
-        drop.userData.velocity.copy(out).multiplyScalar(0.6 + Math.random() * 0.9).setY(0.8 + Math.random() * 1.1)
+        drop.userData.velocity
+          .copy(out)
+          .multiplyScalar(0.6 + Math.random() * 0.9)
+          .setY(0.8 + Math.random() * 1.1)
         drop.scale.setScalar(0.6 + Math.random() * 0.9)
         drop.visible = true
       })
@@ -620,7 +802,14 @@ function camera() {
   const fineGrain = grain.clone()
   fineGrain.repeat.set(10, 10)
   const shell = physical('#26272a', { roughness: 1, specularIntensity: 0.25, bumpMap: fineGrain, bumpScale: 0.12, envMapIntensity: 0.3 })
-  const leather = physical('#1f2022', { roughness: 1, specularIntensity: 0.2, roughnessMap: grain, bumpMap: grain, bumpScale: 0.7, envMapIntensity: 0.25 })
+  const leather = physical('#1f2022', {
+    roughness: 1,
+    specularIntensity: 0.2,
+    roughnessMap: grain,
+    bumpMap: grain,
+    bumpScale: 0.7,
+    envMapIntensity: 0.25,
+  })
   const metal = physical('#8a8e94', { metalness: 0.8, roughness: 0.6 })
   const black = physical('#212224', { roughness: 0.95, specularIntensity: 0.3, envMapIntensity: 0.3 })
 
@@ -634,23 +823,43 @@ function camera() {
   prism.lineTo(0.22, 0.28)
   prism.quadraticCurveTo(0, 0.34, -0.22, 0.28)
   prism.closePath()
-  const prismGeometry = new THREE.ExtrudeGeometry(prism, { depth: 0.5, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 3 })
+  const prismGeometry = new THREE.ExtrudeGeometry(prism, {
+    depth: 0.5,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.03,
+    bevelSegments: 3,
+  })
   prismGeometry.translate(0, 0, -0.27)
   body.add(mesh(prismGeometry, shell, 0.06, 0.45, 0))
   body.add(mesh(new THREE.BoxGeometry(0.22, 0.03, 0.2), metal, 0.06, 0.8, -0.04))
 
   const dial = new THREE.Group()
-  dial.add(mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.09, 40), physical('#242528', { roughness: 0.6, bumpMap: ridges(48), bumpScale: 1.5 })))
+  dial.add(
+    mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.09, 40), physical('#242528', { roughness: 0.6, bumpMap: ridges(48), bumpScale: 1.5 })),
+  )
   dial.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.1, 20), black))
   dial.position.set(0.52, 0.52, -0.02)
   body.add(dial)
   const shutter = mesh(new THREE.CylinderGeometry(0.06, 0.065, 0.04, 24), metal, -0.6, 0.5, 0.3)
   shutter.rotation.x = 0.35
   body.add(shutter)
-  const wheel = mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 24), physical('#242528', { bumpMap: ridges(32), bumpScale: 1 }), -0.42, 0.46, 0.18)
+  const wheel = mesh(
+    new THREE.CylinderGeometry(0.07, 0.07, 0.12, 24),
+    physical('#242528', { bumpMap: ridges(32), bumpScale: 1 }),
+    -0.42,
+    0.46,
+    0.18,
+  )
   wheel.rotation.z = Math.PI / 2
   body.add(wheel)
-  const lcd = mesh(new THREE.PlaneGeometry(0.34, 0.2), physical('#3a4038', { roughness: 0.1, clearcoat: 1, emissive: '#1d221c', emissiveIntensity: 0.4 }), -0.32, 0.4755, -0.05)
+  const lcd = mesh(
+    new THREE.PlaneGeometry(0.34, 0.2),
+    physical('#3a4038', { roughness: 0.1, clearcoat: 1, emissive: '#1d221c', emissiveIntensity: 0.4 }),
+    -0.32,
+    0.4755,
+    -0.05,
+  )
   lcd.rotation.x = -Math.PI / 2
   body.add(lcd)
 
@@ -659,7 +868,8 @@ function camera() {
 
   const lens = new THREE.Group()
   const barrel = physical('#242528', { roughness: 1, specularIntensity: 0.25, bumpMap: fineGrain, bumpScale: 0.1, envMapIntensity: 0.3 })
-  const rubber = (count: number) => physical('#1c1d1f', { roughness: 0.95, specularIntensity: 0.25, bumpMap: ridges(count), bumpScale: 2, envMapIntensity: 0.3 })
+  const rubber = (count: number) =>
+    physical('#1c1d1f', { roughness: 0.95, specularIntensity: 0.25, bumpMap: ridges(count), bumpScale: 2, envMapIntensity: 0.3 })
   lens.add(ring(0.36, 0.03, 0.3, black))
   lens.add(ring(0.33, 0.1, 0.33, barrel))
   lens.add(ring(0.38, 0.16, 0.43, rubber(90)))
@@ -697,7 +907,11 @@ function camera() {
       0.52,
     ),
   )
-  for (const [radius, z] of [[0.22, 1.05], [0.14, 1.03], [0.28, 1.07]]) {
+  for (const [radius, z] of [
+    [0.22, 1.05],
+    [0.14, 1.03],
+    [0.28, 1.07],
+  ]) {
     lens.add(mesh(new THREE.TorusGeometry(radius, 0.006, 6, 48), physical('#3b4a6b', { metalness: 1, roughness: 0.2 }), 0, 0, z))
   }
   lens.position.set(0.06, -0.06, 0)
@@ -712,19 +926,58 @@ function camera() {
   }
   const facingBack = (geometry: THREE.BufferGeometry) => geometry.rotateY(Math.PI)
   onBack(mesh(facingBack(new THREE.PlaneGeometry(0.34, 0.95)), leather), -0.56, 0)
-  onBack(mesh(facingBack(roundedBox(0.8, 0.012, 0.6, 0.04).rotateX(Math.PI / 2)), physical('#1c1d1f', { roughness: 0.8 })), 0.24, -0.1, 0.004)
-  onBack(mesh(facingBack(new THREE.PlaneGeometry(0.66, 0.47)), physical('#060708', { roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.02 })), 0.25, -0.09, 0.012)
+  onBack(
+    mesh(facingBack(roundedBox(0.8, 0.012, 0.6, 0.04).rotateX(Math.PI / 2)), physical('#1c1d1f', { roughness: 0.8 })),
+    0.24,
+    -0.1,
+    0.004,
+  )
+  onBack(
+    mesh(facingBack(new THREE.PlaneGeometry(0.66, 0.47)), physical('#060708', { roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.02 })),
+    0.25,
+    -0.09,
+    0.012,
+  )
   for (let i = 0; i < 5; i++) {
     onBack(mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.025, 20).rotateX(Math.PI / 2), black), 0.66, 0.2 - i * 0.15, 0.012)
   }
   onBack(mesh(softBox(0.38, 0.28, 0.12, 0.07, 0.025), physical('#1a1b1d', { roughness: 0.9 })), 0.06, 0.5, 0.05)
-  onBack(mesh(facingBack(new THREE.PlaneGeometry(0.18, 0.12)), physical('#1b2448', { roughness: 0.05, metalness: 0.5, clearcoat: 1, iridescence: 0.8 })), 0.06, 0.5, 0.111)
+  onBack(
+    mesh(
+      facingBack(new THREE.PlaneGeometry(0.18, 0.12)),
+      physical('#1b2448', { roughness: 0.05, metalness: 0.5, clearcoat: 1, iridescence: 0.8 }),
+    ),
+    0.06,
+    0.5,
+    0.111,
+  )
   for (const x of [-0.24, -0.4, -0.56]) {
     onBack(mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.03, 20).rotateX(Math.PI / 2), black), x, 0.32, 0.014)
   }
-  onBack(mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.04, 20).rotateX(Math.PI / 2), physical('#242528', { roughness: 0.7, bumpMap: ridges(24), bumpScale: 1 })), -0.2, 0.1, 0.02)
-  onBack(mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.04, 48).rotateX(Math.PI / 2), physical('#222326', { roughness: 0.75, bumpMap: ridges(60), bumpScale: 2 })), -0.32, -0.2, 0.02)
-  onBack(mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.05, 32).rotateX(Math.PI / 2), physical('#1d1e20', { roughness: 0.8 })), -0.32, -0.2, 0.026)
+  onBack(
+    mesh(
+      new THREE.CylinderGeometry(0.05, 0.06, 0.04, 20).rotateX(Math.PI / 2),
+      physical('#242528', { roughness: 0.7, bumpMap: ridges(24), bumpScale: 1 }),
+    ),
+    -0.2,
+    0.1,
+    0.02,
+  )
+  onBack(
+    mesh(
+      new THREE.CylinderGeometry(0.17, 0.17, 0.04, 48).rotateX(Math.PI / 2),
+      physical('#222326', { roughness: 0.75, bumpMap: ridges(60), bumpScale: 2 }),
+    ),
+    -0.32,
+    -0.2,
+    0.02,
+  )
+  onBack(
+    mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.05, 32).rotateX(Math.PI / 2), physical('#1d1e20', { roughness: 0.8 })),
+    -0.32,
+    -0.2,
+    0.026,
+  )
   const lever = onBack(mesh(new THREE.BoxGeometry(0.14, 0.035, 0.02), physical('#2a2b2e', { roughness: 0.8 })), -0.2, -0.41, 0.012)
   lever.rotation.z = -0.35
   body.add(back)
@@ -818,7 +1071,12 @@ function palette() {
         const width = 20 + Math.random() * 34
         const path = new Path2D()
         path.moveTo(px - Math.cos(turn) * length, py - Math.sin(turn) * length)
-        path.quadraticCurveTo(px + (Math.random() - 0.5) * 30, py + (Math.random() - 0.5) * 30, px + Math.cos(turn) * length, py + Math.sin(turn) * length)
+        path.quadraticCurveTo(
+          px + (Math.random() - 0.5) * 30,
+          py + (Math.random() - 0.5) * 30,
+          px + Math.cos(turn) * length,
+          py + Math.sin(turn) * length,
+        )
         c.lineCap = hgt.lineCap = 'round'
         c.lineWidth = hgt.lineWidth = width
         c.strokeStyle = zone.colours[Math.floor(Math.random() * zone.colours.length)]
@@ -901,10 +1159,28 @@ function palette() {
 
   const brush = (handleColour: string, tipColour: string, thickness: number, length: number) => {
     const b = new THREE.Group()
-    b.add(mesh(new THREE.CylinderGeometry(thickness * 0.55, thickness, length, 20), physical(handleColour, { roughness: 0.35, clearcoat: 0.8 }), 0, -length / 2, 0))
-    b.add(mesh(new THREE.CylinderGeometry(thickness * 1.05, thickness, 0.2, 20), physical('#c9ccd0', { roughness: 0.25, metalness: 1 }), 0, 0.1, 0))
+    b.add(
+      mesh(
+        new THREE.CylinderGeometry(thickness * 0.55, thickness, length, 20),
+        physical(handleColour, { roughness: 0.35, clearcoat: 0.8 }),
+        0,
+        -length / 2,
+        0,
+      ),
+    )
+    b.add(
+      mesh(
+        new THREE.CylinderGeometry(thickness * 1.05, thickness, 0.2, 20),
+        physical('#c9ccd0', { roughness: 0.25, metalness: 1 }),
+        0,
+        0.1,
+        0,
+      ),
+    )
     const tuft = new THREE.LatheGeometry(
-      [0, 0.3, 0.6, 0.85, 1].map((t) => new THREE.Vector2(thickness * 1.15 * Math.sin(Math.PI * (0.15 + t * 0.85)) * (1 - t * 0.6), t * 0.26)),
+      [0, 0.3, 0.6, 0.85, 1].map(
+        (t) => new THREE.Vector2(thickness * 1.15 * Math.sin(Math.PI * (0.15 + t * 0.85)) * (1 - t * 0.6), t * 0.26),
+      ),
       20,
     )
     b.add(mesh(tuft, physical(tipColour, { roughness: 0.6, clearcoat: 0.4 }), 0, 0.2, 0))
@@ -993,7 +1269,14 @@ function polaroid() {
 
   const card = mesh(
     new THREE.BoxGeometry(cardW, cardH, 0.02),
-    physical('#bdb7aa', { roughness: 0.95, roughnessMap: emboss, bumpMap: emboss, bumpScale: 1.2, specularIntensity: 0.35, envMapIntensity: 0.5 }),
+    physical('#bdb7aa', {
+      roughness: 0.95,
+      roughnessMap: emboss,
+      bumpMap: emboss,
+      bumpScale: 1.2,
+      specularIntensity: 0.35,
+      envMapIntensity: 0.5,
+    }),
   )
   const photo = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}favorites/polaroid.webp`)
   photo.colorSpace = THREE.SRGBColorSpace
