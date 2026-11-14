@@ -1,6 +1,6 @@
 # asejs.github.io
 
-<img width="1200" height="627" alt="banner-image" src="https://github.com/user-attachments/assets/e9c219f0-71e4-4401-8ca0-7139329db736" />
+![Åse Sagebakken – Frontend developer](public/og-image.png)
 
 Personal portfolio and CV for Åse Sagebakken – https://asejs.github.io/
 
