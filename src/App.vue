@@ -6,7 +6,6 @@ import FavoriteThings from './components/FavoriteThings.vue'
 import InterestGallery from './components/InterestGallery.vue'
 import InterestTile from './components/InterestTile.vue'
 import LinkIcon from './components/LinkIcon.vue'
-import LogoEmblem from './components/LogoEmblem.vue'
 import ProjectStage from './components/ProjectStage.vue'
 import ProjectDetail from './components/ProjectDetail.vue'
 import RouteModal from './components/RouteModal.vue'
@@ -14,6 +13,7 @@ import SiteNav from './components/SiteNav.vue'
 import TypedText from './components/TypedText.vue'
 import WaveLines from './components/WaveLines.vue'
 import greetingSvg from './assets/greeting.svg?raw'
+import horizon56Wordmark from './assets/logos/horizon56.svg?raw'
 import { useHashRoute } from './composables/useHashRoute'
 import { useLayoutGlide } from './composables/useLayoutGlide'
 import { usePointerGlow } from './composables/usePointerGlow'
@@ -84,11 +84,8 @@ const year = new Date().getFullYear()
           <p class="hero__summary">{{ profile.summary }}</p>
           <p class="hero__motivation">{{ profile.motivation }}</p>
           <div v-if="current" class="now">
-            <LogoEmblem v-if="current.logo?.emblem" :logo="current.logo" size="2.5rem" />
-            <div>
-              <p class="now__label"><span class="now__dot" aria-hidden="true" />Nå</p>
-              <p class="now__role">{{ current.title }} · {{ current.org }}</p>
-            </div>
+            <p class="now__label"><span class="now__dot" aria-hidden="true" />{{ current.title }} hos</p>
+            <span class="now__wordmark" role="img" :aria-label="current.org" v-html="horizon56Wordmark" />
           </div>
           <ContactLinks label="Kontakt" class="hero__links" />
         </div>
@@ -388,18 +385,7 @@ const year = new Date().getFullYear()
 }
 
 .now {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  padding: 0.6rem 1rem 0.6rem 0.6rem;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-}
-
-.now :deep(.emblem--badge) {
-  border-radius: 3px;
+  margin-top: 1.75rem;
 }
 
 .now__label {
@@ -435,9 +421,16 @@ const year = new Date().getFullYear()
   }
 }
 
-.now__role {
-  font-size: 0.92rem;
-  font-weight: 600;
+.now__wordmark {
+  display: block;
+  margin-top: 0.6rem;
+  color: var(--text);
+}
+
+.now__wordmark :deep(svg) {
+  display: block;
+  width: auto;
+  height: clamp(1.9rem, 3.2vw, 2.4rem);
 }
 
 .hero__links {

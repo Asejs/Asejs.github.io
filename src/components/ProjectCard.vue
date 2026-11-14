@@ -35,6 +35,7 @@ defineProps<{ project: Project }>()
 
 .card .card__cover {
   aspect-ratio: 16 / 9;
+  border-radius: 0;
 }
 
 .card__cover {
