@@ -21,7 +21,12 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     <header class="detail__head">
       <div class="detail__heading">
         <span v-if="project.logos?.length" class="detail__logos">
-          <LogoEmblem v-for="(logo, index) in project.logos" :key="index" :logo="logo" size="calc(1.575rem + 0.89 * clamp(2rem, 6vw, 3rem))" />
+          <LogoEmblem
+            v-for="(logo, index) in project.logos"
+            :key="index"
+            :logo="logo"
+            size="calc(1.575rem + 0.89 * clamp(2rem, 6vw, 3rem))"
+          />
         </span>
         <div>
           <p class="eyebrow">{{ project.subtitle }} · {{ project.period }}</p>
@@ -51,29 +56,14 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     <div v-if="project.coverOnPage !== false || project.images?.length" class="gallery">
       <ProjectCover v-if="project.coverOnPage !== false" :project="project" />
       <figure v-for="image in project.images" :key="image.src">
-        <video
-          v-if="image.video"
-          :src="image.video"
-          :poster="image.src"
-          :aria-label="image.alt"
-          controls
-          playsinline
-          preload="none"
-        />
+        <video v-if="image.video" :src="image.video" :poster="image.src" :aria-label="image.alt" controls playsinline preload="none" />
         <img v-else :src="image.src" :alt="image.alt" :class="{ cutout: image.cutout }" loading="lazy" />
         <figcaption v-if="image.caption">{{ image.caption }}</figcaption>
       </figure>
     </div>
 
     <div v-if="project.links?.length" class="detail__links">
-      <a
-        v-for="link in project.links"
-        :key="link.href"
-        :href="link.href"
-        target="_blank"
-        rel="noopener"
-        class="detail__link"
-      >
+      <a v-for="link in project.links" :key="link.href" :href="link.href" target="_blank" rel="noopener" class="detail__link">
         {{ link.label }} <span aria-hidden="true">↗</span>
       </a>
     </div>

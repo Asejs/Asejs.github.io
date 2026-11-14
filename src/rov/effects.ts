@@ -99,7 +99,13 @@ function starGeometry() {
     else shape.lineTo(x, y)
   }
   shape.closePath()
-  return new THREE.ExtrudeGeometry(shape, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.025, bevelSize: 0.02, bevelSegments: 2 }).center()
+  return new THREE.ExtrudeGeometry(shape, {
+    depth: 0.05,
+    bevelEnabled: true,
+    bevelThickness: 0.025,
+    bevelSize: 0.02,
+    bevelSegments: 2,
+  }).center()
 }
 
 export function createBoostStars(scene: THREE.Scene) {

@@ -597,10 +597,7 @@ export function createMission(scene: THREE.Scene, gripPoint: THREE.Object3D, rov
 
     const speed = Math.hypot(rov.position.x - lastRov.x, rov.position.z - lastRov.z) / Math.max(dt, 0.001)
     lastRov.copy(rov.position)
-    const docked =
-      Math.abs(rov.position.x) < 0.45 &&
-      rov.position.z < dockZ + 0.4 &&
-      rov.position.y < FLOOR_Y + 0.9
+    const docked = Math.abs(rov.position.x) < 0.45 && rov.position.z < dockZ + 0.4 && rov.position.y < FLOOR_Y + 0.9
     if (!isDone('dock') && docked && speed < 0.4) {
       dockTimer += dt
       progress = 'Dokker …'

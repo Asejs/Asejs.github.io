@@ -48,11 +48,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   background:
     linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
     linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
-    radial-gradient(
-      circle at 30% 20%,
-      hsl(var(--hue) 70% 45%),
-      hsl(calc(var(--hue) + 30) 60% 18%)
-    );
+    radial-gradient(circle at 30% 20%, hsl(var(--hue) 70% 45%), hsl(calc(var(--hue) + 30) 60% 18%));
   --grid: rgb(255 255 255 / 0.06);
 }
 

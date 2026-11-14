@@ -20,10 +20,26 @@ describe('ProjectDetail', () => {
 
   it('uses the video, banner, cover or first picture behind the heading', () => {
     const base = { ...projects[0], video: undefined, banner: undefined, cover: undefined, images: undefined }
-    expect(detail({ ...base, video: '/v.mp4' }).find('.detail__banner video').exists()).toBe(true)
-    expect(detail({ ...base, banner: '/b.webp' }).find('.detail__banner img').attributes('src')).toBe('/b.webp')
-    expect(detail({ ...base, cover: '/c.webp' }).find('.detail__banner img').attributes('src')).toBe('/c.webp')
-    expect(detail({ ...base, images: [{ src: '/i.webp', alt: 'I' }] }).find('.detail__banner img').attributes('src')).toBe('/i.webp')
+    expect(
+      detail({ ...base, video: '/v.mp4' })
+        .find('.detail__banner video')
+        .exists(),
+    ).toBe(true)
+    expect(
+      detail({ ...base, banner: '/b.webp' })
+        .find('.detail__banner img')
+        .attributes('src'),
+    ).toBe('/b.webp')
+    expect(
+      detail({ ...base, cover: '/c.webp' })
+        .find('.detail__banner img')
+        .attributes('src'),
+    ).toBe('/c.webp')
+    expect(
+      detail({ ...base, images: [{ src: '/i.webp', alt: 'I' }] })
+        .find('.detail__banner img')
+        .attributes('src'),
+    ).toBe('/i.webp')
     expect(detail(base).find('.detail__banner').exists()).toBe(false)
   })
 

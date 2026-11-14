@@ -165,9 +165,7 @@ export const projects: Project[] = [
     description: [
       'Visuell digital tvilling av Equinors plattformer for søk og navigering i drifts- og prosjektdata. Brukt på over 50 anlegg onshore og offshore, på desktop, nettbrett og mobil.',
     ],
-    role: [
-      'Konsulent i Bouvet, utleid til Equinors Echo-team. Utviklet i React og TypeScript, i tett samarbeid med UX og backend.',
-    ],
+    role: ['Konsulent i Bouvet, utleid til Equinors Echo-team. Utviklet i React og TypeScript, i tett samarbeid med UX og backend.'],
     highlights: [
       'Utviklet MVP-en av Global Selection, der brukeren samler tags og arbeidsordrer i én liste, integrert med plattformens 3D-modell',
       'Utviklet responsivt design og PWA for bruk i felt',
@@ -200,12 +198,8 @@ export const projects: Project[] = [
     subtitle: 'Bacheloroppgave · Universitetet i Stavanger',
     period: '2022',
     summary: 'Brukergrensesnitt og kommunikasjon for fjernstyrt undervannsfartøy.',
-    description: [
-      'Operatørgrensesnitt og toppside-kommunikasjon for UiS Subsea sin ROV, brukt i MATE ROV World Championship.',
-    ],
-    role: [
-      'Bacheloroppgave med en medstudent, i et tverrfaglig team på 18 studenter fra data, elektro og maskin.',
-    ],
+    description: ['Operatørgrensesnitt og toppside-kommunikasjon for UiS Subsea sin ROV, brukt i MATE ROV World Championship.'],
+    role: ['Bacheloroppgave med en medstudent, i et tverrfaglig team på 18 studenter fra data, elektro og maskin.'],
     highlights: [
       'Utviklet operatørgrensesnitt i PyQt med sensordata og sanntidsvideo',
       'Satte opp kontroller for styring av ROV-en',

@@ -17,7 +17,12 @@ defineProps<{ entry: Entry }>()
         <div>
           <h3 class="entry__title">{{ entry.title }}</h3>
           <p v-if="entry.logo && !entry.logo.emblem" class="entry__org">
-            <span class="entry__logo" :style="{ height: entry.logo.height, color: entry.logo.color }" aria-hidden="true" v-html="entry.logo.svg" />
+            <span
+              class="entry__logo"
+              :style="{ height: entry.logo.height, color: entry.logo.color }"
+              aria-hidden="true"
+              v-html="entry.logo.svg"
+            />
             <span class="visually-hidden">{{ entry.org }}</span>
           </p>
           <p v-else class="entry__org">
@@ -182,7 +187,6 @@ defineProps<{ entry: Entry }>()
     order: -1;
     width: 100%;
   }
-
 }
 
 @media (min-width: 60rem) {

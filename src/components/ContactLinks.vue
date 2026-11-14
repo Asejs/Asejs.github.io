@@ -49,12 +49,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', onPointerDown))
   <div class="contact">
     <nav class="contact__links" :aria-label="label">
       <template v-for="link in profile.links" :key="link.label">
-        <div
-          v-if="link.variants"
-          :ref="setMenu"
-          class="menu"
-          @keydown.esc="closeMenu({ restoreFocus: true })"
-        >
+        <div v-if="link.variants" :ref="setMenu" class="menu" @keydown.esc="closeMenu({ restoreFocus: true })">
           <button
             :ref="setMenuButton"
             type="button"
@@ -82,13 +77,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', onPointerDown))
             </template>
           </div>
         </div>
-        <a
-          v-else
-          :href="link.href"
-          class="pill"
-          :target="opensInNewTab(link.href) ? '_blank' : undefined"
-          rel="noopener"
-        >
+        <a v-else :href="link.href" class="pill" :target="opensInNewTab(link.href) ? '_blank' : undefined" rel="noopener">
           <LinkIcon v-if="link.icon" :icon="link.icon" />
           {{ link.label }}
         </a>

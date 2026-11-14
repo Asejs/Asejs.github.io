@@ -90,7 +90,15 @@ const year = new Date().getFullYear()
           <ContactLinks label="Kontakt" class="hero__links" />
         </div>
         <picture class="hero__picture">
-          <img ref="heroPhoto" class="hero__photo" src="/hero-portrait.webp" fetchpriority="high" :alt="profile.name" width="900" height="1698" />
+          <img
+            ref="heroPhoto"
+            class="hero__photo"
+            src="/hero-portrait.webp"
+            fetchpriority="high"
+            :alt="profile.name"
+            width="900"
+            height="1698"
+          />
         </picture>
       </header>
       <div class="hero__edge" aria-hidden="true" />
@@ -198,9 +206,7 @@ const year = new Date().getFullYear()
       >
         <svg v-if="theme === 'dark'" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="4.5" />
-          <path
-            d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-          />
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
         </svg>
         <svg v-else viewBox="0 0 24 24" aria-hidden="true">
           <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
@@ -271,11 +277,7 @@ const year = new Date().getFullYear()
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-    1600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
-    rgb(255 214 150 / 0.025),
-    transparent 70%
-  );
+  background: radial-gradient(1600px circle at var(--glow-x, 50%) var(--glow-y, 50%), rgb(255 214 150 / 0.025), transparent 70%);
   opacity: 0;
   transition: opacity 0.6s;
 }

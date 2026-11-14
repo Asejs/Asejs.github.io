@@ -38,8 +38,7 @@ describe('vReveal', () => {
 
   it('shows everything at once without IntersectionObserver', async () => {
     const original = window.IntersectionObserver
-    // @ts-expect-error
-    delete window.IntersectionObserver
+    Reflect.deleteProperty(window, 'IntersectionObserver')
     const wrapper = host(await load())
     expect(wrapper.element.classList.contains('is-visible')).toBe(true)
     window.IntersectionObserver = original

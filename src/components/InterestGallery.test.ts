@@ -69,7 +69,9 @@ describe('InterestGallery', () => {
   it('works for a gallery with a single picture and no camera', async () => {
     setMatches(() => false)
     const wrapper = mount(InterestGallery, {
-      props: { interest: { slug: 's', title: 'Maling', icon: 'brush', galleryDescription: 'Olje', images: [{ src: '/a.webp', alt: 'A' }] } },
+      props: {
+        interest: { slug: 's', title: 'Maling', icon: 'brush', galleryDescription: 'Olje', images: [{ src: '/a.webp', alt: 'A' }] },
+      },
     })
     expect(wrapper.find('.head__title').text()).toBe('Maling')
     expect(wrapper.find('.head__desc').text()).toBe('Olje')

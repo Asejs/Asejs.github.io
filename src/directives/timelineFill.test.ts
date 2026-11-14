@@ -14,7 +14,9 @@ function mountTimeline(arg?: string, { continued = false, continues = false, top
       render: () =>
         h('div', [
           h('section', { class: continued ? 'section--continued' : '' }, [
-            withDirectives(h('ol', { class: 'timeline' }, [h('li', { class: 'entry' }), h('li', { class: 'entry' })]), [[vTimelineFill, undefined, arg]]),
+            withDirectives(h('ol', { class: 'timeline' }, [h('li', { class: 'entry' }), h('li', { class: 'entry' })]), [
+              [vTimelineFill, undefined, arg],
+            ]),
           ]),
           continues ? h('section', { class: 'section--continued' }) : null,
         ]),

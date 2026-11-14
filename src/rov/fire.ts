@@ -93,12 +93,23 @@ export function createFireball(position: THREE.Vector3) {
   const group = new THREE.Group()
   group.position.copy(position)
   const blobs: Blob[] = []
-  const add = (colors: typeof FIRE, count: number, sizeRange: [number, number], spread: number, rise: number, delay: number, life: number) => {
+  const add = (
+    colors: typeof FIRE,
+    count: number,
+    sizeRange: [number, number],
+    spread: number,
+    rise: number,
+    delay: number,
+    life: number,
+  ) => {
     for (let i = 0; i < count; i++) {
       const mesh = new THREE.Mesh(geometry, flameMaterial(colors, Math.random() * 100))
       mesh.position.set((Math.random() - 0.5) * spread, (Math.random() - 0.3) * spread, (Math.random() - 0.5) * spread)
       mesh.scale.setScalar(0.001)
-      const velocity = mesh.position.clone().normalize().multiplyScalar(0.6 + Math.random() * 0.8)
+      const velocity = mesh.position
+        .clone()
+        .normalize()
+        .multiplyScalar(0.6 + Math.random() * 0.8)
       velocity.y += rise
       blobs.push({ mesh, velocity, size: sizeRange[0] + Math.random() * (sizeRange[1] - sizeRange[0]), delay: delay * Math.random(), life })
       group.add(mesh)
