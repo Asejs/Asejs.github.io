@@ -86,7 +86,7 @@ const year = new Date().getFullYear()
           <div v-if="current" class="now">
             <LogoEmblem v-if="current.logo?.emblem" :logo="current.logo" size="2.5rem" />
             <div>
-              <p class="now__label"><span class="now__dot" aria-hidden="true" />Nå</p>
+              <p class="now__label"><span class="now__dot" aria-hidden="true" />For øyeblikket</p>
               <p class="now__role">{{ current.title }} · {{ current.org }}</p>
             </div>
           </div>
