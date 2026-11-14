@@ -33,6 +33,9 @@ export function coffee() {
   }
   outline.push(new THREE.Vector2(0.455, -0.48), new THREE.Vector2(0, -0.48))
   const mugGeometry = mergeVertices(new THREE.LatheGeometry(outline, 160).deleteAttribute('uv').deleteAttribute('normal'))
+  const dent = (angle: number, y: number) =>
+    (0.012 * Math.sin(angle * 5 + y * 4.2) + 0.009 * Math.sin(angle * 3 - y * 6.5 + 1.3) + 0.005 * Math.sin(angle * 9 + y * 11)) *
+    THREE.MathUtils.smoothstep(y, -0.55, -0.3)
   const wall = mugGeometry.attributes.position as THREE.BufferAttribute
   const colours = new Float32Array(wall.count * 3)
   const point = new THREE.Vector3()
@@ -42,13 +45,7 @@ export function coffee() {
     const radius = Math.hypot(point.x, point.z)
     const angle = Math.atan2(point.z, point.x)
     if (radius > 0.3) {
-      const fade = THREE.MathUtils.smoothstep(point.y, -0.55, -0.3)
-      const dent =
-        (0.012 * Math.sin(angle * 5 + point.y * 4.2) +
-          0.009 * Math.sin(angle * 3 - point.y * 6.5 + 1.3) +
-          0.005 * Math.sin(angle * 9 + point.y * 11)) *
-        fade
-      const scale = (radius + dent) / radius
+      const scale = (radius + dent(angle, point.y)) / radius
       wall.setXYZ(i, point.x * scale, point.y, point.z * scale)
     }
     tone.lerpColors(dark, light, THREE.MathUtils.clamp(glaze(point.x, point.y, point.z), 0, 1))
@@ -59,6 +56,31 @@ export function coffee() {
   mugGeometry.computeVertexNormals()
   const mug = mesh(mugGeometry, ceramic)
   ;(mug.material as THREE.MeshPhysicalMaterial).side = THREE.DoubleSide
+  const print = painted(1024, 96, (ctx) => {
+    ctx.font = '600 52px "Courier New", Courier, monospace'
+    ctx.fillStyle = '#3b3936'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.filter = 'blur(0.6px)'
+    ctx.fillText('...but first, coffee', 512, 50)
+  })
+  const textY = 0.06
+  const textHeight = 0.09
+  const textArc = 2.2
+  const label = new THREE.CylinderGeometry(1, 1, textHeight, 96, 4, true, Math.PI / 2 - textArc / 2, textArc)
+  const labelPoints = label.attributes.position as THREE.BufferAttribute
+  for (let i = 0; i < labelPoints.count; i++) {
+    point.fromBufferAttribute(labelPoints, i)
+    const y = point.y + textY
+    const angle = Math.atan2(point.z, point.x)
+    const radius = 0.53 + ((y + 0.47) / 0.97) * 0.015 + dent(angle, y) + 0.002
+    labelPoints.setXYZ(i, point.x * radius, y, point.z * radius)
+  }
+  label.computeVertexNormals()
+  const lettering = mesh(
+    label,
+    physical('#ffffff', { map: print, transparent: true, depthWrite: false, roughness: 0.7, polygonOffset: true, polygonOffsetFactor: -2 }),
+  )
   const handlePath = new THREE.CatmullRomCurve3(
     [
       [-0.48, 0.34],
@@ -92,7 +114,7 @@ export function coffee() {
   const coffeeLook = { roughness: 0.4, specularIntensity: 0.3, envMapIntensity: 0.12 }
   const drink = mesh(surface, physical('#ffffff', { map: crema, ...coffeeLook }), 0, 0.47, 0)
   drink.rotation.x = -Math.PI / 2
-  cup.add(mug, handle, drink)
+  cup.add(mug, lettering, handle, drink)
 
   const steamTexture = (() => {
     const canvas = document.createElement('canvas')
