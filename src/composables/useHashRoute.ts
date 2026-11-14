@@ -23,8 +23,6 @@ export function useHashRoute() {
     hash.value = window.location.hash
   }
 
-  // Opens route links without a real fragment jump: Safari scrolls the page to the top
-  // for a fragment that names no element, which flashes the hero before the modal opens.
   function onClick(event: MouseEvent) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#/"]')

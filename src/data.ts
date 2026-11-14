@@ -43,7 +43,6 @@ export interface ProjectImage {
   src: string
   alt: string
   caption?: string
-  /** A cut-out on a transparent background, shown without a frame */
   cutout?: boolean
   thumb?: string
   video?: string
@@ -369,7 +368,6 @@ export interface Interest {
   icon: InterestIcon
   galleryTitle?: string
   galleryDescription?: string
-  /** What the pictures were taken with, shown in the gallery's heading */
   camera?: string
   images?: ProjectImage[]
 }

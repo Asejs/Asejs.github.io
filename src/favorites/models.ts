@@ -231,7 +231,6 @@ function laptop() {
   const screenW = W - bezel * 2
   const screenH = D - bezel - chin
 
-  // A real-looking editor: file tree, tabs, highlighted Vue code and a terminal, in the site's own colours
   const editor = painted(1024, Math.round((1024 * screenH) / screenW), (ctx) => {
     const w = 1024
     const h = ctx.canvas.height
@@ -241,7 +240,6 @@ function laptop() {
     ctx.fillStyle = C.bg
     ctx.fillRect(0, 0, w, h)
 
-    // Title bar
     ctx.fillStyle = C.bar
     ctx.fillRect(0, 0, w, 30)
     ;['#ff5f57', '#febc2e', '#28c840'].forEach((colour, i) => {
@@ -256,7 +254,6 @@ function laptop() {
     ctx.fillText('asejs.github.io — App.vue', w / 2, 19)
     ctx.textAlign = 'left'
 
-    // File tree
     const sideW = 190
     ctx.fillStyle = C.side
     ctx.fillRect(0, 30, sideW, h - 30)
@@ -280,7 +277,6 @@ function laptop() {
       ctx.fillText(name, 16 + depth * 14, y)
     })
 
-    // Tabs
     ctx.fillStyle = C.bar
     ctx.fillRect(sideW, 30, w - sideW, 32)
     ;['App.vue', 'data.ts', 'SiteNav.vue'].forEach((tab, i) => {
@@ -296,7 +292,6 @@ function laptop() {
       ctx.fillText(tab, x + 16, 51)
     })
 
-    // Code, as [colour, text] runs per line
     const code: [string, string][][] = [
       [[C.dim, '<'], [C.tag, 'script'], [C.key, ' setup lang'], [C.dim, '='], [C.str, '"ts"'], [C.dim, '>']],
       [[C.key, 'import'], [C.text, ' { computed } '], [C.key, 'from'], [C.str, " 'vue'"]],
@@ -340,7 +335,6 @@ function laptop() {
       }
     })
 
-    // Terminal
     const termY = h - 150
     ctx.fillStyle = C.bar
     ctx.fillRect(sideW, termY, w - sideW, 128)
@@ -366,7 +360,6 @@ function laptop() {
       }
     })
 
-    // Status bar
     ctx.fillStyle = '#0e4a4f'
     ctx.fillRect(0, h - 22, w, 22)
     ctx.font = mono(11)
@@ -419,8 +412,6 @@ function laptop() {
 function coffee() {
   const group = new THREE.Group()
   const cup = new THREE.Group()
-  // Hand-thrown stoneware: soft, uneven walls and a mottled grey-white reactive glaze,
-  // painted per vertex (the lathe has no UVs) and darker where the glaze thins at the rim
   const glaze = (x: number, y: number, z: number) =>
     0.5 + 0.22 * Math.sin(x * 7.1 + y * 3.3) * Math.cos(z * 6.3 - y * 2.1) + 0.18 * Math.sin(x * 15.7 - z * 13.1 + y * 9.4) + 0.1 * Math.sin(y * 23 + x * 19)
   const light = new THREE.Color('#ece9e2')
@@ -429,12 +420,10 @@ function coffee() {
   const ceramic = physical('#ffffff', { vertexColors: true, roughness: 0.72, specularIntensity: 0.45, clearcoat: 0.25, clearcoatRoughness: 0.5 })
 
   const outline: THREE.Vector2[] = [new THREE.Vector2(0, -0.6), new THREE.Vector2(0.44, -0.6)]
-  // A soft, rounded base
   for (let i = 0; i <= 16; i++) {
     const a = -Math.PI / 2 + (i / 16) * (Math.PI / 2)
     outline.push(new THREE.Vector2(0.4 + Math.cos(a) * 0.13, -0.47 + Math.sin(a) * 0.13))
   }
-  // Many points up the wall, so the uneven surface has vertices to bend
   for (let i = 1; i <= 36; i++) outline.push(new THREE.Vector2(0.53 + (i / 36) * 0.015, -0.47 + (i / 36) * 0.97))
   for (let i = 0; i <= 10; i++) {
     const a = (i / 10) * Math.PI
@@ -450,7 +439,6 @@ function coffee() {
     point.fromBufferAttribute(wall, i)
     const radius = Math.hypot(point.x, point.z)
     const angle = Math.atan2(point.z, point.x)
-    // Gentle, irregular dents, like a cup pressed by hand; strongest mid-wall, none at the base
     if (radius > 0.3) {
       const fade = THREE.MathUtils.smoothstep(point.y, -0.55, -0.3)
       const dent = (0.012 * Math.sin(angle * 5 + point.y * 4.2) + 0.009 * Math.sin(angle * 3 - point.y * 6.5 + 1.3) + 0.005 * Math.sin(angle * 9 + point.y * 11)) * fade
@@ -465,7 +453,6 @@ function coffee() {
   mugGeometry.computeVertexNormals()
   const mug = mesh(mugGeometry, ceramic)
   ;(mug.material as THREE.MeshPhysicalMaterial).side = THREE.DoubleSide
-  // A teardrop handle: a full, round curve at the top that tapers in towards the bottom
   const handlePath = new THREE.CatmullRomCurve3(
     [
       [-0.48, 0.34], [-0.68, 0.42], [-0.88, 0.34], [-0.95, 0.12],
@@ -630,7 +617,6 @@ function camera() {
   grain.colorSpace = THREE.NoColorSpace
   grain.wrapS = grain.wrapT = THREE.RepeatWrapping
   grain.repeat.set(4, 4)
-  // Low specular and a fine grain everywhere, so the body reads as matte magnesium and rubber, not glossy plastic
   const fineGrain = grain.clone()
   fineGrain.repeat.set(10, 10)
   const shell = physical('#26272a', { roughness: 1, specularIntensity: 0.25, bumpMap: fineGrain, bumpScale: 0.12, envMapIntensity: 0.3 })
@@ -674,7 +660,7 @@ function camera() {
   const lens = new THREE.Group()
   const barrel = physical('#242528', { roughness: 1, specularIntensity: 0.25, bumpMap: fineGrain, bumpScale: 0.1, envMapIntensity: 0.3 })
   const rubber = (count: number) => physical('#1c1d1f', { roughness: 0.95, specularIntensity: 0.25, bumpMap: ridges(count), bumpScale: 2, envMapIntensity: 0.3 })
-  lens.add(ring(0.36, 0.03, 0.3, black)) // the mount: hidden in black where the lens meets the body
+  lens.add(ring(0.36, 0.03, 0.3, black))
   lens.add(ring(0.33, 0.1, 0.33, barrel))
   lens.add(ring(0.38, 0.16, 0.43, rubber(90)))
   lens.add(ring(0.38, 0.12, 0.59, barrel))
@@ -983,7 +969,6 @@ function polaroid() {
   const cardW = photoW + margin * 2
   const cardH = photoH + margin + strip
 
-  // The embossed diamond texture of real instant-film frames, as a tiling bump map
   const emboss = painted(64, 64, (ctx) => {
     ctx.fillStyle = '#808080'
     ctx.fillRect(0, 0, 64, 64)
@@ -1006,7 +991,6 @@ function polaroid() {
   emboss.wrapS = emboss.wrapT = THREE.RepeatWrapping
   emboss.repeat.set(cardW * 22, cardH * 22)
 
-  // An aged, off-white frame that sits in the scene's shade instead of glowing
   const card = mesh(
     new THREE.BoxGeometry(cardW, cardH, 0.02),
     physical('#bdb7aa', { roughness: 0.95, roughnessMap: emboss, bumpMap: emboss, bumpScale: 1.2, specularIntensity: 0.35, envMapIntensity: 0.5 }),

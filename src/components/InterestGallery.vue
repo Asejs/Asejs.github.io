@@ -185,7 +185,6 @@ onBeforeUnmount(() => {
   height: auto;
 }
 
-/* Where it was taken, shown over the picture on hover or keyboard focus */
 .grid__caption {
   position: absolute;
   inset: auto 0 0;
@@ -214,7 +213,6 @@ onBeforeUnmount(() => {
   z-index: 20;
   display: grid;
   place-items: center;
-  /* Room at the sides for the arrows, so they don't sit on the picture */
   padding: 2.5rem 4.5rem;
   background: rgb(0 0 0 / 0.9);
 }

@@ -100,7 +100,6 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   transform: translateX(-50%);
   overflow: hidden;
   pointer-events: none;
-  /* Fades the banner itself out, so no edge of the image can show at the bottom */
   mask-image: linear-gradient(to bottom, #000 60%, transparent);
 }
 

@@ -299,7 +299,6 @@ const year = new Date().getFullYear()
   margin: -5rem auto 1.5rem;
   object-fit: cover;
   object-position: center 40%;
-  /* The same slant as on wider screens, fading out at the bottom */
   clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
   mask-image: linear-gradient(to bottom, #000 65%, transparent);
 }
@@ -539,7 +538,6 @@ const year = new Date().getFullYear()
   letter-spacing: -0.02em;
 }
 
-/* A small running number above each title */
 .section__label::before {
   content: counter(section, decimal-leading-zero) ' /';
   margin-right: 0.7em;
@@ -617,7 +615,6 @@ const year = new Date().getFullYear()
 
 .about__signature {
   justify-self: end;
-  /* Tucks up beside the short last line of the text, like a signature under a letter */
   margin-top: -2.25rem;
   color: var(--text);
 }

@@ -78,7 +78,6 @@ function onClick(event: MouseEvent) {
   overflow: hidden;
 }
 
-/* Galleries take the whole screen, so the pictures get all the room */
 .modal--wide {
   width: 100vw;
   height: 100dvh;
@@ -143,7 +142,6 @@ function onClick(event: MouseEvent) {
   stroke-linecap: round;
 }
 
-/* Phones, upright or on their side, get the whole screen */
 @media (max-width: 39.99rem), (max-height: 30rem) {
   .modal {
     width: 100vw;

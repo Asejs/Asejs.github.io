@@ -81,7 +81,6 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--bg) 78%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  /* A slanted bottom edge, like the hero's */
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), 0 100%);
   translate: 0 -100%;
   opacity: 0;
@@ -147,7 +146,6 @@ onBeforeUnmount(() => {
   border-radius: var(--radius);
 }
 
-/* Phones, upright or on their side, keep the whole screen for the content */
 @media (max-width: 39.99rem), (max-height: 30rem) {
   .nav {
     display: none;

@@ -88,8 +88,6 @@ export function createFavoritesScene(host: HTMLElement, canvas: HTMLCanvasElemen
 
   const raycaster = new THREE.Raycaster()
 
-  // The tiles overlap, so pick the object actually under the pointer: the topmost one
-  // (drawn last) whose model the ray hits, falling back to the tile whose centre is nearest.
   function itemAt(event: MouseEvent) {
     const under = items.filter((item) => {
       const r = item.tile.getBoundingClientRect()
@@ -119,7 +117,6 @@ export function createFavoritesScene(host: HTMLElement, canvas: HTMLCanvasElemen
     return Math.hypot(event.clientX - (r.left + r.width / 2), event.clientY - (r.top + r.height / 2))
   }
 
-  // Sets the shared camera up for one tile, as render() draws it
   function aim(r: DOMRect, bleed: number) {
     camera.aspect = r.width / r.height
     camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan((Math.tan(THREE.MathUtils.degToRad(16)) * bleed) / Math.min(camera.aspect, 1)))

@@ -146,8 +146,6 @@ onBeforeUnmount(() => {
   bottom: calc(var(--objects-room) * 0.3);
 }
 
-/* Beside the text from 70rem: the text column and the objects shrink a little
-   on narrower screens, so they keep flanking the text for as long as there is room */
 @media (min-width: 70rem) {
   .favorites {
     --row: min(100vw - 2.5rem, 78rem);
