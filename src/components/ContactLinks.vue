@@ -127,7 +127,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', onPointerDown))
   gap: 0.5rem;
   padding: 0.45rem 0.95rem 0.45rem 0.85rem;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius);
   font-size: 0.9rem;
   font-weight: 500;
   transition:
@@ -171,7 +171,7 @@ button.pill {
   gap: 0.15rem;
   padding: 0.25rem;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: var(--bg);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.08);
   transform: translateX(-50%);
@@ -179,7 +179,7 @@ button.pill {
 
 .menu__option {
   padding: 0.25rem 0.7rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   font-size: 0.85rem;
   font-weight: 600;
   transition:

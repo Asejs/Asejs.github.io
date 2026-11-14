@@ -9,7 +9,7 @@ const stages = useTemplateRef<HTMLElement[]>('stages')
 
 let dispose: (() => void) | undefined
 
-useLayoutGlide(matchMedia('(min-width: 80rem)'), () => stages.value ?? [])
+useLayoutGlide(matchMedia('(min-width: 70rem)'), () => stages.value ?? [])
 
 const away = ref(!matchMedia('(prefers-reduced-motion: reduce)').matches)
 const arrival = new IntersectionObserver(
@@ -143,47 +143,48 @@ onBeforeUnmount(() => {
 
 .favorites__stage--polaroid {
   left: calc(50% - var(--stage-w) * 0.55);
-  bottom: calc(var(--objects-room) * 0.22);
+  bottom: calc(var(--objects-room) * 0.3);
 }
 
-@media (min-width: 80rem) {
+@media (min-width: 70rem) {
   .favorites {
     --row: min(100vw - 2.5rem, 78rem);
+    --text-w: min(41.5rem, 100vw - 32rem);
     width: var(--row);
     margin-inline: calc((100% - var(--row)) / 2);
-    padding: 0 calc((var(--row) - 41.5rem) / 2) 14rem;
+    padding: 0 calc((var(--row) - var(--text-w)) / 2) 14rem;
   }
 
   .favorites__stage {
-    --stage-w: 22rem;
+    --stage-w: clamp(16rem, (100vw - var(--text-w)) * 0.575, 22rem);
   }
 
   .favorites__stage--laptop {
-    left: calc(50% - 20.75rem - 21rem);
+    left: calc(50% - var(--text-w) / 2 - var(--stage-w) * 0.86 - 1.5rem);
     top: -5rem;
     bottom: auto;
   }
 
   .favorites__stage--coffee {
-    left: calc(50% - 20.75rem - 10rem);
+    left: calc(50% - var(--text-w) / 2 - var(--stage-w) * 0.45);
     bottom: calc(-6rem - var(--stage-w) * 0.45);
   }
 
   .favorites__stage--camera {
-    right: calc(50% - 20.75rem - 19rem);
+    right: calc(50% - var(--text-w) / 2 - var(--stage-w) * 0.8);
     left: auto;
     top: 1rem;
     bottom: auto;
   }
 
   .favorites__stage--palette {
-    right: calc(50% - 20.75rem - 12rem);
+    right: calc(50% - var(--text-w) / 2 - var(--stage-w) * 0.55);
     bottom: -9rem;
   }
 
   .favorites__stage--polaroid {
-    left: calc(50% - 8rem);
-    bottom: -9rem;
+    left: calc(50% - var(--stage-w) * 0.36);
+    bottom: -5.5rem;
   }
 }
 </style>

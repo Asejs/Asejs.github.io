@@ -1,4 +1,6 @@
 :root {
+  --radius: 2px;
+  --live: #3fb56b;
   --bg: #fafafa;
   --text: #15181d;
   --muted: #5b6270;
@@ -116,7 +118,7 @@ ul.tags {
 .tag {
   display: inline-block;
   padding: 0.2rem 0.6rem;
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--tag-bg);
   font-family: var(--mono);
   font-size: 0.78rem;

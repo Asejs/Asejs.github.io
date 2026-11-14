@@ -45,7 +45,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     </ul>
 
     <ul class="tags">
-      <li v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</li>
+      <li v-for="tag in project.tags" :key="tag" class="tag is-lit">{{ tag }}</li>
     </ul>
 
     <div v-if="project.coverOnPage !== false || project.images?.length" class="gallery">
@@ -60,7 +60,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
           playsinline
           preload="none"
         />
-        <img v-else :src="image.src" :alt="image.alt" loading="lazy" />
+        <img v-else :src="image.src" :alt="image.alt" :class="{ cutout: image.cutout }" loading="lazy" />
         <figcaption v-if="image.caption">{{ image.caption }}</figcaption>
       </figure>
     </div>
@@ -100,6 +100,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   transform: translateX(-50%);
   overflow: hidden;
   pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000 60%, transparent);
 }
 
 .detail__banner img,
@@ -116,9 +117,9 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   inset: 0;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--bg) 50%, transparent) 0%,
-    color-mix(in srgb, var(--bg) 70%, transparent) 45%,
-    var(--bg) 100%
+    color-mix(in srgb, var(--bg) 55%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 82%, transparent) 35%,
+    var(--bg) 75%
   );
 }
 
@@ -146,8 +147,10 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--accent-text);
 }
 
@@ -178,7 +181,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 }
 
 .detail__text {
-  max-width: 36rem;
+  max-width: 46rem;
   font-size: 1.1rem;
   color: var(--muted);
 }
@@ -241,8 +244,11 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 .gallery video {
   display: block;
   width: 100%;
-  border-radius: 3px;
   border: 1px solid var(--line);
+}
+
+.gallery .cutout {
+  border: none;
 }
 
 .gallery figcaption {

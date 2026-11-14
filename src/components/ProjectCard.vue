@@ -16,11 +16,8 @@ defineProps<{ project: Project }>()
           <LogoEmblem v-for="(logo, index) in project.logos" :key="index" :logo="logo" size="2.75rem" />
         </span>
         <div class="card__heading">
-          <div class="card__title-row">
-            <h3 class="card__title">{{ project.title }}</h3>
-            <span class="card__period">{{ project.period }}</span>
-          </div>
-          <p class="card__subtitle">{{ project.subtitle }}</p>
+          <p class="card__eyebrow">{{ project.subtitle.split(' · ')[0] }} · {{ project.period }}</p>
+          <h3 class="card__title">{{ project.title }}</h3>
         </div>
       </div>
       <p class="card__summary">{{ project.summary }}</p>
@@ -63,13 +60,13 @@ defineProps<{ project: Project }>()
 }
 
 .card__body {
-  margin-top: 0.9rem;
+  margin-top: 1.25rem;
 }
 
 .card__head {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
 
 .card__heading {
@@ -77,19 +74,13 @@ defineProps<{ project: Project }>()
   min-width: 0;
 }
 
-/* The period shares the title's line, so the subtitle below gets the full width */
-.card__title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.75rem;
-}
-
-.card__period {
+.card__eyebrow {
   font-family: var(--mono);
-  font-size: 0.78rem;
-  color: var(--text);
-  white-space: nowrap;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-text);
 }
 
 .card__logos {
@@ -103,7 +94,9 @@ defineProps<{ project: Project }>()
 }
 
 .card__title {
-  font-size: 1.05rem;
+  margin-top: 0.15rem;
+  font-size: 1.3rem;
+  line-height: 1.2;
   font-weight: 600;
   transition: color 0.2s;
 }
@@ -112,14 +105,8 @@ defineProps<{ project: Project }>()
   color: var(--accent);
 }
 
-.card__subtitle {
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
 .card__summary {
-  margin-top: 0.6rem;
+  margin-top: 0.9rem;
   font-size: 0.95rem;
   color: var(--muted);
 }

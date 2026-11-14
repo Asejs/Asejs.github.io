@@ -77,11 +77,11 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: flex-end;
   gap: 1.5rem;
-  padding: 0.7rem max(1.25rem, 4vw);
+  padding: 0.7rem max(1.25rem, 4vw) calc(0.7rem + 14px);
   background: color-mix(in srgb, var(--bg) 78%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), 0 100%);
   translate: 0 -100%;
   opacity: 0;
   transition:
@@ -108,7 +108,11 @@ onBeforeUnmount(() => {
   position: relative;
   display: block;
   padding: 0.3rem 0;
-  font-size: 0.88rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
   color: var(--muted);
   text-decoration: none;
@@ -139,7 +143,13 @@ onBeforeUnmount(() => {
 .nav a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--radius);
+}
+
+@media (max-width: 39.99rem), (max-height: 30rem) {
+  .nav {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

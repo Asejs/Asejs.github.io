@@ -36,7 +36,7 @@ defineProps<{ logo: Logo; size?: string }>()
   display: grid;
   place-items: center;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 
 .emblem--badge :deep(svg) {
