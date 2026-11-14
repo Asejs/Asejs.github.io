@@ -15,6 +15,17 @@ npm run dev
 
 All content lives in `src/data.ts`.
 
+## CV
+
+The CV is written in HTML (`cv/cv.html` and `cv/cv.en.html`) and saved as PDF to `public/`:
+
+```bash
+npx playwright install chromium   # once, downloads the browser
+npm run cv                        # both languages
+npm run cv:no                     # Norwegian only
+npm run cv:en                     # English only
+```
+
 ## Tests
 
 ```bash
